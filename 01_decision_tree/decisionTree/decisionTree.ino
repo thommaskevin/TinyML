@@ -1,4 +1,4 @@
-                    int predict(float *x) {
+int predict(float *x) {
                         if (x[2] <= 2.449999988079071) {
                             return 0;
                         }

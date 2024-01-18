@@ -9,6 +9,8 @@
 - 03 - [XGBoost](https://github.com/thommaskevin/TinyML/tree/main/03_XGBoost)
 
 - 04 - [GaussianNB](https://github.com/thommaskevin/TinyML/tree/main/04_GaussianNB)
+  
+- 05 - [Support Vector Machines](https://github.com/thommaskevin/TinyML/tree/main/05_support_vector_machine)
 
 ## Medium - TinyML's Weekly Open Paper
 
@@ -19,3 +21,5 @@
 - 03 - [XGBoost](https://medium.com/@thommaskevin/tinyml-xgboost-classifier-795202285779)
 
 - 04 - [GaussianNB](https://medium.com/@thommaskevin/tinyml-gaussian-naive-bayes-classifier-31f8d241c67c)
+
+- 05 - [Support Vector Machines](https://medium.com/@thommaskevin/tinyml-support-vector-machines-classifier-c391b54f3ab8)

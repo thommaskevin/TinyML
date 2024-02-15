@@ -16,6 +16,8 @@
 
 - 07 - [Principal Component Analysis](https://github.com/thommaskevin/TinyML/tree/main/07_principal_components_analysis)
 
+- 08 - [Binomial Logistic Regression](https://github.com/thommaskevin/TinyML/tree/main/08_Logistic_Regressor)
+
 ## Medium - TinyML's Weekly Open Paper
 
 - 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)
@@ -31,3 +33,5 @@
 - 06 - [SEFR](https://medium.com/@thommaskevin/tinyml-similarity-ensemble-fusion-for-retrieval-sefr-379b647faba3)
 
 - 07 - [Principal Component Analysis](https://medium.com/@thommaskevin/tinyml-principal-component-analysis-pca-5379d0874592)
+
+- 08 - [Binomial Logistic Regression](https://medium.com/@thommaskevin/tinyml-binomial-logistic-regression-0fdbf00e6765)

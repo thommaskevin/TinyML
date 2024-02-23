@@ -20,6 +20,8 @@
 
 - 09 - [K-means](https://github.com/thommaskevin/TinyML/tree/main/09_K_Means)
 
+- 10 - [Linear Regression](https://github.com/thommaskevin/TinyML/tree/main/10_Linear_Regressor)
+
 ## Medium - TinyML's Weekly Open Paper
 
 - 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)
@@ -39,3 +41,5 @@
 - 08 - [Binomial Logistic Regression](https://medium.com/@thommaskevin/tinyml-binomial-logistic-regression-0fdbf00e6765)
 
 - 09 - [K-means](https://medium.com/@thommaskevin/tinyml-k-means-10e72828d492)
+
+- 10 - [Linear Regression](https://medium.com/@thommaskevin/tinyml-linear-regression-0b715844db01)

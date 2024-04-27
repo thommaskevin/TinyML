@@ -22,6 +22,9 @@
 
 - 10 - [Linear Regression](https://github.com/thommaskevin/TinyML/tree/main/10_Linear_Regressor)
 
+- 11 - [Gaussian Mixture Model](https://github.com/thommaskevin/TinyML/tree/main/11_GMM)
+
+
 ## Medium - TinyML's Weekly Open Paper
 
 - 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)
@@ -43,3 +46,5 @@
 - 09 - [K-means](https://medium.com/@thommaskevin/tinyml-k-means-10e72828d492)
 
 - 10 - [Linear Regression](https://medium.com/@thommaskevin/tinyml-linear-regression-0b715844db01)
+
+- 11 - [Gaussian Mixture Model](https://medium.com/p/9730693fb8a4)

@@ -24,6 +24,7 @@
 
 - 11 - [Gaussian Mixture Model](https://github.com/thommaskevin/TinyML/tree/main/11_GMM)
 
+- 12 - [Artificial Neural Networks (MLP)](https://github.com/thommaskevin/TinyML/tree/main/12_MLP)
 
 ## Medium - TinyML's Weekly Open Paper
 
@@ -48,3 +49,5 @@
 - 10 - [Linear Regression](https://medium.com/@thommaskevin/tinyml-linear-regression-0b715844db01)
 
 - 11 - [Gaussian Mixture Model](https://medium.com/p/9730693fb8a4)
+  
+- 12 - [Artificial Neural Networks (MLP)](https://medium.com/@thommaskevin/tinyml-neural-networks-mlp-62b2cfcc09c2)

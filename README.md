@@ -26,6 +26,8 @@
 
 - 12 - [Artificial Neural Networks (MLP)](https://github.com/thommaskevin/TinyML/tree/main/12_MLP)
 
+- 13 - [Convolutional Neural Networks (CNN)](https://github.com/thommaskevin/TinyML/tree/main/13_CNN)
+
 ## Medium - TinyML's Weekly Open Paper
 
 - 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)
@@ -51,3 +53,5 @@
 - 11 - [Gaussian Mixture Model](https://medium.com/p/9730693fb8a4)
   
 - 12 - [Artificial Neural Networks (MLP)](https://medium.com/@thommaskevin/tinyml-neural-networks-mlp-62b2cfcc09c2)
+
+- 13 - [Convolutional Neural Networks (CNN)](https://medium.com/@thommaskevin/tinyml-convolutional-neural-networks-cnn-3601b32c35f4)

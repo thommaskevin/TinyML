@@ -6,7 +6,7 @@
 
 - 02 - [Random Forest](https://github.com/thommaskevin/TinyML/tree/main/02_random_forest)
 
-- 03 - [XGBoost](https://github.com/thommaskevin/TinyML/tree/main/03_XGBoost)
+- 03 - [XGBoost Classifier](https://github.com/thommaskevin/TinyML/tree/main/03_XGBoost)
 
 - 04 - [GaussianNB](https://github.com/thommaskevin/TinyML/tree/main/04_GaussianNB)
   
@@ -28,13 +28,15 @@
 
 - 13 - [Convolutional Neural Networks (CNN)](https://github.com/thommaskevin/TinyML/tree/main/13_CNN)
 
+- 14 - [XGBoost Regression](https://github.com/thommaskevin/TinyML/tree/main/14_XGBRegression)
+
 ## Medium - TinyML's Weekly Open Paper
 
 - 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)
 
 - 02 - [Random Forest](https://medium.com/@thommaskevin/tinyml-random-forest-classifier-and-regressor-b351aa0980e8)
 
-- 03 - [XGBoost](https://medium.com/@thommaskevin/tinyml-xgboost-classifier-795202285779)
+- 03 - [XGBoost Classifier](https://medium.com/@thommaskevin/tinyml-xgboost-classifier-795202285779)
 
 - 04 - [GaussianNB](https://medium.com/@thommaskevin/tinyml-gaussian-naive-bayes-classifier-31f8d241c67c)
 
@@ -55,3 +57,5 @@
 - 12 - [Artificial Neural Networks (MLP)](https://medium.com/@thommaskevin/tinyml-neural-networks-mlp-62b2cfcc09c2)
 
 - 13 - [Convolutional Neural Networks (CNN)](https://medium.com/@thommaskevin/tinyml-convolutional-neural-networks-cnn-3601b32c35f4)
+
+- 14 - [XGBoost Regression](https://medium.com/@thommaskevin/tinyml-xgboost-regression-d2b513a0d237)

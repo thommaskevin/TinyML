@@ -30,6 +30,8 @@
 
 - 14 - [XGBoost Regression](https://github.com/thommaskevin/TinyML/tree/main/14_XGBRegression)
 
+- 15 - [Poisson Regression](https://github.com/thommaskevin/TinyML/tree/main/15_Poisson_Regressor)
+
 ## Medium - TinyML's Weekly Open Paper
 
 - 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)
@@ -59,3 +61,6 @@
 - 13 - [Convolutional Neural Networks (CNN)](https://medium.com/@thommaskevin/tinyml-convolutional-neural-networks-cnn-3601b32c35f4)
 
 - 14 - [XGBoost Regression](https://medium.com/@thommaskevin/tinyml-xgboost-regression-d2b513a0d237)
+
+- 15 - [Poisson Regression](https://medium.com/@thommaskevin/tinyml-poisson-regression-5174d88479f5)
+  

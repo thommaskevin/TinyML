@@ -1,6 +1,0 @@
-{
-    "configuration": "PartitionScheme=default,PinNumbers=default,USBMode=default",
-    "board": "arduino:esp32:nano_nora",
-    "sketch": "12_MLP\\MLP\\MLP.ino",
-    "port": "COM4"
-}

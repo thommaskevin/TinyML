@@ -32,6 +32,8 @@
 
 - 15 - [Poisson Regression](https://github.com/thommaskevin/TinyML/tree/main/15_Poisson_Regressor)
 
+- 16 - [K-Nearest Neighbors (KNN-Classifier)](https://github.com/thommaskevin/TinyML/tree/main/16_KNN)
+
 ## Medium - TinyML's Weekly Open Paper
 
 - 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)
@@ -63,4 +65,6 @@
 - 14 - [XGBoost Regression](https://medium.com/@thommaskevin/tinyml-xgboost-regression-d2b513a0d237)
 
 - 15 - [Poisson Regression](https://medium.com/@thommaskevin/tinyml-poisson-regression-5174d88479f5)
+  
+- 16 - [K-Nearest Neighbors (KNN-Classifier)](https://medium.com/@thommaskevin/tinyml-k-nearest-neighbors-knn-classifier-6008f8e51189)
   

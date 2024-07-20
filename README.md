@@ -34,6 +34,8 @@
 
 - 16 - [K-Nearest Neighbors (KNN-Classifier)](https://github.com/thommaskevin/TinyML/tree/main/16_KNN)
 
+- 17 - [ElasticNet (ELNET)](https://github.com/thommaskevin/TinyML/tree/main/17_ElasticNet)
+
 ## Medium - TinyML's Weekly Open Paper
 
 - 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)
@@ -67,4 +69,6 @@
 - 15 - [Poisson Regression](https://medium.com/@thommaskevin/tinyml-poisson-regression-5174d88479f5)
   
 - 16 - [K-Nearest Neighbors (KNN-Classifier)](https://medium.com/@thommaskevin/tinyml-k-nearest-neighbors-knn-classifier-6008f8e51189)
+
+- 17 - [ElasticNet (ELNET)](https://medium.com/@thommaskevin/)
   

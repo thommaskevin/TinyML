@@ -70,5 +70,5 @@
   
 - 16 - [K-Nearest Neighbors (KNN-Classifier)](https://medium.com/@thommaskevin/tinyml-k-nearest-neighbors-knn-classifier-6008f8e51189)
 
-- 17 - [ElasticNet (ELNET)](https://medium.com/@thommaskevin/)
+- 17 - [ElasticNet (ELNET)](https://medium.com/@thommaskevin/tinyml-elastic-net-elnet-e8eee849225a)
   

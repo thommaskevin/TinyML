@@ -98,7 +98,7 @@ Next, a vector of new candidate values, ($\tilde{C}_t$), is created. The computa
 ```
 
 
-In the next step, the values of the input gate and the cell candidate are combined to create and update the cell state as given in equation (5). The linear combination of the input gate and forget gate is used for updating the previous cell state ( $C_{t-1}$ ) into the current cell state ($C_t$). The input gate ($i_t$) determines how much new data should be incorporated via the candidate ( $\tilde{C}_t$ ), while the forget gate ($f_t$) determines how much of the old memory cell content ($C_{t-1}$) should be retained. Using pointwise multiplication (Hadamard product), we arrive at the following updated equation:
+In the next step, the values of the input gate and the cell candidate are combined to create and update the cell state as given in equation (5). The linear combination of the input gate and forget gate is used for updating the previous cell state ( $C_{t-1}$ ) into the current cell state ($C_t$). The input gate ($i_t$) determines how much new data should be incorporated via the candidate (```math \tilde{C}_t```), while the forget gate ($f_t$) determines how much of the old memory cell content ($C_{t-1}$) should be retained. Using pointwise multiplication (Hadamard product), we arrive at the following updated equation:
 
 $C_t = f_t \odot C_{t-1} + I_t \odot \tilde{C}_t \tag{6}$
 

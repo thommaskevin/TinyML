@@ -36,6 +36,8 @@
 
 - 17 - [ElasticNet (ELNET)](https://github.com/thommaskevin/TinyML/tree/main/17_ElasticNet)
 
+- 18 - [Long Short-Term Memory (LSTM)](https://github.com/thommaskevin/TinyML/tree/main/18_LSTM) 
+
 ## Medium - TinyML's Weekly Open Paper
 
 - 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)

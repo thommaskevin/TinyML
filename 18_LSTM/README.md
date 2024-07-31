@@ -98,7 +98,7 @@ Next, a vector of new candidate values, ($\tilde{C}_t$), is created. The computa
 ```
 
 
-In the next step, the values of the input gate and the cell candidate are combined to create and update the cell state as given in equation (5). The linear combination of the input gate and forget gate is used for updating the previous cell state ( $C_{t-1}$ ) into the current cell state ($C_t$). The input gate ($i_t$) determines how much new data should be incorporated via the candidate (```math \tilde{C}_t```), while the forget gate ($f_t$) determines how much of the old memory cell content ($C_{t-1}$) should be retained. Using pointwise multiplication (Hadamard product), we arrive at the following updated equation:
+In the next step, the values of the input gate and the cell candidate are combined to create and update the cell state as given in equation (5). The linear combination of the input gate and forget gate is used for updating the previous cell state ( $C_{t-1}$ ) into the current cell state ($C_t$). The input gate ($i_t$) determines how much new data should be incorporated via the candidate ($\tilde{C}_t$), while the forget gate ($f_t$) determines how much of the old memory cell content ($C_{t-1}$) should be retained. Using pointwise multiplication (Hadamard product), we arrive at the following updated equation:
 
 $C_t = f_t \odot C_{t-1} + I_t \odot \tilde{C}_t \tag{6}$
 
@@ -147,7 +147,7 @@ The LSTM network generates an output ($\hat{y_t}$) at each time step that is use
 
 $E = \sum_t -y_t \log(\hat{y_t})  \tag{8}$
 
-The gradient of the error with respect to the weights \(\frac{\partial E}{\partial W}\) at each time step is calculated, and then the sum of the gradients over all time steps is obtained:
+The gradient of the error with respect to the weights ($\frac{\partial E}{\partial W}$) at each time step is calculated, and then the sum of the gradients over all time steps is obtained:
 
 $\frac{\partial E}{\partial W} = \sum_t \frac{\partial E_t}{\partial W}  \tag{9}$
 
@@ -167,7 +167,7 @@ For the overall error gradient using the chain rule of differentiation, we get:
 
 $\frac{\partial E}{\partial W} = \sum_t \frac{\partial E_t}{\partial \hat{y_t}} \cdot \frac{\partial \hat{y_t}}{\partial h_t} \cdot \frac{\partial h_t}{\partial C_t} \cdot \frac{\partial C_t}{\partial C_{t-1}} \cdot \frac{\partial C_{t-1}}{\partial C_{t-2}} \cdot \frac{\partial C_{t-2}}{\partial C_{t-3}} \cdot \ldots \cdot \frac{\partial C_0}{\partial W} \tag{13}$
 
-The previous equation shows that the gradient involves the chain rule of ($\frac{\partial C_t}{\partial C_{t-1}}$) in LSTM training using the backpropagation algorithm, while the gradient equation involves the chain rule of \(\frac{\partial h_t}{\partial h_{t-1}}\) for a basic RNN. Therefore, the Jacobian matrix for the cell state in an LSTM is:
+The previous equation shows that the gradient involves the chain rule of ($\frac{\partial C_t}{\partial C_{t-1}}$) in LSTM training using the backpropagation algorithm, while the gradient equation involves the chain rule of ($\frac{\partial h_t}{\partial h_{t-1}}$) for a basic RNN. Therefore, the Jacobian matrix for the cell state in an LSTM is:
 
 ```math
 \frac{\partial C_j}{\partial C_{j-1}} = \begin{bmatrix} \frac{\partial C_{j,1}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,1}}{\partial C_{j-1,s}} \\ \vdots & \ddots & \vdots \\ \frac{\partial C_{j,s}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,s}}{\partial C_{j-1,s}} \end{bmatrix} \tag{14}

@@ -61,17 +61,17 @@ Figure 2: Forget Gate (https://medium.com/@ottaviocalzone/an-intuitive-explanati
 
 
 
- Here, \(\sigma\) is the sigmoid activation function, \(W_f\) and \(b_f\) are the weight matrix and bias vector, which are learned from the input training data.
+ Here, \(\sigma\) is the sigmoid activation function, ($W_f$) and ($b_f$) are the weight matrix and bias vector, which are learned from the input training data.
 
 $f_t = \sigma(W_f \cdot [p_t, h_{t-1}] + b_f) = \frac{1}{1 + e^{-(W_f \cdot [p_t, h_{t-1}] + b_f)}} \tag{3}$
 
-The function takes the previous hidden state (\(h_{t-1}\)) at time \(t-1\) and the current input (\(p_t\)) at time \(t\) to calculate the components that control the cell state and hidden state of the layer. The results range from 0 to 1, where 1 represents "completely hold this" and 0 represents "completely throw this away".
+The function takes the previous hidden state ($h_{t-1}$) at time (t-1) and the current input ($p_t$) at time (t) to calculate the components that control the cell state and hidden state of the layer. The results range from 0 to 1, where 1 represents "completely hold this" and 0 represents "completely throw this away".
 
 
 ### 1.2 - Input gate and Candidate Memory
 
 
-The Input Gate (\(I_t\)) controls what new information will be added to the cell state from the current input. This gate also plays a role in protecting the memory contents from perturbation by irrelevant input (Figure 3). 
+The Input Gate ($I_t$) controls what new information will be added to the cell state from the current input. This gate also plays a role in protecting the memory contents from perturbation by irrelevant input (Figure 3). 
 
 ![Figure 3](/18_LSTM/figures/fig3.png)
 Figure 3:  Input Gate and Candidate Memory (https://medium.com/@ottaviocalzone/an-intuitive-explanation-of-lstm-a035eb6ab42c)
@@ -83,20 +83,20 @@ A sigmoid activation function is used to generate the input values and converts 
 
 $I_t = \sigma(W_i \cdot [p_t, h_{t-1}] + b_i) = \frac{1}{1 + e^{-(W_i \cdot [p_t, h_{t-1}] + b_i)}} \tag{4}$
 
-where \(W_i\) and \(b_i\) are the weight matrix and bias vector, \(p_t\) is the current input, and \(h_{t-1}\) is the previous hidden state. Similar to the forget gate, the parameters in the input gate are learned from the input training data. At each time step, with the new information \(p_t\), we can compute a candidate cell state. 
+where ($W_i$) and ($b_i$) are the weight matrix and bias vector, ($p_t$) is the current input, and ($h_{t-1}$) is the previous hidden state. Similar to the forget gate, the parameters in the input gate are learned from the input training data. At each time step, with the new information \(p_t\), we can compute a candidate cell state. 
 
-Next, a vector of new candidate values, \(\tilde{C}_t\), is created. The computation of the new candidate is similar to that of the forget gate but uses a hyperbolic tangent (tanh) activation function with a value range of \((-1, 1)\). This leads to the following equation (5) at time \(t\):
+Next, a vector of new candidate values, ($\tilde{C}_t$), is created. The computation of the new candidate is similar to that of the forget gate but uses a hyperbolic tangent (tanh) activation function with a value range of (-1, 1). This leads to the following equation (5) at time (t):
 
-$$\tilde{C}_t = \tanh(W_c \cdot [p_t, h_{t-1}] + b_c) = \frac{e^{W_c \cdot [p_t, h_{t-1}] + b_c} - e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}}{e^{W_c \cdot [p_t, h_{t-1}] + b_c} + e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}} \tag{5}$$
+$\tilde{C}_t = \tanh(W_c \cdot [p_t, h_{t-1}] + b_c) = \frac{e^{W_c \cdot [p_t, h_{t-1}] + b_c} - e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}}{e^{W_c \cdot [p_t, h_{t-1}] + b_c} + e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}} \tag{5}$
 
-In the next step, the values of the input gate and the cell candidate are combined to create and update the cell state as given in equation (5). The linear combination of the input gate and forget gate is used for updating the previous cell state (\(C_{t-1}\)) into the current cell state (\(C_t\)). The input gate (\(i_t\)) determines how much new data should be incorporated via the candidate (\(\tilde{C}_t\)), while the forget gate (\(f_t\)) determines how much of the old memory cell content (\(C_{t-1}\)) should be retained. Using pointwise multiplication (Hadamard product), we arrive at the following updated equation:
+In the next step, the values of the input gate and the cell candidate are combined to create and update the cell state as given in equation (5). The linear combination of the input gate and forget gate is used for updating the previous cell state (\(C_{t-1}\)) into the current cell state ($C_t$). The input gate ($i_t$) determines how much new data should be incorporated via the candidate ($tilde{C}_t$), while the forget gate ($f_t$) determines how much of the old memory cell content ($C_{t-1}$) should be retained. Using pointwise multiplication (Hadamard product), we arrive at the following updated equation:
 
 $C_t = f_t \odot C_{t-1} + I_t \odot \tilde{C}_t \tag{6}$
 
 
 ### 1.3 - Output Gate
 
-The Output Gate (\(O_t\)) controls which information to reveal from the updated cell state (\(C_t\)) to the output in a single time step. In other words, the output gate determines the value of the next hidden state at each time step. As depicted in Figure 4, the hidden state comprises information from previous inputs. Moreover, the calculated value of the hidden state for the given time step is used for the prediction (\(\hat{y_t} = \text{softmax}(W_y h_t + b_y)\)). Here, softmax is a nonlinear activation function.
+The Output Gate ($O_t$) controls which information to reveal from the updated cell state ($C_t$) to the output in a single time step. In other words, the output gate determines the value of the next hidden state at each time step. As depicted in Figure 4, the hidden state comprises information from previous inputs. Moreover, the calculated value of the hidden state for the given time step is used for the prediction ($\hat{y_t} = \text{softmax}(W_y h_t + b_y)$). Here, softmax is a nonlinear activation function.
 
 
 ![Figure 4](/18_LSTM/figures/fig4.png)
@@ -116,13 +116,13 @@ where:
 
 
 
-The next hidden state (\(h_t\)) is determined by applying the tanh activation function to the updated cell state (\(C_t\)) and then multiplying it by the output gate value (\(O_t\)):
+The next hidden state ($h_t$) is determined by applying the tanh activation function to the updated cell state ($C_t$) and then multiplying it by the output gate value ($O_t$):
 
-$ h_t = O_t \odot \tanh(C_t) \tag{16} $
+$h_t = O_t \odot \tanh(C_t) \tag{16}$
 
-Here, \(\odot\) denotes element-wise multiplication (Hadamard product). This process ensures that only relevant information from the cell state is passed to the next hidden state and ultimately to the output.
+Here, ($\odot$) denotes element-wise multiplication (Hadamard product). This process ensures that only relevant information from the cell state is passed to the next hidden state and ultimately to the output.
 
-The prediction (\(\hat{y_t}\)) is then calculated as:
+The prediction ($\hat{y_t}$) is then calculated as:
 
 $\hat{y_t} = \text{softmax}(W_y h_t + b_y) \tag{7}$
 

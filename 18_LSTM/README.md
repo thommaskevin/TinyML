@@ -18,9 +18,15 @@
 ## SUMMARY
 
 1 - Introduction to Long Short-Term Memory (LSTM)
- 1.1 - Ridge Regression
- 1.2 - Lasso Regression
- 1.3 - Elastic Net
+
+ 1.1 - Forget Gate
+ 
+ 1.2 - Input Gate and Candidate Memory
+ 
+ 1.3 - Output Gate
+ 
+ 1.4 - Backward Pass
+ 
 2 - TinyML Implementation
 
 ## 1 - Introduction to Long Short-Term Memory (LSTM)
@@ -37,7 +43,7 @@ In the forget gate, a sigmoid activation function is utilized. For the input and
 
 The sigmoid activation function is defined as:
 
-$ \[ \sigma(x) = \frac{1}{1 + e^{-x}} \tag{1} \] $
+$\sigma(x) = \frac{1}{1 + e^{-x}} \tag{1}$
 
 The hyperbolic tangent activation function is defined as:
 

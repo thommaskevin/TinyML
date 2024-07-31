@@ -37,7 +37,7 @@ In the forget gate, a sigmoid activation function is utilized. For the input and
 
 The sigmoid activation function is defined as:
 
-\[ \sigma(x) = \frac{1}{1 + e^{-x}} \tag{1} \]
+$ \[ \sigma(x) = \frac{1}{1 + e^{-x}} \tag{1} \] $
 
 The hyperbolic tangent activation function is defined as:
 

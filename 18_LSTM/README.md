@@ -63,7 +63,7 @@ Figure 2: Forget Gate (https://medium.com/@ottaviocalzone/an-intuitive-explanati
 
  Here, \(\sigma\) is the sigmoid activation function, \(W_f\) and \(b_f\) are the weight matrix and bias vector, which are learned from the input training data.
 
-$ f_t = \sigma(W_f \cdot [p_t, h_{t-1}] + b_f) = \frac{1}{1 + e^{-(W_f \cdot [p_t, h_{t-1}] + b_f)}} \tag{3} $
+$f_t = \sigma(W_f \cdot [p_t, h_{t-1}] + b_f) = \frac{1}{1 + e^{-(W_f \cdot [p_t, h_{t-1}] + b_f)}} \tag{3}$
 
 The function takes the previous hidden state (\(h_{t-1}\)) at time \(t-1\) and the current input (\(p_t\)) at time \(t\) to calculate the components that control the cell state and hidden state of the layer. The results range from 0 to 1, where 1 represents "completely hold this" and 0 represents "completely throw this away".
 
@@ -124,7 +124,7 @@ Here, \(\odot\) denotes element-wise multiplication (Hadamard product). This pro
 
 The prediction (\(\hat{y_t}\)) is then calculated as:
 
-$ \hat{y_t} = \text{softmax}(W_y h_t + b_y) \tag{7} $
+$\hat{y_t} = \text{softmax}(W_y h_t + b_y) \tag{7}$
 
 First, the previous hidden state (\(h_{t-1}\)) and the current input (\(p_t\)) are passed through a sigmoid function to determine the output gate value (\(O_t\)). Then, the updated cell state (\(C_t\)) is generated using the tanh function. Finally, the tanh output is multiplied by the sigmoid output to determine the information carried by the hidden state (\(h_t\)). The output of the output gate is an updated hidden state, used for prediction at time step \(t\).
 
@@ -136,31 +136,31 @@ The aim of this gate is to separate the updated cell state (which contains a lot
 
 The LSTM network generates an output \(\hat{y_t}\) at each time step that is used to train the network via gradient descent. During the backward pass, the network parameters are updated at each epoch (iteration). The main difference between the back-propagation algorithms of RNN and LSTM networks is a minor modification. The error term at each time step is calculated as \(E_t = -y_t \log(\hat{y_t})\). Similar to RNNs, the total error is the sum of the errors from all time steps:
 
-$ E = \sum_t -y_t \log(\hat{y_t})  \tag{8}$
+$E = \sum_t -y_t \log(\hat{y_t})  \tag{8}$
 
 The gradient of the error with respect to the weights \(\frac{\partial E}{\partial W}\) at each time step is calculated, and then the sum of the gradients over all time steps is obtained:
 
-$ \frac{\partial E}{\partial W} = \sum_t \frac{\partial E_t}{\partial W}  \tag{9}$
+$\frac{\partial E}{\partial W} = \sum_t \frac{\partial E_t}{\partial W}  \tag{9}$
 
 The predicted value \(\hat{y_t}\) is a function of the hidden state:
 
-$ \hat{y_t} = \text{softmax}(W_y h_t + b_y)  \tag{10} $
+$\hat{y_t} = \text{softmax}(W_y h_t + b_y)  \tag{10}$
 
 The hidden state \(h_t\) is a function of the cell state:
 
-$ h_t = O_t \odot \tanh(C_t)  \tag{11} $
+$h_t = O_t \odot \tanh(C_t)  \tag{11}$
 
 Both of these functions are subject to the chain rule. Hence, the derivatives of the individual error terms with respect to the network parameters are:
 
-$ \frac{\partial E_t}{\partial W} = \frac{\partial E_t}{\partial \hat{y_t}} \cdot \frac{\partial \hat{y_t}}{\partial h_t} \cdot \frac{\partial h_t}{\partial C_t} \cdot \frac{\partial C_t}{\partial C_{t-1}} \cdot \frac{\partial C_{t-1}}{\partial C_{t-2}} \cdot \frac{\partial C_{t-2}}{\partial C_{t-3}} \cdot \ldots \cdot \frac{\partial C_0}{\partial W} \tag{12} $
+$\frac{\partial E_t}{\partial W} = \frac{\partial E_t}{\partial \hat{y_t}} \cdot \frac{\partial \hat{y_t}}{\partial h_t} \cdot \frac{\partial h_t}{\partial C_t} \cdot \frac{\partial C_t}{\partial C_{t-1}} \cdot \frac{\partial C_{t-1}}{\partial C_{t-2}} \cdot \frac{\partial C_{t-2}}{\partial C_{t-3}} \cdot \ldots \cdot \frac{\partial C_0}{\partial W} \tag{12}$
 
 For the overall error gradient using the chain rule of differentiation, we get:
 
-$ \frac{\partial E}{\partial W} = \sum_t \frac{\partial E_t}{\partial \hat{y_t}} \cdot \frac{\partial \hat{y_t}}{\partial h_t} \cdot \frac{\partial h_t}{\partial C_t} \cdot \frac{\partial C_t}{\partial C_{t-1}} \cdot \frac{\partial C_{t-1}}{\partial C_{t-2}} \cdot \frac{\partial C_{t-2}}{\partial C_{t-3}} \cdot \ldots \cdot \frac{\partial C_0}{\partial W} \tag{13} $
+$\frac{\partial E}{\partial W} = \sum_t \frac{\partial E_t}{\partial \hat{y_t}} \cdot \frac{\partial \hat{y_t}}{\partial h_t} \cdot \frac{\partial h_t}{\partial C_t} \cdot \frac{\partial C_t}{\partial C_{t-1}} \cdot \frac{\partial C_{t-1}}{\partial C_{t-2}} \cdot \frac{\partial C_{t-2}}{\partial C_{t-3}} \cdot \ldots \cdot \frac{\partial C_0}{\partial W} \tag{13}$
 
 The previous equation shows that the gradient involves the chain rule of \(\frac{\partial C_t}{\partial C_{t-1}}\) in LSTM training using the backpropagation algorithm, while the gradient equation involves the chain rule of \(\frac{\partial h_t}{\partial h_{t-1}}\) for a basic RNN. Therefore, the Jacobian matrix for the cell state in an LSTM is:
 
-$ \frac{\partial C_j}{\partial C_{j-1}} = \begin{bmatrix} \frac{\partial C_{j,1}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,1}}{\partial C_{j-1,s}} \\ \vdots & \ddots & \vdots \\ \frac{\partial C_{j,s}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,s}}{\partial C_{j-1,s}} \end{bmatrix} \tag{14} $
+$\frac{\partial C_j}{\partial C_{j-1}} = \begin{bmatrix} \frac{\partial C_{j,1}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,1}}{\partial C_{j-1,s}} \\ \vdots & \ddots & \vdots \\ \frac{\partial C_{j,s}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,s}}{\partial C_{j-1,s}} \end{bmatrix} \tag{14}$
 
 
 

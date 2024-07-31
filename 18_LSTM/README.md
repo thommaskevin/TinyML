@@ -3,11 +3,17 @@
 *From mathematical foundations to edge implementation*
 
 **Social media:**
+
 👨🏽‍💻 Github: [thommaskevin/TinyML](https://github.com/thommaskevin/TinyML)
+
 👷🏾 Linkedin: [Thommas Kevin](https://www.linkedin.com/in/thommas-kevin-ab9810166/)
+
 📽 Youtube: [Thommas Kevin](https://www.youtube.com/channel/UC7uazGXaMIE6MNkHg4ll9oA)
+
 :pencil2:CV Lattes CNPq: [Thommas Kevin Sales Flores](http://lattes.cnpq.br/0630479458408181)
+
 👨🏻‍🏫 Research group: [Conecta.ai](https://conect2ai.dca.ufrn.br/)
+
 
 
 ![Figure 1](/18_LSTM/figures/fig0.png)
@@ -87,7 +93,10 @@ where ($W_i$) and ($b_i$) are the weight matrix and bias vector, ($p_t$) is the 
 
 Next, a vector of new candidate values, ($\tilde{C}_t$), is created. The computation of the new candidate is similar to that of the forget gate but uses a hyperbolic tangent (tanh) activation function with a value range of (-1, 1). This leads to the following equation (5) at time (t):
 
-$\tilde{C}_t = \tanh(W_c \cdot [p_t, h_{t-1}] + b_c) = \frac{e^{W_c \cdot [p_t, h_{t-1}] + b_c} - e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}}{e^{W_c \cdot [p_t, h_{t-1}] + b_c} + e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}} \tag{5}$
+```math
+\tilde{C}_t = \tanh(W_c \cdot [p_t, h_{t-1}] + b_c) = \frac{e^{W_c \cdot [p_t, h_{t-1}] + b_c} - e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}}{e^{W_c \cdot [p_t, h_{t-1}] + b_c} + e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}} \tag{5}
+```
+
 
 In the next step, the values of the input gate and the cell candidate are combined to create and update the cell state as given in equation (5). The linear combination of the input gate and forget gate is used for updating the previous cell state (\(C_{t-1}\)) into the current cell state ($C_t$). The input gate ($i_t$) determines how much new data should be incorporated via the candidate ($tilde{C}_t$), while the forget gate ($f_t$) determines how much of the old memory cell content ($C_{t-1}$) should be retained. Using pointwise multiplication (Hadamard product), we arrive at the following updated equation:
 
@@ -126,15 +135,15 @@ The prediction ($\hat{y_t}$) is then calculated as:
 
 $\hat{y_t} = \text{softmax}(W_y h_t + b_y) \tag{7}$
 
-First, the previous hidden state (\(h_{t-1}\)) and the current input (\(p_t\)) are passed through a sigmoid function to determine the output gate value (\(O_t\)). Then, the updated cell state (\(C_t\)) is generated using the tanh function. Finally, the tanh output is multiplied by the sigmoid output to determine the information carried by the hidden state (\(h_t\)). The output of the output gate is an updated hidden state, used for prediction at time step \(t\).
+First, the previous hidden state ($h_{t-1}$) and the current input ($p_t$) are passed through a sigmoid function to determine the output gate value ($O_t$). Then, the updated cell state ($C_t$) is generated using the tanh function. Finally, the tanh output is multiplied by the sigmoid output to determine the information carried by the hidden state ($h_t$). The output of the output gate is an updated hidden state, used for prediction at time step (t).
 
-The aim of this gate is to separate the updated cell state (which contains a lot of information not necessarily required in the hidden state) from the hidden state. The updated cell state (\(C_t\)) is critical as it influences the hidden state used in all gates of an LSTM block. The output gate assesses which parts of the cell state (\(C_t\)) are presented in the hidden state (\(h_t\)). The new cell and hidden states are then passed to the next time step (Figure 4).
+The aim of this gate is to separate the updated cell state (which contains a lot of information not necessarily required in the hidden state) from the hidden state. The updated cell state ($C_t$) is critical as it influences the hidden state used in all gates of an LSTM block. The output gate assesses which parts of the cell state ($C_t$) are presented in the hidden state ($h_t$). The new cell and hidden states are then passed to the next time step (Figure 4).
 
 
 ### 1.4 - Backward Pass
 
 
-The LSTM network generates an output \(\hat{y_t}\) at each time step that is used to train the network via gradient descent. During the backward pass, the network parameters are updated at each epoch (iteration). The main difference between the back-propagation algorithms of RNN and LSTM networks is a minor modification. The error term at each time step is calculated as \(E_t = -y_t \log(\hat{y_t})\). Similar to RNNs, the total error is the sum of the errors from all time steps:
+The LSTM network generates an output ($\hat{y_t}$) at each time step that is used to train the network via gradient descent. During the backward pass, the network parameters are updated at each epoch (iteration). The main difference between the back-propagation algorithms of RNN and LSTM networks is a minor modification. The error term at each time step is calculated as ($E_t = -y_t \log(\hat{y_t})$). Similar to RNNs, the total error is the sum of the errors from all time steps:
 
 $E = \sum_t -y_t \log(\hat{y_t})  \tag{8}$
 
@@ -146,7 +155,7 @@ The predicted value \(\hat{y_t}\) is a function of the hidden state:
 
 $\hat{y_t} = \text{softmax}(W_y h_t + b_y)  \tag{10}$
 
-The hidden state \(h_t\) is a function of the cell state:
+The hidden state ($h_t$) is a function of the cell state:
 
 $h_t = O_t \odot \tanh(C_t)  \tag{11}$
 
@@ -158,12 +167,11 @@ For the overall error gradient using the chain rule of differentiation, we get:
 
 $\frac{\partial E}{\partial W} = \sum_t \frac{\partial E_t}{\partial \hat{y_t}} \cdot \frac{\partial \hat{y_t}}{\partial h_t} \cdot \frac{\partial h_t}{\partial C_t} \cdot \frac{\partial C_t}{\partial C_{t-1}} \cdot \frac{\partial C_{t-1}}{\partial C_{t-2}} \cdot \frac{\partial C_{t-2}}{\partial C_{t-3}} \cdot \ldots \cdot \frac{\partial C_0}{\partial W} \tag{13}$
 
-The previous equation shows that the gradient involves the chain rule of \(\frac{\partial C_t}{\partial C_{t-1}}\) in LSTM training using the backpropagation algorithm, while the gradient equation involves the chain rule of \(\frac{\partial h_t}{\partial h_{t-1}}\) for a basic RNN. Therefore, the Jacobian matrix for the cell state in an LSTM is:
+The previous equation shows that the gradient involves the chain rule of ($\frac{\partial C_t}{\partial C_{t-1}}$) in LSTM training using the backpropagation algorithm, while the gradient equation involves the chain rule of \(\frac{\partial h_t}{\partial h_{t-1}}\) for a basic RNN. Therefore, the Jacobian matrix for the cell state in an LSTM is:
 
 ```math
 \frac{\partial C_j}{\partial C_{j-1}} = \begin{bmatrix} \frac{\partial C_{j,1}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,1}}{\partial C_{j-1,s}} \\ \vdots & \ddots & \vdots \\ \frac{\partial C_{j,s}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,s}}{\partial C_{j-1,s}} \end{bmatrix} \tag{14}
 ```
-
 
 ## 2 - TinyML Implementation
 

@@ -108,11 +108,11 @@ The output gate is defined as:
 $O_t = \sigma(W_o \cdot [h_{t-1}, p_t] + b_o) = \frac{1}{1 + e^{-(W_o \cdot [h_{t-1}, p_t] + b_o)}} \tag{15}$
 
 where:
-- \( \sigma \) is the sigmoid function,
-- \( W_o \) is the weight matrix for the output gate,
-- \( b_o \) is the bias vector for the output gate,
-- \( p_t \) is the current input,
-- \( h_{t-1} \) is the previous hidden state.
+- ($\sigma$) is the sigmoid function,
+- ($W_o$) is the weight matrix for the output gate,
+- ($b_o$) is the bias vector for the output gate,
+- ($p_t$ ) is the current input,
+- ($h_{t-1}$) is the previous hidden state.
 
 
 

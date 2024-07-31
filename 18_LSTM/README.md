@@ -47,7 +47,7 @@ $\sigma(x) = \frac{1}{1 + e^{-x}} \tag{1}$
 
 The hyperbolic tangent activation function is defined as:
 
-$ \tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} \tag{2} $
+$\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} \tag{2}$
 
 
 
@@ -81,17 +81,17 @@ Figure 3:  Input Gate and Candidate Memory (https://medium.com/@ottaviocalzone/a
 
 A sigmoid activation function is used to generate the input values and converts information between 0 and 1. Mathematically, the input gate is:
 
-$ I_t = \sigma(W_i \cdot [p_t, h_{t-1}] + b_i) = \frac{1}{1 + e^{-(W_i \cdot [p_t, h_{t-1}] + b_i)}} \tag{4} $
+$I_t = \sigma(W_i \cdot [p_t, h_{t-1}] + b_i) = \frac{1}{1 + e^{-(W_i \cdot [p_t, h_{t-1}] + b_i)}} \tag{4}$
 
 where \(W_i\) and \(b_i\) are the weight matrix and bias vector, \(p_t\) is the current input, and \(h_{t-1}\) is the previous hidden state. Similar to the forget gate, the parameters in the input gate are learned from the input training data. At each time step, with the new information \(p_t\), we can compute a candidate cell state. 
 
 Next, a vector of new candidate values, \(\tilde{C}_t\), is created. The computation of the new candidate is similar to that of the forget gate but uses a hyperbolic tangent (tanh) activation function with a value range of \((-1, 1)\). This leads to the following equation (5) at time \(t\):
 
-$ \tilde{C}_t = \tanh(W_c \cdot [p_t, h_{t-1}] + b_c) = \frac{e^{W_c \cdot [p_t, h_{t-1}] + b_c} - e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}}{e^{W_c \cdot [p_t, h_{t-1}] + b_c} + e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}} \tag{5} $
+$\tilde{C}_t = \tanh(W_c \cdot [p_t, h_{t-1}] + b_c) = \frac{e^{W_c \cdot [p_t, h_{t-1}] + b_c} - e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}}{e^{W_c \cdot [p_t, h_{t-1}] + b_c} + e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}} \tag{5}$
 
 In the next step, the values of the input gate and the cell candidate are combined to create and update the cell state as given in equation (5). The linear combination of the input gate and forget gate is used for updating the previous cell state (\(C_{t-1}\)) into the current cell state (\(C_t\)). The input gate (\(i_t\)) determines how much new data should be incorporated via the candidate (\(\tilde{C}_t\)), while the forget gate (\(f_t\)) determines how much of the old memory cell content (\(C_{t-1}\)) should be retained. Using pointwise multiplication (Hadamard product), we arrive at the following updated equation:
 
-$ C_t = f_t \odot C_{t-1} + I_t \odot \tilde{C}_t \tag{6} $
+$C_t = f_t \odot C_{t-1} + I_t \odot \tilde{C}_t \tag{6}$
 
 
 ### 1.3 - Output Gate
@@ -105,7 +105,7 @@ Figure 4:  Output Gate (https://medium.com/@ottaviocalzone/an-intuitive-explanat
 
 The output gate is defined as:
 
-$ O_t = \sigma(W_o \cdot [h_{t-1}, p_t] + b_o) = \frac{1}{1 + e^{-(W_o \cdot [h_{t-1}, p_t] + b_o)}} \tag{15} $
+$O_t = \sigma(W_o \cdot [h_{t-1}, p_t] + b_o) = \frac{1}{1 + e^{-(W_o \cdot [h_{t-1}, p_t] + b_o)}} \tag{15}$
 
 where:
 - \( \sigma \) is the sigmoid function,

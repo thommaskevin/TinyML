@@ -89,7 +89,7 @@ A sigmoid activation function is used to generate the input values and converts 
 
 $I_t = \sigma(W_i \cdot [p_t, h_{t-1}] + b_i) = \frac{1}{1 + e^{-(W_i \cdot [p_t, h_{t-1}] + b_i)}} \tag{4}$
 
-where ($W_i$) and ($b_i$) are the weight matrix and bias vector, ($p_t$) is the current input, and ($h_{t-1}$) is the previous hidden state. Similar to the forget gate, the parameters in the input gate are learned from the input training data. At each time step, with the new information \(p_t\), we can compute a candidate cell state. 
+where ($W_i$) and ($b_i$) are the weight matrix and bias vector, ($p_t$) is the current input, and ($h_{t-1}$) is the previous hidden state. Similar to the forget gate, the parameters in the input gate are learned from the input training data. At each time step, with the new information ($p_t$), we can compute a candidate cell state. 
 
 Next, a vector of new candidate values, ($\tilde{C}_t$), is created. The computation of the new candidate is similar to that of the forget gate but uses a hyperbolic tangent (tanh) activation function with a value range of (-1, 1). This leads to the following equation (5) at time (t):
 
@@ -98,7 +98,7 @@ Next, a vector of new candidate values, ($\tilde{C}_t$), is created. The computa
 ```
 
 
-In the next step, the values of the input gate and the cell candidate are combined to create and update the cell state as given in equation (5). The linear combination of the input gate and forget gate is used for updating the previous cell state (\(C_{t-1}\)) into the current cell state ($C_t$). The input gate ($i_t$) determines how much new data should be incorporated via the candidate ($tilde{C}_t$), while the forget gate ($f_t$) determines how much of the old memory cell content ($C_{t-1}$) should be retained. Using pointwise multiplication (Hadamard product), we arrive at the following updated equation:
+In the next step, the values of the input gate and the cell candidate are combined to create and update the cell state as given in equation (5). The linear combination of the input gate and forget gate is used for updating the previous cell state ( $C_{t-1}$ ) into the current cell state ($C_t$). The input gate ($i_t$) determines how much new data should be incorporated via the candidate ( $\tilde{C}_t$ ), while the forget gate ($f_t$) determines how much of the old memory cell content ($C_{t-1}$) should be retained. Using pointwise multiplication (Hadamard product), we arrive at the following updated equation:
 
 $C_t = f_t \odot C_{t-1} + I_t \odot \tilde{C}_t \tag{6}$
 

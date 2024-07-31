@@ -87,7 +87,7 @@ where \(W_i\) and \(b_i\) are the weight matrix and bias vector, \(p_t\) is the 
 
 Next, a vector of new candidate values, \(\tilde{C}_t\), is created. The computation of the new candidate is similar to that of the forget gate but uses a hyperbolic tangent (tanh) activation function with a value range of \((-1, 1)\). This leads to the following equation (5) at time \(t\):
 
-$\tilde{C}_t = \tanh(W_c \cdot [p_t, h_{t-1}] + b_c) = \frac{e^{W_c \cdot [p_t, h_{t-1}] + b_c} - e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}}{e^{W_c \cdot [p_t, h_{t-1}] + b_c} + e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}} \tag{5}$
+$$\tilde{C}_t = \tanh(W_c \cdot [p_t, h_{t-1}] + b_c) = \frac{e^{W_c \cdot [p_t, h_{t-1}] + b_c} - e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}}{e^{W_c \cdot [p_t, h_{t-1}] + b_c} + e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}} \tag{5}$$
 
 In the next step, the values of the input gate and the cell candidate are combined to create and update the cell state as given in equation (5). The linear combination of the input gate and forget gate is used for updating the previous cell state (\(C_{t-1}\)) into the current cell state (\(C_t\)). The input gate (\(i_t\)) determines how much new data should be incorporated via the candidate (\(\tilde{C}_t\)), while the forget gate (\(f_t\)) determines how much of the old memory cell content (\(C_{t-1}\)) should be retained. Using pointwise multiplication (Hadamard product), we arrive at the following updated equation:
 

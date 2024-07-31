@@ -2,7 +2,7 @@
 
 *From mathematical foundations to edge implementation*
 
-**Social media:**
+## **Social media:**
 
 👨🏽‍💻 Github: [thommaskevin/TinyML](https://github.com/thommaskevin/TinyML)
 

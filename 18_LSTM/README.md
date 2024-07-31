@@ -160,9 +160,9 @@ $\frac{\partial E}{\partial W} = \sum_t \frac{\partial E_t}{\partial \hat{y_t}} 
 
 The previous equation shows that the gradient involves the chain rule of \(\frac{\partial C_t}{\partial C_{t-1}}\) in LSTM training using the backpropagation algorithm, while the gradient equation involves the chain rule of \(\frac{\partial h_t}{\partial h_{t-1}}\) for a basic RNN. Therefore, the Jacobian matrix for the cell state in an LSTM is:
 
-$\frac{\partial C_j}{\partial C_{j-1}} = \begin{bmatrix} \frac{\partial C_{j,1}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,1}}{\partial C_{j-1,s}} \\ \vdots & \ddots & \vdots \\ \frac{\partial C_{j,s}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,s}}{\partial C_{j-1,s}} \end{bmatrix} \tag{14}$
-
-
+```math
+\frac{\partial C_j}{\partial C_{j-1}} = \begin{bmatrix} \frac{\partial C_{j,1}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,1}}{\partial C_{j-1,s}} \\ \vdots & \ddots & \vdots \\ \frac{\partial C_{j,s}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,s}}{\partial C_{j-1,s}} \end{bmatrix} \tag{14}
+```
 
 
 ## 2 - TinyML Implementation

@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "algorithm": "cpp",
-        "format": "cpp",
-        "xiosbase": "cpp",
-        "xutility": "cpp"
-    }
-}

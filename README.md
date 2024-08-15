@@ -36,7 +36,11 @@
 
 - 17 - [ElasticNet (ELNET)](https://github.com/thommaskevin/TinyML/tree/main/17_ElasticNet)
 
-- 18 - [Long Short-Term Memory (LSTM)](https://github.com/thommaskevin/TinyML/tree/main/18_LSTM) 
+- 18 - [Long Short-Term Memory (LSTM)](https://github.com/thommaskevin/TinyML/tree/main/18_LSTM)
+
+- 19 - [AutoEncoder](https://github.com/thommaskevin/TinyML/tree/main/19_Autoencoder)
+
+
 
 ## Medium - TinyML's Weekly Open Paper
 

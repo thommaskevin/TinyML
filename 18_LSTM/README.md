@@ -2,12 +2,18 @@
 
 *From mathematical foundations to edge implementation*
 
-**Social media:**
+## **Social media:**
+
 👨🏽‍💻 Github: [thommaskevin/TinyML](https://github.com/thommaskevin/TinyML)
+
 👷🏾 Linkedin: [Thommas Kevin](https://www.linkedin.com/in/thommas-kevin-ab9810166/)
+
 📽 Youtube: [Thommas Kevin](https://www.youtube.com/channel/UC7uazGXaMIE6MNkHg4ll9oA)
+
 :pencil2:CV Lattes CNPq: [Thommas Kevin Sales Flores](http://lattes.cnpq.br/0630479458408181)
+
 👨🏻‍🏫 Research group: [Conecta.ai](https://conect2ai.dca.ufrn.br/)
+
 
 
 ![Figure 1](/18_LSTM/figures/fig0.png)
@@ -18,9 +24,15 @@
 ## SUMMARY
 
 1 - Introduction to Long Short-Term Memory (LSTM)
- 1.1 - Ridge Regression
- 1.2 - Lasso Regression
- 1.3 - Elastic Net
+
+ 1.1 - Forget Gate
+ 
+ 1.2 - Input Gate and Candidate Memory
+ 
+ 1.3 - Output Gate
+ 
+ 1.4 - Backward Pass
+ 
 2 - TinyML Implementation
 
 ## 1 - Introduction to Long Short-Term Memory (LSTM)
@@ -37,11 +49,11 @@ In the forget gate, a sigmoid activation function is utilized. For the input and
 
 The sigmoid activation function is defined as:
 
-\[ \sigma(x) = \frac{1}{1 + e^{-x}} \tag{1} \]
+$\sigma(x) = \frac{1}{1 + e^{-x}} \tag{1}$
 
 The hyperbolic tangent activation function is defined as:
 
-\[ \tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} \tag{2} \]
+$\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} \tag{2}$
 
 
 
@@ -55,17 +67,17 @@ Figure 2: Forget Gate (https://medium.com/@ottaviocalzone/an-intuitive-explanati
 
 
 
- Here, \(\sigma\) is the sigmoid activation function, \(W_f\) and \(b_f\) are the weight matrix and bias vector, which are learned from the input training data.
+ Here, \(\sigma\) is the sigmoid activation function, ($W_f$) and ($b_f$) are the weight matrix and bias vector, which are learned from the input training data.
 
-\[ f_t = \sigma(W_f \cdot [p_t, h_{t-1}] + b_f) = \frac{1}{1 + e^{-(W_f \cdot [p_t, h_{t-1}] + b_f)}} \tag{3} \]
+$f_t = \sigma(W_f \cdot [p_t, h_{t-1}] + b_f) = \frac{1}{1 + e^{-(W_f \cdot [p_t, h_{t-1}] + b_f)}} \tag{3}$
 
-The function takes the previous hidden state (\(h_{t-1}\)) at time \(t-1\) and the current input (\(p_t\)) at time \(t\) to calculate the components that control the cell state and hidden state of the layer. The results range from 0 to 1, where 1 represents "completely hold this" and 0 represents "completely throw this away".
+The function takes the previous hidden state ($h_{t-1}$) at time (t-1) and the current input ($p_t$) at time (t) to calculate the components that control the cell state and hidden state of the layer. The results range from 0 to 1, where 1 represents "completely hold this" and 0 represents "completely throw this away".
 
 
 ### 1.2 - Input gate and Candidate Memory
 
 
-The Input Gate (\(I_t\)) controls what new information will be added to the cell state from the current input. This gate also plays a role in protecting the memory contents from perturbation by irrelevant input (Figure 3). 
+The Input Gate ($I_t$) controls what new information will be added to the cell state from the current input. This gate also plays a role in protecting the memory contents from perturbation by irrelevant input (Figure 3). 
 
 ![Figure 3](/18_LSTM/figures/fig3.png)
 Figure 3:  Input Gate and Candidate Memory (https://medium.com/@ottaviocalzone/an-intuitive-explanation-of-lstm-a035eb6ab42c)
@@ -75,22 +87,25 @@ Figure 3:  Input Gate and Candidate Memory (https://medium.com/@ottaviocalzone/a
 
 A sigmoid activation function is used to generate the input values and converts information between 0 and 1. Mathematically, the input gate is:
 
-\[ I_t = \sigma(W_i \cdot [p_t, h_{t-1}] + b_i) = \frac{1}{1 + e^{-(W_i \cdot [p_t, h_{t-1}] + b_i)}} \tag{4} \]
+$I_t = \sigma(W_i \cdot [p_t, h_{t-1}] + b_i) = \frac{1}{1 + e^{-(W_i \cdot [p_t, h_{t-1}] + b_i)}} \tag{4}$
 
-where \(W_i\) and \(b_i\) are the weight matrix and bias vector, \(p_t\) is the current input, and \(h_{t-1}\) is the previous hidden state. Similar to the forget gate, the parameters in the input gate are learned from the input training data. At each time step, with the new information \(p_t\), we can compute a candidate cell state. 
+where ($W_i$) and ($b_i$) are the weight matrix and bias vector, ($p_t$) is the current input, and ($h_{t-1}$) is the previous hidden state. Similar to the forget gate, the parameters in the input gate are learned from the input training data. At each time step, with the new information ($p_t$), we can compute a candidate cell state. 
 
-Next, a vector of new candidate values, \(\tilde{C}_t\), is created. The computation of the new candidate is similar to that of the forget gate but uses a hyperbolic tangent (tanh) activation function with a value range of \((-1, 1)\). This leads to the following equation (5) at time \(t\):
+Next, a vector of new candidate values, ($\tilde{C}_t$), is created. The computation of the new candidate is similar to that of the forget gate but uses a hyperbolic tangent (tanh) activation function with a value range of (-1, 1). This leads to the following equation (5) at time (t):
 
-\[ \tilde{C}_t = \tanh(W_c \cdot [p_t, h_{t-1}] + b_c) = \frac{e^{W_c \cdot [p_t, h_{t-1}] + b_c} - e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}}{e^{W_c \cdot [p_t, h_{t-1}] + b_c} + e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}} \tag{5} \]
+```math
+\tilde{C}_t = \tanh(W_c \cdot [p_t, h_{t-1}] + b_c) = \frac{e^{W_c \cdot [p_t, h_{t-1}] + b_c} - e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}}{e^{W_c \cdot [p_t, h_{t-1}] + b_c} + e^{-(W_c \cdot [p_t, h_{t-1}] + b_c)}} \tag{5}
+```
 
-In the next step, the values of the input gate and the cell candidate are combined to create and update the cell state as given in equation (5). The linear combination of the input gate and forget gate is used for updating the previous cell state (\(C_{t-1}\)) into the current cell state (\(C_t\)). The input gate (\(i_t\)) determines how much new data should be incorporated via the candidate (\(\tilde{C}_t\)), while the forget gate (\(f_t\)) determines how much of the old memory cell content (\(C_{t-1}\)) should be retained. Using pointwise multiplication (Hadamard product), we arrive at the following updated equation:
 
-\[ C_t = f_t \odot C_{t-1} + I_t \odot \tilde{C}_t \tag{6} \]
+In the next step, the values of the input gate and the cell candidate are combined to create and update the cell state as given in equation (5). The linear combination of the input gate and forget gate is used for updating the previous cell state ( $C_{t-1}$ ) into the current cell state ($C_t$). The input gate ($i_t$) determines how much new data should be incorporated via the candidate ($\tilde{C}_t$), while the forget gate ($f_t$) determines how much of the old memory cell content ($C_{t-1}$) should be retained. Using pointwise multiplication (Hadamard product), we arrive at the following updated equation:
+
+$C_t = f_t \odot C_{t-1} + I_t \odot \tilde{C}_t \tag{6}$
 
 
 ### 1.3 - Output Gate
 
-The Output Gate (\(O_t\)) controls which information to reveal from the updated cell state (\(C_t\)) to the output in a single time step. In other words, the output gate determines the value of the next hidden state at each time step. As depicted in Figure 4, the hidden state comprises information from previous inputs. Moreover, the calculated value of the hidden state for the given time step is used for the prediction (\(\hat{y_t} = \text{softmax}(W_y h_t + b_y)\)). Here, softmax is a nonlinear activation function.
+The Output Gate ($O_t$) controls which information to reveal from the updated cell state ($C_t$) to the output in a single time step. In other words, the output gate determines the value of the next hidden state at each time step. As depicted in Figure 4, the hidden state comprises information from previous inputs. Moreover, the calculated value of the hidden state for the given time step is used for the prediction ($\hat{y_t} = \text{softmax}(W_y h_t + b_y)$). Here, softmax is a nonlinear activation function.
 
 
 ![Figure 4](/18_LSTM/figures/fig4.png)
@@ -99,65 +114,64 @@ Figure 4:  Output Gate (https://medium.com/@ottaviocalzone/an-intuitive-explanat
 
 The output gate is defined as:
 
-\[ O_t = \sigma(W_o \cdot [h_{t-1}, p_t] + b_o) = \frac{1}{1 + e^{-(W_o \cdot [h_{t-1}, p_t] + b_o)}} \tag{15} \]
+$O_t = \sigma(W_o \cdot [h_{t-1}, p_t] + b_o) = \frac{1}{1 + e^{-(W_o \cdot [h_{t-1}, p_t] + b_o)}} \tag{15}$
 
 where:
-- \( \sigma \) is the sigmoid function,
-- \( W_o \) is the weight matrix for the output gate,
-- \( b_o \) is the bias vector for the output gate,
-- \( p_t \) is the current input,
-- \( h_{t-1} \) is the previous hidden state.
+- ($\sigma$) is the sigmoid function,
+- ($W_o$) is the weight matrix for the output gate,
+- ($b_o$) is the bias vector for the output gate,
+- ($p_t$ ) is the current input,
+- ($h_{t-1}$) is the previous hidden state.
 
 
 
-The next hidden state (\(h_t\)) is determined by applying the tanh activation function to the updated cell state (\(C_t\)) and then multiplying it by the output gate value (\(O_t\)):
+The next hidden state ($h_t$) is determined by applying the tanh activation function to the updated cell state ($C_t$) and then multiplying it by the output gate value ($O_t$):
 
-\[ h_t = O_t \odot \tanh(C_t) \tag{16} \]
+$h_t = O_t \odot \tanh(C_t) \tag{16}$
 
-Here, \(\odot\) denotes element-wise multiplication (Hadamard product). This process ensures that only relevant information from the cell state is passed to the next hidden state and ultimately to the output.
+Here, ($\odot$) denotes element-wise multiplication (Hadamard product). This process ensures that only relevant information from the cell state is passed to the next hidden state and ultimately to the output.
 
-The prediction (\(\hat{y_t}\)) is then calculated as:
+The prediction ($\hat{y_t}$) is then calculated as:
 
-\[ \hat{y_t} = \text{softmax}(W_y h_t + b_y) \tag{7} \]
+$\hat{y_t} = \text{softmax}(W_y h_t + b_y) \tag{7}$
 
-First, the previous hidden state (\(h_{t-1}\)) and the current input (\(p_t\)) are passed through a sigmoid function to determine the output gate value (\(O_t\)). Then, the updated cell state (\(C_t\)) is generated using the tanh function. Finally, the tanh output is multiplied by the sigmoid output to determine the information carried by the hidden state (\(h_t\)). The output of the output gate is an updated hidden state, used for prediction at time step \(t\).
+First, the previous hidden state ($h_{t-1}$) and the current input ($p_t$) are passed through a sigmoid function to determine the output gate value ($O_t$). Then, the updated cell state ($C_t$) is generated using the tanh function. Finally, the tanh output is multiplied by the sigmoid output to determine the information carried by the hidden state ($h_t$). The output of the output gate is an updated hidden state, used for prediction at time step (t).
 
-The aim of this gate is to separate the updated cell state (which contains a lot of information not necessarily required in the hidden state) from the hidden state. The updated cell state (\(C_t\)) is critical as it influences the hidden state used in all gates of an LSTM block. The output gate assesses which parts of the cell state (\(C_t\)) are presented in the hidden state (\(h_t\)). The new cell and hidden states are then passed to the next time step (Figure 4).
+The aim of this gate is to separate the updated cell state (which contains a lot of information not necessarily required in the hidden state) from the hidden state. The updated cell state ($C_t$) is critical as it influences the hidden state used in all gates of an LSTM block. The output gate assesses which parts of the cell state ($C_t$) are presented in the hidden state ($h_t$). The new cell and hidden states are then passed to the next time step (Figure 4).
 
 
 ### 1.4 - Backward Pass
 
 
-The LSTM network generates an output \(\hat{y_t}\) at each time step that is used to train the network via gradient descent. During the backward pass, the network parameters are updated at each epoch (iteration). The main difference between the back-propagation algorithms of RNN and LSTM networks is a minor modification. The error term at each time step is calculated as \(E_t = -y_t \log(\hat{y_t})\). Similar to RNNs, the total error is the sum of the errors from all time steps:
+The LSTM network generates an output ($\hat{y_t}$) at each time step that is used to train the network via gradient descent. During the backward pass, the network parameters are updated at each epoch (iteration). The main difference between the back-propagation algorithms of RNN and LSTM networks is a minor modification. The error term at each time step is calculated as ($E_t = -y_t \log(\hat{y_t})$). Similar to RNNs, the total error is the sum of the errors from all time steps:
 
-\[ E = \sum_t -y_t \log(\hat{y_t})  \tag{8}\]
+$E = \sum_t -y_t \log(\hat{y_t})  \tag{8}$
 
-The gradient of the error with respect to the weights \(\frac{\partial E}{\partial W}\) at each time step is calculated, and then the sum of the gradients over all time steps is obtained:
+The gradient of the error with respect to the weights ($\frac{\partial E}{\partial W}$) at each time step is calculated, and then the sum of the gradients over all time steps is obtained:
 
-\[ \frac{\partial E}{\partial W} = \sum_t \frac{\partial E_t}{\partial W}  \tag{9}\]
+$\frac{\partial E}{\partial W} = \sum_t \frac{\partial E_t}{\partial W}  \tag{9}$
 
 The predicted value \(\hat{y_t}\) is a function of the hidden state:
 
-\[ \hat{y_t} = \text{softmax}(W_y h_t + b_y)  \tag{10} \]
+$\hat{y_t} = \text{softmax}(W_y h_t + b_y)  \tag{10}$
 
-The hidden state \(h_t\) is a function of the cell state:
+The hidden state ($h_t$) is a function of the cell state:
 
-\[ h_t = O_t \odot \tanh(C_t)  \tag{11} \]
+$h_t = O_t \odot \tanh(C_t)  \tag{11}$
 
 Both of these functions are subject to the chain rule. Hence, the derivatives of the individual error terms with respect to the network parameters are:
 
-\[ \frac{\partial E_t}{\partial W} = \frac{\partial E_t}{\partial \hat{y_t}} \cdot \frac{\partial \hat{y_t}}{\partial h_t} \cdot \frac{\partial h_t}{\partial C_t} \cdot \frac{\partial C_t}{\partial C_{t-1}} \cdot \frac{\partial C_{t-1}}{\partial C_{t-2}} \cdot \frac{\partial C_{t-2}}{\partial C_{t-3}} \cdot \ldots \cdot \frac{\partial C_0}{\partial W} \tag{12} \]
+$\frac{\partial E_t}{\partial W} = \frac{\partial E_t}{\partial \hat{y_t}} \cdot \frac{\partial \hat{y_t}}{\partial h_t} \cdot \frac{\partial h_t}{\partial C_t} \cdot \frac{\partial C_t}{\partial C_{t-1}} \cdot \frac{\partial C_{t-1}}{\partial C_{t-2}} \cdot \frac{\partial C_{t-2}}{\partial C_{t-3}} \cdot \ldots \cdot \frac{\partial C_0}{\partial W} \tag{12}$
 
 For the overall error gradient using the chain rule of differentiation, we get:
 
-\[ \frac{\partial E}{\partial W} = \sum_t \frac{\partial E_t}{\partial \hat{y_t}} \cdot \frac{\partial \hat{y_t}}{\partial h_t} \cdot \frac{\partial h_t}{\partial C_t} \cdot \frac{\partial C_t}{\partial C_{t-1}} \cdot \frac{\partial C_{t-1}}{\partial C_{t-2}} \cdot \frac{\partial C_{t-2}}{\partial C_{t-3}} \cdot \ldots \cdot \frac{\partial C_0}{\partial W} \tag{13} \]
+$\frac{\partial E}{\partial W} = \sum_t \frac{\partial E_t}{\partial \hat{y_t}} \cdot \frac{\partial \hat{y_t}}{\partial h_t} \cdot \frac{\partial h_t}{\partial C_t} \cdot \frac{\partial C_t}{\partial C_{t-1}} \cdot \frac{\partial C_{t-1}}{\partial C_{t-2}} \cdot \frac{\partial C_{t-2}}{\partial C_{t-3}} \cdot \ldots \cdot \frac{\partial C_0}{\partial W} \tag{13}$
 
-The previous equation shows that the gradient involves the chain rule of \(\frac{\partial C_t}{\partial C_{t-1}}\) in LSTM training using the backpropagation algorithm, while the gradient equation involves the chain rule of \(\frac{\partial h_t}{\partial h_{t-1}}\) for a basic RNN. Therefore, the Jacobian matrix for the cell state in an LSTM is:
+The previous equation shows that the gradient involves the chain rule of ($\frac{\partial C_t}{\partial C_{t-1}}$) in LSTM training using the backpropagation algorithm, while the gradient equation involves the chain rule of ($\frac{\partial h_t}{\partial h_{t-1}}$) for a basic RNN. Therefore, the Jacobian matrix for the cell state in an LSTM is:
 
-\[ \frac{\partial C_j}{\partial C_{j-1}} = \begin{bmatrix} \frac{\partial C_{j,1}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,1}}{\partial C_{j-1,s}} \\ \vdots & \ddots & \vdots \\ \frac{\partial C_{j,s}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,s}}{\partial C_{j-1,s}} \end{bmatrix} \tag{14} \]
-
-
-
+```math
+\frac{\partial C_j}{\partial C_{j-1}} = \begin{bmatrix} \frac{\partial C_{j,1}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,1}}{\partial C_{j-1,s}} \\ \vdots & \ddots & \vdots \\ \frac{\partial C_{j,s}}{\partial C_{j-1,1}} & \cdots & \frac{\partial C_{j,s}}{\partial C_{j-1,s}} \end{bmatrix} \tag{14}
+```
 
 ## 2 - TinyML Implementation
 

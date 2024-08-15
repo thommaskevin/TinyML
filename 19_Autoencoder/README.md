@@ -4,10 +4,15 @@
 
 **Social media:**
 👨🏽‍💻 Github: [thommaskevin/TinyML](https://github.com/thommaskevin/TinyML)
+
 👷🏾 Linkedin: [Thommas Kevin](https://www.linkedin.com/in/thommas-kevin-ab9810166/)
+
 📽 Youtube: [Thommas Kevin](https://www.youtube.com/channel/UC7uazGXaMIE6MNkHg4ll9oA)
+
 :pencil2:CV Lattes CNPq: [Thommas Kevin Sales Flores](http://lattes.cnpq.br/0630479458408181)
+
 👨🏻‍🏫 Research group: [Conecta.ai](https://conect2ai.dca.ufrn.br/)
+
 
 
 ![Figure 1](/19_Autoencoder/figures/fig0.png)
@@ -18,14 +23,23 @@
 ## SUMMARY
 
 1 - Introduction to AutoEncoder
+
  1.1 - Mathematical Foundations of Autoencoders
+ 
  1.2 - Loss Function and Optimization
+ 
  1.3 -The Training Process
+ 
  1.4 - Understanding the Latent Space
+ 
  1.5 - Visualizing the Autoencoder Process
+ 
  1.6  - The Role of Activation Functions
+ 
  1.7 -Types of Autoencoders
+ 
 2 - TinyML Implementation
+
 
 ## 1 - Introduction to AutoEncoder
 
@@ -51,7 +65,7 @@ An autoencoder consists of two main components:
 
 #### 1.1.1 - Input Data
 
-Consider an input vector \( \mathbf{x} \in \mathbb{R}^n \), where \( n \) represents the dimensionality of the input data. This vector \( \mathbf{x} \) can represent any kind of data, such as an image, a sound wave, or a set of numerical features.
+Consider an input vector $\mathbf{x} \in \mathbb{R}^n$, where \( n \) represents the dimensionality of the input data. This vector \( \mathbf{x} \) can represent any kind of data, such as an image, a sound wave, or a set of numerical features.
 
 
 #### 1.1.2 - Encoder Function
@@ -59,9 +73,7 @@ Consider an input vector \( \mathbf{x} \in \mathbb{R}^n \), where \( n \) repres
 The encoder is a function \( f: \mathbb{R}^n \rightarrow \mathbb{R}^m \) that maps the input \( \mathbf{x} \) to a latent space vector \( \mathbf{z} \in \mathbb{R}^m \), where \( m \) is the dimensionality of the latent space, typically much smaller than \( n \). Mathematically, the encoder is represented as:
 
 
-\[
-\mathbf{z} = f(\mathbf{x}) = \sigma(\mathbf{W}_e \mathbf{x} + \mathbf{b}_e)
-\]
+$\mathbf{z} = f(\mathbf{x}) = \sigma(\mathbf{W}_e \mathbf{x} + \mathbf{b}_e)$
 
 
 In this equation:

@@ -65,42 +65,42 @@ An autoencoder consists of two main components:
 
 #### 1.1.1 - Input Data
 
-Consider an input vector $\mathbf{x} \in \mathbb{R}^n$, where \( n \) represents the dimensionality of the input data. This vector \( \mathbf{x} \) can represent any kind of data, such as an image, a sound wave, or a set of numerical features.
+Consider an input vector $\mathbf{x} \in \mathbb{R}^n$, where $n$ represents the dimensionality of the input data. This vector $\mathbf{x}$ can represent any kind of data, such as an image, a sound wave, or a set of numerical features.
 
 
 #### 1.1.2 - Encoder Function
 
-The encoder is a function \( f: \mathbb{R}^n \rightarrow \mathbb{R}^m \) that maps the input \( \mathbf{x} \) to a latent space vector \( \mathbf{z} \in \mathbb{R}^m \), where \( m \) is the dimensionality of the latent space, typically much smaller than \( n \). Mathematically, the encoder is represented as:
+The encoder is a function $f: \mathbb{R}^n \rightarrow \mathbb{R}^m$ that maps the input $\mathbf{x}$ to a latent space vector $\mathbf{z} \in \mathbb{R}^m$, where $m$ is the dimensionality of the latent space, typically much smaller than $n$. Mathematically, the encoder is represented as:
 
 
 $\mathbf{z} = f(\mathbf{x}) = \sigma(\mathbf{W}_e \mathbf{x} + \mathbf{b}_e)$
 
 
 In this equation:
-- \( \mathbf{W}_e \) is the weight matrix associated with the encoder.
-- \( \mathbf{b}_e \) is the bias vector for the encoder.
-- \( \sigma \) is an activation function, such as ReLU, sigmoid, or tanh.
+- $\mathbf{W}_e$ is the weight matrix associated with the encoder.
+- $\mathbf{b}_e$ is the bias vector for the encoder.
+- $\sigma$ is an activation function, such as ReLU, sigmoid, or tanh.
 
 
 
 #### 1.1.3 -  Latent Space Representation
 
-The vector \( \mathbf{z} \) is the compressed version of the input data. This latent space representation is crucial because it holds the encoded information that the decoder will use to reconstruct the original data. The dimensionality of \( \mathbf{z} \) (denoted as \( m \)) is usually smaller than that of the input \( \mathbf{x} \), enforcing the network to learn only the most critical features of the data.
+The vector $\mathbf{z}$ is the compressed version of the input data. This latent space representation is crucial because it holds the encoded information that the decoder will use to reconstruct the original data. The dimensionality of $\mathbf{z}$ (denoted as $m$) is usually smaller than that of the input $\mathbf{x}$, enforcing the network to learn only the most critical features of the data.
 
 #### 1.1.4 - Decoder Function
 
-The decoder is a function \( g: \mathbb{R}^m \rightarrow \mathbb{R}^n \) that maps the latent space representation \( \mathbf{z} \) back to the original data space, attempting to reconstruct the input \( \mathbf{x} \). The decoder is mathematically represented as:
+The decoder is a function $g: \mathbb{R}^m \rightarrow \mathbb{R}^n$ that maps the latent space representation $\mathbf{z}$ back to the original data space, attempting to reconstruct the input $\mathbf{x}$. The decoder is mathematically represented as:
 
-\[
-\hat{\mathbf{x}} = g(\mathbf{z}) = \sigma(\mathbf{W}_d \mathbf{z} + \mathbf{b}_d)
-\]
+
+$\hat{\mathbf{x}} = g(\mathbf{z}) = \sigma(\mathbf{W}_d \mathbf{z} + \mathbf{b}_d)$
+
 
 Where:
-- \( \mathbf{W}_d \) is the weight matrix for the decoder.
-- \( \mathbf{b}_d \) is the bias vector for the decoder.
+- $\mathbf{W}_d$ is the weight matrix for the decoder.
+- $\mathbf{b}_d$ is the bias vector for the decoder.
 
 
-The output \( \hat{\mathbf{x}} \) is the reconstructed version of the original input \( \mathbf{x} \). The goal of the decoder is to make \( \hat{\mathbf{x}} \) as close as possible to \( \mathbf{x} \).
+The output $\hat{\mathbf{x}}$ is the reconstructed version of the original input $\mathbf{x}$. The goal of the decoder is to make $\hat{\mathbf{x}}$ as close as possible to $\mathbf{x}$.
 
 
 
@@ -109,17 +109,15 @@ The output \( \hat{\mathbf{x}} \) is the reconstructed version of the original i
 ### 1.2 - Loss Function and Optimization
 
 
-The quality of the autoencoder's reconstruction is measured by a loss function, which quantifies the difference between the original input \( \mathbf{x} \) and the reconstructed output \( \hat{\mathbf{x}} \). A commonly used loss function for autoencoders is the Mean Squared Error (MSE), defined as:
+The quality of the autoencoder's reconstruction is measured by a loss function, which quantifies the difference between the original input $\mathbf{x}$ and the reconstructed output $\hat{\mathbf{x}}$. A commonly used loss function for autoencoders is the Mean Squared Error (MSE), defined as:
 
-\[
-\mathcal{L}(\mathbf{x}, \hat{\mathbf{x}}) = \frac{1}{n} \sum_{i=1}^n (x_i - \hat{x}_i)^2
-\]
+$\mathcal{L}(\mathbf{x}, \hat{\mathbf{x}}) = \frac{1}{n} \sum_{i=1}^n (x_i - \hat{x}_i)^2$
 
 Where:
-- \( n \) is the number of features in the input data.
-- \( x_i \) and \( \hat{x}_i \) are the components of the original and reconstructed data vectors, respectively.
+- $n$ is the number of features in the input data.
+- $x_i$ and $\hat{x}_i$ are the components of the original and reconstructed data vectors, respectively.
 
-The objective during the training of an autoencoder is to minimize this loss function. Minimizing the loss function involves adjusting the weights \( \mathbf{W}_e \), \( \mathbf{W}_d \), and the biases \( \mathbf{b}_e \), \( \mathbf{b}_d \) in the network to achieve the smallest possible reconstruction error.
+The objective during the training of an autoencoder is to minimize this loss function. Minimizing the loss function involves adjusting the weights $\mathbf{W}_e$, $\mathbf{W}_d$, and the biases $\mathbf{b}_e$, $\mathbf{b}_d$ in the network to achieve the smallest possible reconstruction error.
 
 
 
@@ -140,15 +138,15 @@ The latent space is not just a mathematical abstraction; it has practical implic
 ### 1.5 - Visualizing the Autoencoder Process
 Let’s visualize the autoencoder process with a simple example:
 
-1. **Input Layer**: Imagine we have an input data vector \( \mathbf{x} \) that represents an image. Each element in \( \mathbf{x} \) corresponds to a pixel intensity value in the image.
+1. **Input Layer**: Imagine we have an input data vector $\mathbf{x}$ that represents an image. Each element in $\mathbf{x}$ corresponds to a pixel intensity value in the image.
 
-2. **Hidden Layers (Encoder)**: The input is passed through several layers of neurons, where each layer performs a linear transformation followed by a non-linear activation. The data’s dimensionality is progressively reduced until it reaches the latent space \( \mathbf{z} \).
+2. **Hidden Layers (Encoder)**: The input is passed through several layers of neurons, where each layer performs a linear transformation followed by a non-linear activation. The data’s dimensionality is progressively reduced until it reaches the latent space $\mathbf{z}$.
 
-3. **Latent Space**: The latent space \( \mathbf{z} \) is a compact representation of the input image. It contains the essential features that the decoder will use to reconstruct the original image.
+3. **Latent Space**: The latent space $\mathbf{z}$ is a compact representation of the input image. It contains the essential features that the decoder will use to reconstruct the original image.
 
-4. **Hidden Layers (Decoder)**: The latent representation \( \mathbf{z} \) is passed through another set of layers that progressively increase the dimensionality until the output layer is reached.
+4. **Hidden Layers (Decoder)**: The latent representation $\mathbf{z}$ is passed through another set of layers that progressively increase the dimensionality until the output layer is reached.
 
-5. **Output Layer**: The final output \( \hat{\mathbf{x}} \) is the reconstructed version of the original input image. The network’s goal is for this output to be as close as possible to the original image.
+5. **Output Layer**: The final output $\hat{\mathbf{x}}$ is the reconstructed version of the original input image. The network’s goal is for this output to be as close as possible to the original image.
 
 
 
@@ -164,36 +162,20 @@ In practice, autoencoders can be extended and modified in various ways to improv
 The simplest form of autoencoder, often referred to as a "vanilla" autoencoder, consists of a symmetric network with equal numbers of neurons in the encoder and decoder layers. It is primarily used for dimensionality reduction.
 
 #### 1.7.2 - Sparse Autoencoder
-A sparse autoencoder includes an additional sparsity constraint on the latent representation. This encourages the model to learn a more compact and informative representation, where only a small number of neurons are active at any given time. This can be mathematically expressed by adding a sparsity penalty term \( \Omega(\mathbf{z}) \) to the loss function:
+A sparse autoencoder includes an additional sparsity constraint on the latent representation. This encourages the model to learn a more compact and informative representation, where only a small number of neurons are active at any given time. This can be mathematically expressed by adding a sparsity penalty term $\Omega(\mathbf{z})$ to the loss function:
 
-\[
-\mathcal{L}_{\text{sparse}}(\mathbf{x}, \hat{\mathbf{x}}) = \mathcal{L}(\mathbf{x}, \hat{\mathbf{x}}) + \lambda \Omega(\mathbf{z})
-\]
+$\mathcal{L}_{\text{sparse}}(\mathbf{x}, \hat{\mathbf{x}}) = \mathcal{L}(\mathbf{x}, \hat{\mathbf{x}}) + \lambda \Omega(\mathbf{z})$
 
-where \( \lambda \) controls the trade-off between reconstruction accuracy and sparsity.
+where $\lambda$ controls the trade-off between reconstruction accuracy and sparsity.
 
 #### 1.7.3 - Denoising Autoencoder
-A denoising autoencoder is designed to reconstruct the original input from a corrupted version of it. During training, the input data is intentionally corrupted (e.g., by adding noise), and the autoencoder is tasked with recovering the clean input. The loss function remains the same, but the input \( \mathbf{x} \) is replaced with a corrupted version \( \mathbf{x}_{\text{noisy}} \).
+A denoising autoencoder is designed to reconstruct the original input from a corrupted version of it. During training, the input data is intentionally corrupted (e.g., by adding noise), and the autoencoder is tasked with recovering the clean input. The loss function remains the same, but the input $\mathbf{x}$ is replaced with a corrupted version $\mathbf{x}_{\text{noisy}}$.
 
 #### 1.7.4 - Variational Autoencoder (VAE)
 The Variational Autoencoder (VAE) is a probabilistic approach that models the latent space as a distribution, typically Gaussian. Instead of learning a fixed representation, the VAE learns the parameters of the distribution (mean and variance) from which the latent vector is sampled. The VAE optimizes a loss function that includes a reconstruction term and a regularization term based on the Kullback-Leibler (KL) divergence between the learned latent distribution and a prior distribution (typically standard normal):
 
-\[
-\mathcal{L}_{\text{VAE}}(\mathbf{x}, \hat{\mathbf{x}}) = \mathcal{L}(\mathbf{x}, \hat{\mathbf{x}}) + \text{KL}(q(\mathbf{z}|\mathbf{x}) \parallel p(\mathbf{z}))
-\]
 
-
-
-
-
-
-
-
-
-
-
-
-
+$\mathcal{L}_{\text{VAE}}(\mathbf{x}, \hat{\mathbf{x}}) = \mathcal{L}(\mathbf{x}, \hat{\mathbf{x}}) + \text{KL}(q(\mathbf{z}|\mathbf{x}) \parallel p(\mathbf{z}))$
 
 
 

@@ -48,62 +48,62 @@ In RL, the agent perceives the environment through states, takes actions, and re
 ## 2 - Mathematical Foundations of Q-Learning
 
 
-At the heart of Q-Learning is the idea of learning an action-value function \( Q(s, a) \), which estimates the expected future reward of taking an action \( a \) in a state \( s \), following the best possible policy from that point.
+At the heart of Q-Learning is the idea of learning an action-value function $Q(s, a)$, which estimates the expected future reward of taking an action $a$ in a state $s$, following the best possible policy from that point.
 
 
 ###  2.1 - Basic Definitions
 
 
-- **State \( s \)**: Represents a particular configuration of the environment.
+- **State $s$**: Represents a particular configuration of the environment.
 
-- **Action \( a \)**: A decision or move that the agent can make in a state \( s \).
-- **Reward \( r \)**: A value received after taking an action, reflecting the immediate benefit.
+- **Action $a$**: A decision or move that the agent can make in a state $s$.
+- **Reward $r$**: A value received after taking an action, reflecting the immediate benefit.
 
-- **Policy \( \pi(s) \)**: A rule or function that maps states to actions. The goal is to find the optimal policy \( \pi^*(s) \).
+- **Policy $\pi(s)$**: A rule or function that maps states to actions. The goal is to find the optimal policy $\pi^*(s)$.
 
-- **Action-Value \( Q(s, a) \)**: The expected reward for taking action \( a \) in state \( s \) and following policy \( \pi \) thereafter.
+- **Action-Value $Q(s, a)$**: The expected reward for taking action $a$ in state $s$ and following policy $\pi$ thereafter.
 
 
 
 ###   2.2 - Bellman Equation
 
-The action-value function \( Q(s, a) \) can be expressed recursively using the Bellman equation:
+The action-value function $Q(s, a)$ can be expressed recursively using the Bellman equation:
 \[
 Q(s, a) = \mathbb{E} \left[ r + \gamma \cdot \max_{a'} Q(s', a') \mid s, a \right]
 \]
 where:
 
-- \( \gamma \in [0, 1] \) is the discount factor that weighs the importance of future rewards relative to immediate rewards.
+- $\gamma \in [0, 1]$ is the discount factor that weighs the importance of future rewards relative to immediate rewards.
 
-- \( \mathbb{E} \) denotes the expected value, considering the transition probabilities between states.
+- $\mathbb{E}$ denotes the expected value, considering the transition probabilities between states.
 
 
 
 ###   2.3 - Q-Learning Algorithm
 
-Q-Learning is an off-policy algorithm that iteratively updates the function \( Q(s, a) \) without requiring a model of the environment.
+Q-Learning is an off-policy algorithm that iteratively updates the function $Q(s, a)$ without requiring a model of the environment.
 
 **Step by Step:**
 
 1. **Initialization**:
-   - Initialize the Q-table arbitrarily: \( Q(s, a) = 0 \) for all \( s \) and \( a \).
+   - Initialize the Q-table arbitrarily: $Q(s, a) = 0$ for all $s$ and $a$.
 
 2. **Iteration**:
    - For each episode (a set of steps until the terminal state):
-     1. **Observation of Initial State**: Observe the initial state \( s \).
-     2. **Action Selection**: Choose an action \( a \) using an exploration policy (e.g., ε-greedy).
-     3. **Action Execution and Reward Observation**: Execute the action \( a \), observe the reward \( r \) and the new state \( s' \).
+     1. **Observation of Initial State**: Observe the initial state $s$.
+     2. **Action Selection**: Choose an action $a$ using an exploration policy (e.g., ε-greedy).
+     3. **Action Execution and Reward Observation**: Execute the action $a$, observe the reward $r$ and the new state $s'$.
      4. **Q-Table Update**:
         \[
         Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
         \]
-        - \( \alpha \in [0, 1] \) is the learning rate that controls how quickly new values replace old ones.
+        - $\alpha \in [0, 1]$ is the learning rate that controls how quickly new values replace old ones.
 
-     5. **Transition to the New State**: Update the current state \( s \) to the new state \( s' \).
-     6. **Episode Termination**: If \( s' \) is a terminal state, restart the process with a new initial state.
+     5. **Transition to the New State**: Update the current state $s$ to the new state $s'$.
+     6. **Episode Termination**: If $s'$ is a terminal state, restart the process with a new initial state.
 
 3. **Convergence**:
-   - Repeat the process until the Q-table \( Q(s, a) \) converges to stable values. Ultimately, the optimal policy \( \pi^*(s) \) is given by:
+   - Repeat the process until the Q-table $Q(s, a)$ converges to stable values. Ultimately, the optimal policy $\pi^*(s)$ is given by:
    \[
    \pi^*(s) = \arg\max_a Q(s, a)
    \]
@@ -111,11 +111,11 @@ Q-Learning is an off-policy algorithm that iteratively updates the function \( Q
 
 ###   2.4 - Convergence Considerations
 
-Q-Learning converges to the optimal policy \( \pi^*(s) \), assuming all actions are explored infinitely often and the sum of the learning rates \( \alpha \) over time also converges to zero.
+Q-Learning converges to the optimal policy $\pi^*(s)$, assuming all actions are explored infinitely often and the sum of the learning rates $\alpha$ over time also converges to zero.
 
-- **Exploration vs. Exploitation**: The ε-greedy policy is often used, where with probability ε the agent chooses a random action (exploration), and with probability \( 1 - ε \) chooses the best action based on the Q-table (exploitation).
+- **Exploration vs. Exploitation**: The ε-greedy policy is often used, where with probability ε the agent chooses a random action (exploration), and with probability $1 - ε$ chooses the best action based on the Q-table (exploitation).
   
-- **Learning Rate \( \alpha \)**: It should decrease, but not too quickly, to ensure that new learning can be incorporated while not completely discarding old knowledge.
+- **Learning Rate $\alpha$**: It should decrease, but not too quickly, to ensure that new learning can be incorporated while not completely discarding old knowledge.
 
 
 ###   2.5 - Numerical Example of Q-Learning for Forecasting

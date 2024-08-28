@@ -109,8 +109,9 @@ Q-Learning is an off-policy algorithm that iteratively updates the function $Q(s
      7. **Episode Termination**: If $s'$ is a terminal state, restart the process with a new initial state.
 
 4. **Convergence**:
-5. 
+   
    - Repeat the process until the Q-table $Q(s, a)$ converges to stable values. Ultimately, the optimal policy $\pi^*(s)$ is given by:
+     
    $\pi^*(s) = \arg\max_a Q(s, a)$
 
 ###   2.4 - Convergence Considerations

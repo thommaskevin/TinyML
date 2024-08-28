@@ -183,13 +183,13 @@ Let's simulate the Q-Learning update process for these steps.
 **At Time 3**:
 
 - **State**: $s_3 = (Up, Up)$
-- 
+  
 - **Action**: Assume the agent randomly selects "Buy (B)" (exploration).
-- 
+  
 - **Reward**: The next price decreases, so $r = 0$.
-- 
+  
 - **Next State**: $s_4 = (Down, Up)$
-- 
+  
 - **Q-Table Update**:
   
   $Q((Up, Up), B) = Q((Up, Up), B) + \alpha \left[ r + \gamma \max_{a'} Q((Down, Up), a') - Q((Up, Up), B) \right]$

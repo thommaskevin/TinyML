@@ -120,19 +120,19 @@ Let's walk through a numerical example of using Q-Learning to make forecasting d
 
 ####  2.5.1 - Problem Setup
 
-- **States (\(s_t\))**: The state represents recent price movements. For simplicity, we'll define the state as the price movement over the last two time steps: \(s_t = (p_{t-1}, p_{t-2})\), where \(p_t\) is the price at time \(t\).
+- **States ($s_t$)**: The state represents recent price movements. For simplicity, we'll define the state as the price movement over the last two time steps: $s_t = (p_{t-1}, p_{t-2})$, where $p_t$ is the price at time $t$.
   
-- **Actions (\(a_t\))**: The possible actions are:
+- **Actions ($a_t$)**: The possible actions are:
   1. Buy (B)
   2. Sell (S)
   3. Hold (H)
 
-- **Rewards (\(r_t\))**:
-  - If the agent buys at \(t\) and the price increases at \(t+1\), reward = +1.
-  - If the agent sells at \(t\) and the price decreases at \(t+1\), reward = +1.
+- **Rewards ($r_t$)**:
+  - If the agent buys at $t$ and the price increases at $t+1$, reward = +1.
+  - If the agent sells at $t$ and the price decreases at $t+1$, reward = +1.
   - Otherwise, reward = 0.
 
-- **Discount Factor (\(\gamma\))**: Let's assume \(\gamma = 0.9\).
+- **Discount Factor ($\gamma$)**: Let's assume $\gamma = 0.9$.
 
 ####  2.5.2 - Step-by-Step Example
 
@@ -140,7 +140,7 @@ Let's walk through a numerical example of using Q-Learning to make forecasting d
 
 We'll initialize the Q-Table for the three possible actions across all states. Initially, all Q-values are set to 0.
 
-| State (\(s_t\))  | Buy (B) | Sell (S) | Hold (H) |
+| State ($s_t$)  | Buy (B) | Sell (S) | Hold (H) |
 |------------------|---------|----------|----------|
 | (Up, Up)         | 0       | 0        | 0        |
 | (Up, Down)       | 0       | 0        | 0        |
@@ -151,7 +151,7 @@ We'll initialize the Q-Table for the three possible actions across all states. I
 
 Assume we have the following price movements over 5 time steps:
 
-| Time | Price (\(p_t\)) | Price Change |
+| Time | Price ($p_t$) | Price Change |
 |------|-----------------|--------------|
 | 1    | 100             | —            |
 | 2    | 102             | Up           |
@@ -161,7 +161,7 @@ Assume we have the following price movements over 5 time steps:
 
 The corresponding states over time are:
 
-| Time | State (\(s_t\)) |
+| Time | State ($s_t$) |
 |------|-----------------|
 | 3    | (Up, Up)        |
 | 4    | (Down, Up)      |
@@ -172,33 +172,44 @@ The corresponding states over time are:
 Let's simulate the Q-Learning update process for these steps.
 
 **At Time 3**:
-- **State**: \(s_3 = (Up, Up)\)
+
+- **State**: $s_3 = (Up, Up)$
+- 
 - **Action**: Assume the agent randomly selects "Buy (B)" (exploration).
-- **Reward**: The next price decreases, so \(r = 0\).
-- **Next State**: \(s_4 = (Down, Up)\)
+- 
+- **Reward**: The next price decreases, so $r = 0$.
+- 
+- **Next State**: $s_4 = (Down, Up)$
+- 
 - **Q-Table Update**:
+  
   $Q((Up, Up), B) = Q((Up, Up), B) + \alpha \left[ r + \gamma \max_{a'} Q((Down, Up), a') - Q((Up, Up), B) \right]$
   
-  - Assuming \(\alpha = 0.1\), and the maximum Q-value in the next state is 0 (as all Q-values are still 0):
+  - Assuming $\alpha = 0.1$, and the maximum Q-value in the next state is 0 (as all Q-values are still 0):
+    
   $Q((Up, Up), B) = 0 + 0.1 \times \left[ 0 + 0.9 \times 0 - 0 \right] = 0$
+  
   The Q-value remains 0.
 
 **At Time 4**:
-- **State**: \(s_4 = (Down, Up)\)
+- **State**: $s_4 = (Down, Up)$
 - **Action**: Assume the agent selects "Sell (S)".
-- **Reward**: The price increases, so \(r = 0\).
-- **Next State**: \(s_5 = (Up, Down)\)
+- **Reward**: The price increases, so $r = 0$.
+- **Next State**: $s_5 = (Up, Down)$
 - **Q-Table Update**:
+  
   $Q((Down, Up), S) = Q((Down, Up), S) + \alpha \left[ r + \gamma \max_{a'} Q((Up, Down), a') - Q((Down, Up), S) \right]$
-  - Again, assuming \(\alpha = 0.1\) and the maximum Q-value in the next state is 0:
+
+  - Again, assuming $\alpha = 0.1$ and the maximum Q-value in the next state is 0:
+    
   $Q((Down, Up), S) = 0 + 0.1 \times \left[ 0 + 0.9 \times 0 - 0 \right] = 0$
 
 **At Time 5**:
-- **State**: \(s_5 = (Up, Down)\)
+- **State**: $s_5 = (Up, Down)$
 - **Action**: Assume the agent selects "Hold (H)".
-- **Reward**: The price increases, so \(r = 0\) (since no profit or loss is realized).
+- **Reward**: The price increases, so $r = 0$ (since no profit or loss is realized).
 - **Q-Table Update**:
-- 
+  
   $Q((Up, Down), H) = Q((Up, Down), H) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q((Up, Down), H) \right]$
   
   - The Q-value remains 0 as before.

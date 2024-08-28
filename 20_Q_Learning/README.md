@@ -4,9 +4,13 @@
 
 **Social media:**
 👨🏽‍💻 Github: [thommaskevin/TinyML](https://github.com/thommaskevin/TinyML)
+
 👷🏾 Linkedin: [Thommas Kevin](https://www.linkedin.com/in/thommas-kevin-ab9810166/)
+
 📽 Youtube: [Thommas Kevin](https://www.youtube.com/channel/UC7uazGXaMIE6MNkHg4ll9oA)
+
 :pencil2:CV Lattes CNPq: [Thommas Kevin Sales Flores](http://lattes.cnpq.br/0630479458408181)
+
 👨🏻‍🏫 Research group: [Conecta.ai](https://conect2ai.dca.ufrn.br/)
 
 

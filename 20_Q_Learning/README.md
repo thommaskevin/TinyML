@@ -22,12 +22,19 @@
 ## SUMMARY
 
 1 - Introduction to Reinforcement Learning
+
 2 - Mathematical Foundations of Q-Learning
+
  2.1 - Basic Definitions
+ 
  2.2 - Bellman Equation
+ 
  2.3 - Q-Learning Algorithm
+ 
  2.4 - Convergence Considerations
+ 
  2.5 - Forecasting Numeric Example
+ 
 3 - TinyML Implementation
 
 

@@ -3,6 +3,8 @@
 *From mathematical foundations to edge implementation*
 
 **Social media:**
+
+
 👨🏽‍💻 Github: [thommaskevin/TinyML](https://github.com/thommaskevin/TinyML)
 
 👷🏾 Linkedin: [Thommas Kevin](https://www.linkedin.com/in/thommas-kevin-ab9810166/)
@@ -68,9 +70,9 @@ At the heart of Q-Learning is the idea of learning an action-value function $Q(s
 ###   2.2 - Bellman Equation
 
 The action-value function $Q(s, a)$ can be expressed recursively using the Bellman equation:
-\[
-Q(s, a) = \mathbb{E} \left[ r + \gamma \cdot \max_{a'} Q(s', a') \mid s, a \right]
-\]
+
+$Q(s, a) = \mathbb{E} \left[ r + \gamma \cdot \max_{a'} Q(s', a') \mid s, a \right]$
+
 where:
 
 - $\gamma \in [0, 1]$ is the discount factor that weighs the importance of future rewards relative to immediate rewards.
@@ -86,22 +88,28 @@ Q-Learning is an off-policy algorithm that iteratively updates the function $Q(s
 **Step by Step:**
 
 1. **Initialization**:
+   
    - Initialize the Q-table arbitrarily: $Q(s, a) = 0$ for all $s$ and $a$.
 
-2. **Iteration**:
+3. **Iteration**:
    - For each episode (a set of steps until the terminal state):
+     
      1. **Observation of Initial State**: Observe the initial state $s$.
-     2. **Action Selection**: Choose an action $a$ using an exploration policy (e.g., ε-greedy).
-     3. **Action Execution and Reward Observation**: Execute the action $a$, observe the reward $r$ and the new state $s'$.
-     4. **Q-Table Update**:
+        
+     3. **Action Selection**: Choose an action $a$ using an exploration policy (e.g., ε-greedy).
+        
+     4. **Action Execution and Reward Observation**: Execute the action $a$, observe the reward $r$ and the new state $s'$.
+     5. **Q-Table Update**:
+        
         $Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]$
         
         - $\alpha \in [0, 1]$ is the learning rate that controls how quickly new values replace old ones.
 
-     5. **Transition to the New State**: Update the current state $s$ to the new state $s'$.
-     6. **Episode Termination**: If $s'$ is a terminal state, restart the process with a new initial state.
+     6. **Transition to the New State**: Update the current state $s$ to the new state $s'$.
+     7. **Episode Termination**: If $s'$ is a terminal state, restart the process with a new initial state.
 
-3. **Convergence**:
+4. **Convergence**:
+5. 
    - Repeat the process until the Q-table $Q(s, a)$ converges to stable values. Ultimately, the optimal policy $\pi^*(s)$ is given by:
    $\pi^*(s) = \arg\max_a Q(s, a)$
 
@@ -193,9 +201,13 @@ Let's simulate the Q-Learning update process for these steps.
 
 **At Time 4**:
 - **State**: $s_4 = (Down, Up)$
+  
 - **Action**: Assume the agent selects "Sell (S)".
+  
 - **Reward**: The price increases, so $r = 0$.
+  
 - **Next State**: $s_5 = (Up, Down)$
+  
 - **Q-Table Update**:
   
   $Q((Down, Up), S) = Q((Down, Up), S) + \alpha \left[ r + \gamma \max_{a'} Q((Up, Down), a') - Q((Down, Up), S) \right]$
@@ -206,8 +218,11 @@ Let's simulate the Q-Learning update process for these steps.
 
 **At Time 5**:
 - **State**: $s_5 = (Up, Down)$
+  
 - **Action**: Assume the agent selects "Hold (H)".
+  
 - **Reward**: The price increases, so $r = 0$ (since no profit or loss is realized).
+  
 - **Q-Table Update**:
   
   $Q((Up, Down), H) = Q((Up, Down), H) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q((Up, Down), H) \right]$

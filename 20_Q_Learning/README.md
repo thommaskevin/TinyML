@@ -94,9 +94,8 @@ Q-Learning is an off-policy algorithm that iteratively updates the function $Q(s
      2. **Action Selection**: Choose an action $a$ using an exploration policy (e.g., ε-greedy).
      3. **Action Execution and Reward Observation**: Execute the action $a$, observe the reward $r$ and the new state $s'$.
      4. **Q-Table Update**:
-        \[
-        Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
-        \]
+        $Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]$
+        
         - $\alpha \in [0, 1]$ is the learning rate that controls how quickly new values replace old ones.
 
      5. **Transition to the New State**: Update the current state $s$ to the new state $s'$.
@@ -104,10 +103,7 @@ Q-Learning is an off-policy algorithm that iteratively updates the function $Q(s
 
 3. **Convergence**:
    - Repeat the process until the Q-table $Q(s, a)$ converges to stable values. Ultimately, the optimal policy $\pi^*(s)$ is given by:
-   \[
-   \pi^*(s) = \arg\max_a Q(s, a)
-   \]
-
+   $\pi^*(s) = \arg\max_a Q(s, a)$
 
 ###   2.4 - Convergence Considerations
 
@@ -181,13 +177,10 @@ Let's simulate the Q-Learning update process for these steps.
 - **Reward**: The next price decreases, so \(r = 0\).
 - **Next State**: \(s_4 = (Down, Up)\)
 - **Q-Table Update**:
-  \[
-  Q((Up, Up), B) = Q((Up, Up), B) + \alpha \left[ r + \gamma \max_{a'} Q((Down, Up), a') - Q((Up, Up), B) \right]
-  \]
+  $Q((Up, Up), B) = Q((Up, Up), B) + \alpha \left[ r + \gamma \max_{a'} Q((Down, Up), a') - Q((Up, Up), B) \right]$
+  
   - Assuming \(\alpha = 0.1\), and the maximum Q-value in the next state is 0 (as all Q-values are still 0):
-  \[
-  Q((Up, Up), B) = 0 + 0.1 \times \left[ 0 + 0.9 \times 0 - 0 \right] = 0
-  \]
+  $Q((Up, Up), B) = 0 + 0.1 \times \left[ 0 + 0.9 \times 0 - 0 \right] = 0$
   The Q-value remains 0.
 
 **At Time 4**:
@@ -196,22 +189,18 @@ Let's simulate the Q-Learning update process for these steps.
 - **Reward**: The price increases, so \(r = 0\).
 - **Next State**: \(s_5 = (Up, Down)\)
 - **Q-Table Update**:
-  \[
-  Q((Down, Up), S) = Q((Down, Up), S) + \alpha \left[ r + \gamma \max_{a'} Q((Up, Down), a') - Q((Down, Up), S) \right]
-  \]
+  $Q((Down, Up), S) = Q((Down, Up), S) + \alpha \left[ r + \gamma \max_{a'} Q((Up, Down), a') - Q((Down, Up), S) \right]$
   - Again, assuming \(\alpha = 0.1\) and the maximum Q-value in the next state is 0:
-  \[
-  Q((Down, Up), S) = 0 + 0.1 \times \left[ 0 + 0.9 \times 0 - 0 \right] = 0
-  \]
+  $Q((Down, Up), S) = 0 + 0.1 \times \left[ 0 + 0.9 \times 0 - 0 \right] = 0$
 
 **At Time 5**:
 - **State**: \(s_5 = (Up, Down)\)
 - **Action**: Assume the agent selects "Hold (H)".
 - **Reward**: The price increases, so \(r = 0\) (since no profit or loss is realized).
 - **Q-Table Update**:
-  \[
-  Q((Up, Down), H) = Q((Up, Down), H) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q((Up, Down), H) \right]
-  \]
+- 
+  $Q((Up, Down), H) = Q((Up, Down), H) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q((Up, Down), H) \right]$
+  
   - The Q-value remains 0 as before.
 
 #####  2.5.2.4 - **Q-Table After Updates**

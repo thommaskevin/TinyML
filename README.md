@@ -40,6 +40,7 @@
 
 - 19 - [AutoEncoder](https://github.com/thommaskevin/TinyML/tree/main/19_Autoencoder)
 
+- 20 - [Q-Learning](https://github.com/thommaskevin/TinyML/tree/main/20_Q_Learning)
 
 
 ## Medium - TinyML's Weekly Open Paper

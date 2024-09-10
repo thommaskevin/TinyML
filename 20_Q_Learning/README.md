@@ -3,10 +3,16 @@
 *From mathematical foundations to edge implementation*
 
 **Social media:**
+
+
 👨🏽‍💻 Github: [thommaskevin/TinyML](https://github.com/thommaskevin/TinyML)
+
 👷🏾 Linkedin: [Thommas Kevin](https://www.linkedin.com/in/thommas-kevin-ab9810166/)
+
 📽 Youtube: [Thommas Kevin](https://www.youtube.com/channel/UC7uazGXaMIE6MNkHg4ll9oA)
+
 :pencil2:CV Lattes CNPq: [Thommas Kevin Sales Flores](http://lattes.cnpq.br/0630479458408181)
+
 👨🏻‍🏫 Research group: [Conecta.ai](https://conect2ai.dca.ufrn.br/)
 
 
@@ -18,12 +24,19 @@
 ## SUMMARY
 
 1 - Introduction to Reinforcement Learning
+
 2 - Mathematical Foundations of Q-Learning
+
  2.1 - Basic Definitions
+ 
  2.2 - Bellman Equation
+ 
  2.3 - Q-Learning Algorithm
+ 
  2.4 - Convergence Considerations
+ 
  2.5 - Forecasting Numeric Example
+ 
 3 - TinyML Implementation
 
 
@@ -37,74 +50,77 @@ In RL, the agent perceives the environment through states, takes actions, and re
 ## 2 - Mathematical Foundations of Q-Learning
 
 
-At the heart of Q-Learning is the idea of learning an action-value function \( Q(s, a) \), which estimates the expected future reward of taking an action \( a \) in a state \( s \), following the best possible policy from that point.
+At the heart of Q-Learning is the idea of learning an action-value function $Q(s, a)$, which estimates the expected future reward of taking an action $a$ in a state $s$, following the best possible policy from that point.
 
 
 ###  2.1 - Basic Definitions
 
 
-- **State \( s \)**: Represents a particular configuration of the environment.
+- **State $s$**: Represents a particular configuration of the environment.
 
-- **Action \( a \)**: A decision or move that the agent can make in a state \( s \).
-- **Reward \( r \)**: A value received after taking an action, reflecting the immediate benefit.
+- **Action $a$**: A decision or move that the agent can make in a state $s$.
+- **Reward $r$**: A value received after taking an action, reflecting the immediate benefit.
 
-- **Policy \( \pi(s) \)**: A rule or function that maps states to actions. The goal is to find the optimal policy \( \pi^*(s) \).
+- **Policy $\pi(s)$**: A rule or function that maps states to actions. The goal is to find the optimal policy $\pi^*(s)$.
 
-- **Action-Value \( Q(s, a) \)**: The expected reward for taking action \( a \) in state \( s \) and following policy \( \pi \) thereafter.
+- **Action-Value $Q(s, a)$**: The expected reward for taking action $a$ in state $s$ and following policy $\pi$ thereafter.
 
 
 
 ###   2.2 - Bellman Equation
 
-The action-value function \( Q(s, a) \) can be expressed recursively using the Bellman equation:
-\[
-Q(s, a) = \mathbb{E} \left[ r + \gamma \cdot \max_{a'} Q(s', a') \mid s, a \right]
-\]
+The action-value function $Q(s, a)$ can be expressed recursively using the Bellman equation:
+
+$Q(s, a) = \mathbb{E} \left[ r + \gamma \cdot \max_{a'} Q(s', a') \mid s, a \right]$
+
 where:
 
-- \( \gamma \in [0, 1] \) is the discount factor that weighs the importance of future rewards relative to immediate rewards.
+- $\gamma \in [0, 1]$ is the discount factor that weighs the importance of future rewards relative to immediate rewards.
 
-- \( \mathbb{E} \) denotes the expected value, considering the transition probabilities between states.
+- $\mathbb{E}$ denotes the expected value, considering the transition probabilities between states.
 
 
 
 ###   2.3 - Q-Learning Algorithm
 
-Q-Learning is an off-policy algorithm that iteratively updates the function \( Q(s, a) \) without requiring a model of the environment.
+Q-Learning is an off-policy algorithm that iteratively updates the function $Q(s, a)$ without requiring a model of the environment.
 
 **Step by Step:**
 
 1. **Initialization**:
-   - Initialize the Q-table arbitrarily: \( Q(s, a) = 0 \) for all \( s \) and \( a \).
+   
+   - Initialize the Q-table arbitrarily: $Q(s, a) = 0$ for all $s$ and $a$.
 
-2. **Iteration**:
+3. **Iteration**:
    - For each episode (a set of steps until the terminal state):
-     1. **Observation of Initial State**: Observe the initial state \( s \).
-     2. **Action Selection**: Choose an action \( a \) using an exploration policy (e.g., ε-greedy).
-     3. **Action Execution and Reward Observation**: Execute the action \( a \), observe the reward \( r \) and the new state \( s' \).
-     4. **Q-Table Update**:
-        \[
-        Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
-        \]
-        - \( \alpha \in [0, 1] \) is the learning rate that controls how quickly new values replace old ones.
+     
+     1. **Observation of Initial State**: Observe the initial state $s$.
+        
+     3. **Action Selection**: Choose an action $a$ using an exploration policy (e.g., ε-greedy).
+        
+     4. **Action Execution and Reward Observation**: Execute the action $a$, observe the reward $r$ and the new state $s'$.
+     5. **Q-Table Update**:
+        
+        $Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]$
+        
+        - $\alpha \in [0, 1]$ is the learning rate that controls how quickly new values replace old ones.
 
-     5. **Transition to the New State**: Update the current state \( s \) to the new state \( s' \).
-     6. **Episode Termination**: If \( s' \) is a terminal state, restart the process with a new initial state.
+     6. **Transition to the New State**: Update the current state $s$ to the new state $s'$.
+     7. **Episode Termination**: If $s'$ is a terminal state, restart the process with a new initial state.
 
-3. **Convergence**:
-   - Repeat the process until the Q-table \( Q(s, a) \) converges to stable values. Ultimately, the optimal policy \( \pi^*(s) \) is given by:
-   \[
-   \pi^*(s) = \arg\max_a Q(s, a)
-   \]
-
+4. **Convergence**:
+   
+   - Repeat the process until the Q-table $Q(s, a)$ converges to stable values. Ultimately, the optimal policy $\pi^*(s)$ is given by:
+     
+   $\pi^*(s) = \arg\max_a Q(s, a)$
 
 ###   2.4 - Convergence Considerations
 
-Q-Learning converges to the optimal policy \( \pi^*(s) \), assuming all actions are explored infinitely often and the sum of the learning rates \( \alpha \) over time also converges to zero.
+Q-Learning converges to the optimal policy $\pi^*(s)$, assuming all actions are explored infinitely often and the sum of the learning rates $\alpha$ over time also converges to zero.
 
-- **Exploration vs. Exploitation**: The ε-greedy policy is often used, where with probability ε the agent chooses a random action (exploration), and with probability \( 1 - ε \) chooses the best action based on the Q-table (exploitation).
+- **Exploration vs. Exploitation**: The ε-greedy policy is often used, where with probability ε the agent chooses a random action (exploration), and with probability $1 - ε$ chooses the best action based on the Q-table (exploitation).
   
-- **Learning Rate \( \alpha \)**: It should decrease, but not too quickly, to ensure that new learning can be incorporated while not completely discarding old knowledge.
+- **Learning Rate $\alpha$**: It should decrease, but not too quickly, to ensure that new learning can be incorporated while not completely discarding old knowledge.
 
 
 ###   2.5 - Numerical Example of Q-Learning for Forecasting
@@ -113,19 +129,19 @@ Let's walk through a numerical example of using Q-Learning to make forecasting d
 
 ####  2.5.1 - Problem Setup
 
-- **States (\(s_t\))**: The state represents recent price movements. For simplicity, we'll define the state as the price movement over the last two time steps: \(s_t = (p_{t-1}, p_{t-2})\), where \(p_t\) is the price at time \(t\).
+- **States ($s_t$)**: The state represents recent price movements. For simplicity, we'll define the state as the price movement over the last two time steps: $s_t = (p_{t-1}, p_{t-2})$, where $p_t$ is the price at time $t$.
   
-- **Actions (\(a_t\))**: The possible actions are:
+- **Actions ($a_t$)**: The possible actions are:
   1. Buy (B)
   2. Sell (S)
   3. Hold (H)
 
-- **Rewards (\(r_t\))**:
-  - If the agent buys at \(t\) and the price increases at \(t+1\), reward = +1.
-  - If the agent sells at \(t\) and the price decreases at \(t+1\), reward = +1.
+- **Rewards ($r_t$)**:
+  - If the agent buys at $t$ and the price increases at $t+1$, reward = +1.
+  - If the agent sells at $t$ and the price decreases at $t+1$, reward = +1.
   - Otherwise, reward = 0.
 
-- **Discount Factor (\(\gamma\))**: Let's assume \(\gamma = 0.9\).
+- **Discount Factor ($\gamma$)**: Let's assume $\gamma = 0.9$.
 
 ####  2.5.2 - Step-by-Step Example
 
@@ -133,7 +149,7 @@ Let's walk through a numerical example of using Q-Learning to make forecasting d
 
 We'll initialize the Q-Table for the three possible actions across all states. Initially, all Q-values are set to 0.
 
-| State (\(s_t\))  | Buy (B) | Sell (S) | Hold (H) |
+| State ($s_t$)  | Buy (B) | Sell (S) | Hold (H) |
 |------------------|---------|----------|----------|
 | (Up, Up)         | 0       | 0        | 0        |
 | (Up, Down)       | 0       | 0        | 0        |
@@ -144,7 +160,7 @@ We'll initialize the Q-Table for the three possible actions across all states. I
 
 Assume we have the following price movements over 5 time steps:
 
-| Time | Price (\(p_t\)) | Price Change |
+| Time | Price ($p_t$) | Price Change |
 |------|-----------------|--------------|
 | 1    | 100             | —            |
 | 2    | 102             | Up           |
@@ -154,7 +170,7 @@ Assume we have the following price movements over 5 time steps:
 
 The corresponding states over time are:
 
-| Time | State (\(s_t\)) |
+| Time | State ($s_t$) |
 |------|-----------------|
 | 3    | (Up, Up)        |
 | 4    | (Down, Up)      |
@@ -165,42 +181,53 @@ The corresponding states over time are:
 Let's simulate the Q-Learning update process for these steps.
 
 **At Time 3**:
-- **State**: \(s_3 = (Up, Up)\)
+
+- **State**: $s_3 = (Up, Up)$
+  
 - **Action**: Assume the agent randomly selects "Buy (B)" (exploration).
-- **Reward**: The next price decreases, so \(r = 0\).
-- **Next State**: \(s_4 = (Down, Up)\)
+  
+- **Reward**: The next price decreases, so $r = 0$.
+  
+- **Next State**: $s_4 = (Down, Up)$
+  
 - **Q-Table Update**:
-  \[
-  Q((Up, Up), B) = Q((Up, Up), B) + \alpha \left[ r + \gamma \max_{a'} Q((Down, Up), a') - Q((Up, Up), B) \right]
-  \]
-  - Assuming \(\alpha = 0.1\), and the maximum Q-value in the next state is 0 (as all Q-values are still 0):
-  \[
-  Q((Up, Up), B) = 0 + 0.1 \times \left[ 0 + 0.9 \times 0 - 0 \right] = 0
-  \]
+  
+  $Q((Up, Up), B) = Q((Up, Up), B) + \alpha \left[ r + \gamma \max_{a'} Q((Down, Up), a') - Q((Up, Up), B) \right]$
+  
+  - Assuming $\alpha = 0.1$, and the maximum Q-value in the next state is 0 (as all Q-values are still 0):
+    
+  $Q((Up, Up), B) = 0 + 0.1 \times \left[ 0 + 0.9 \times 0 - 0 \right] = 0$
+  
   The Q-value remains 0.
 
 **At Time 4**:
-- **State**: \(s_4 = (Down, Up)\)
+- **State**: $s_4 = (Down, Up)$
+  
 - **Action**: Assume the agent selects "Sell (S)".
-- **Reward**: The price increases, so \(r = 0\).
-- **Next State**: \(s_5 = (Up, Down)\)
+  
+- **Reward**: The price increases, so $r = 0$.
+  
+- **Next State**: $s_5 = (Up, Down)$
+  
 - **Q-Table Update**:
-  \[
-  Q((Down, Up), S) = Q((Down, Up), S) + \alpha \left[ r + \gamma \max_{a'} Q((Up, Down), a') - Q((Down, Up), S) \right]
-  \]
-  - Again, assuming \(\alpha = 0.1\) and the maximum Q-value in the next state is 0:
-  \[
-  Q((Down, Up), S) = 0 + 0.1 \times \left[ 0 + 0.9 \times 0 - 0 \right] = 0
-  \]
+  
+  $Q((Down, Up), S) = Q((Down, Up), S) + \alpha \left[ r + \gamma \max_{a'} Q((Up, Down), a') - Q((Down, Up), S) \right]$
+
+  - Again, assuming $\alpha = 0.1$ and the maximum Q-value in the next state is 0:
+    
+  $Q((Down, Up), S) = 0 + 0.1 \times \left[ 0 + 0.9 \times 0 - 0 \right] = 0$
 
 **At Time 5**:
-- **State**: \(s_5 = (Up, Down)\)
+- **State**: $s_5 = (Up, Down)$
+  
 - **Action**: Assume the agent selects "Hold (H)".
-- **Reward**: The price increases, so \(r = 0\) (since no profit or loss is realized).
+  
+- **Reward**: The price increases, so $r = 0$ (since no profit or loss is realized).
+  
 - **Q-Table Update**:
-  \[
-  Q((Up, Down), H) = Q((Up, Down), H) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q((Up, Down), H) \right]
-  \]
+  
+  $Q((Up, Down), H) = Q((Up, Down), H) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q((Up, Down), H) \right]$
+  
   - The Q-value remains 0 as before.
 
 #####  2.5.2.4 - **Q-Table After Updates**

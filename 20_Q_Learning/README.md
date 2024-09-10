@@ -308,8 +308,6 @@ int chooseAction(int state) {
     return maxAction; // Choose the best action
   }
 }
-
-
 ```
 
 

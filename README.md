@@ -42,6 +42,8 @@
 
 - 20 - [Q-Learning](https://github.com/thommaskevin/TinyML/tree/main/20_Q_Learning)
 
+- 21 - [Huber Regression](https://github.com/thommaskevin/TinyML/tree/main/21_Huber_Regressor)
+
 
 ## Medium - TinyML's Weekly Open Paper
 

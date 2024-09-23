@@ -61,7 +61,8 @@ However, in some cases, sufficient training data may not be readily available. I
 Figure 1 provides an overview of both QAT and PTQ, highlighting the key differences and use cases for each method in the context of NN quantization.
 
 ![Figure 2](./figures/fig00.png)
-**Figure 1**: How to quantize a pre-trained model via either Quantization-Aware Training (QAT) or Post-Training Quantizatino (PTQ). Calibration data can be either a subset of training data or a small set of unlabelled input data. Refer to Section 3 to review calibration.
+
+**Figure 1**: How to quantize a pre-trained model via either Quantization-Aware Training (QAT) or Post-Training Quantizatino (PTQ). Calibration data can be either a subset of training data or a small set of unlabelled input data. Refer to Section 3 to review calibration.
 
 
 
@@ -71,6 +72,7 @@ Quantization, as the name implies, is to let the weight and activation of the fo
 
 
 ![Figure 2](./figures/fig1.png)
+
 **Figure 2**: The process of quantization.
 
 Quantization itself can be divided into linear quantization and non-linear quantization. The steps of non-linear quantization are not fixed, and the method is not fixed, too. Basically, it only reduces the storage size of the model. There is no acceleration and even time complexity in model inference and data processing. So the main discussion is linear quantization. The basic principle of linear quantization is relatively clear. Take the 32-bit floating point to 8-bit integer as an example. Establish the data mapping relationship between the two, from the original data accuracy value to the corresponding quantized value. Its general form can be expressed as:
@@ -107,6 +109,7 @@ where
 A floating point number encodes the sign bit, mantissa, and exponent in its binary representation. In single precision floating point - the most common precision used for NN training on GPUs - , 32 total bits are given, in which 8 bits are allocated for the exponent, 23 bits are allocated for the mantissa, and 1 bit is allocated for the sign bit, as seen in Figure 3.
 
 ![Figure 2](./figures/fig2.png)
+
 **Figure 3**: IEEE single-precision floating point bit fields. The binary of a floating point value is broken up, from least significant to most significant bit, into 23 bits for the mantissa field, 8 bits for the exponent field, and 1 bit for the sign bit.
 
 
@@ -176,7 +179,8 @@ Fixed point is typically used in embedded systems that cannot afford to have a f
 
 
 ![Figure 3](./figures/fig2.png)
-**Figure 3**: Example 32-bit fixed point format, where, from least significant to most significant bit, 24 bits are chosen for the mantissa, 7 bits are chosen for the integer, and 1 bit is for the sign bit. The value of the global fixed exponent depends on the number of bits allocated for the mantissa. In this case, there are 24 mantissa bits, implying that the global fixed exponent is $2^{−24}$.
+
+**Figure 4**: Example 32-bit fixed point format, where, from least significant to most significant bit, 24 bits are chosen for the mantissa, 7 bits are chosen for the integer, and 1 bit is for the sign bit. The value of the global fixed exponent depends on the number of bits allocated for the mantissa. In this case, there are 24 mantissa bits, implying that the global fixed exponent is $2^{−24}$.
 
 
 Since our value is a fraction, we do not need any integer bits, so this field is all zeroes. For the mantissa field, given 24 bits and a global exponent of $2^{−24}$, we store the integer 5,592,405 in the mantissa field because 5592405 × $2^{−24}$ ≈ 1/3 . This can be derived for any real number fraction 𝑟 and 𝑚 mantissa bits, where the corresponding fixed point mantissa value is ⌊𝑟 · 2 𝑚⌋. As such, to determine based on the sign bit, integer field, mantissa field, and global exponent the fixed point value 𝑛, we compute
@@ -202,7 +206,8 @@ Quantization Aware Training (QAT) is a technique used to train neural networks w
 
 
 ![Figure 3](./figures/fig3.png)
-**Figure 4**: Quantization Aware Training Scheme.
+
+**Figure 5**: Quantization Aware Training Scheme.
 
 
 ###  2.1 - Simulating Quantization During Training

@@ -73,11 +73,7 @@ Where:
 
 Weight pruning involves setting weights $W_{ij}$ to zero if their magnitude is below a threshold $\epsilon$, as they contribute minimally to the model's output:
 
-$W_{ij}^{(l)} = 
-\begin{cases} 
-W_{ij}^{(l)}, & \text{if} \ |W_{ij}^{(l)}| \geq \epsilon \\
-0, & \text{if} \ |W_{ij}^{(l)}| < \epsilon
-\end{cases}$
+$W_{ij}^{(l)} = \begin{cases} W_{ij}^{(l)}, & \text{if} \ |W_{ij}^{(l)}| \geq \epsilon \\0, & \text{if} \ |W_{ij}^{(l)}| < \epsilon\end{cases}$
 
 This results in a sparse weight matrix. After pruning, the model is typically retrained (fine-tuned) to recover lost accuracy.
 

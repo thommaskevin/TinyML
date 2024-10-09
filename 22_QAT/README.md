@@ -1,4 +1,4 @@
-# TinyML - Huber Regression
+# TinyML - Quantization Aware Training
 
 *From mathematical foundations to edge implementation*
 

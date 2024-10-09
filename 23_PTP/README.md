@@ -129,9 +129,13 @@ $$ W =\begin{pmatrix}
 w_{11} & w_{12} & w_{13} \\
 w_{21} & w_{22} & w_{23} \\
 w_{31} & w_{32} & w_{33}
-\end{pmatrix}$
+\end{pmatrix}$$
+
+
 After unstructured pruning, the sparse matrix looks like:
-$W_{\text{pruned}} = 
+
+
+$$W_{\text{pruned}} = 
 \begin{pmatrix}
 w_{11} & 0 & w_{13} \\
 0 & w_{22} & 0 \\

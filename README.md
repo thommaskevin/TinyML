@@ -44,6 +44,10 @@
 
 - 21 - [Huber Regression](https://github.com/thommaskevin/TinyML/tree/main/21_Huber_Regressor)
 
+- 22 - [Quantization Aware Training](https://github.com/thommaskevin/TinyML/tree/main/22_QAT)
+
+- 23 - [Post-Training Pruning](https://github.com/thommaskevin/TinyML/tree/main/23_PTP)
+
 
 ## Medium - TinyML's Weekly Open Paper
 

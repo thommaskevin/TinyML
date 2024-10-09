@@ -125,8 +125,7 @@ In unstructured pruning, individual weights are removed from the weight matrices
 
 Consider a dense weight matrix W before pruning:
 
-$W = 
-\begin{pmatrix}
+$$ W =\begin{pmatrix}
 w_{11} & w_{12} & w_{13} \\
 w_{21} & w_{22} & w_{23} \\
 w_{31} & w_{32} & w_{33}
@@ -137,7 +136,7 @@ $W_{\text{pruned}} =
 w_{11} & 0 & w_{13} \\
 0 & w_{22} & 0 \\
 w_{31} & 0 & w_{33}
-\end{pmatrix}$
+\end{pmatrix}$$
 
 This reduces the number of non-zero weights but may not lead to significant hardware speedups.
 
@@ -153,20 +152,20 @@ In structured pruning, entire structures, such as neurons, filters, or even laye
 
 For example, consider a layer with 3 neurons:
 
-$z^{(l)} = \begin{pmatrix}
+$$z^{(l)} = \begin{pmatrix}
 z_1^{(l)} \\
 z_2^{(l)} \\
 z_3^{(l)}
-\end{pmatrix}$
+\end{pmatrix}$$
 
 
 After pruning, neuron $z_2^{(l)}$ is removed:
 
 
-$z_{\text{pruned}}^{(l)} = \begin{pmatrix}
+$$z_{\text{pruned}}^{(l)} = \begin{pmatrix}
 z_1^{(l)} \\
 z_3^{(l)}
-\end{pmatrix}$
+\end{pmatrix}$$
 
 Structured pruning simplifies the architecture and leads to easier optimization for hardware.
 
@@ -192,11 +191,11 @@ $W = \{w_{ij}\}, \quad \text{where} \ w_{ij} \in \mathbb{R}$
 
 For each weight $w_{ij}$, if the absolute value $|w_{ij}|$ is less than a predefined threshold $\epsilon$, the weight is set to zero (pruned):
 
-$w_{ij} =
+$$w_{ij} =
 \begin{cases} 
 w_{ij}, & \text{if} \ |w_{ij}| \geq \epsilon \\
 0, & \text{if} \ |w_{ij}| < \epsilon
-\end{cases}$
+\end{cases}$$
 
 **Pruning Process**
 
@@ -238,11 +237,11 @@ Weights with smaller gradients contribute less to reducing the loss function. Th
 
 3. **Prune based on gradients**: Weights are pruned if their corresponding gradients are below the threshold:
 
-$w_{ij} = 
+$$w_{ij} = 
 \begin{cases} 
 w_{ij}, & \text{if} \ |\frac{\partial L}{\partial w_{ij}}| \geq \epsilon \\
 0, & \text{if} \ |\frac{\partial L}{\partial w_{ij}}| < \epsilon
-\end{cases}$
+\end{cases}$$
 
 **Example**
 

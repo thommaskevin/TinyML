@@ -17,7 +17,7 @@
 
 
 
-![Figure 1](./figures/fig0.png)
+![Figure 1](./figures/fig00.png)
 
 
 

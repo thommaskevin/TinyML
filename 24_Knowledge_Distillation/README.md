@@ -94,11 +94,12 @@ The soft labels reveal that while the correct class is "cat," the model also con
 The soft labels are produced using the softmax function, which transforms the teacher model's logits (raw outputs before softmax) into probabilities. To smooth the probability distribution and allow the student to learn better, a temperature parameter ($T$) is introduced:
 
 
-$$
-q_i = \frac{\exp(z_i^{(T)}/T)}{\sum_{j} \exp(z_j^{(T)}/T)}
-$$
+$$q_i = \frac{\exp(z_i^{(T)}/T)}{\sum_{j} \exp(z_j^{(T)}/T)}$$
+
 where:
+
 - $z_i^{(T)}$ is the logit for class $i$ from the teacher model.
+
 - $T$ is the temperature hyperparameter.
 
 The temperature $T$ controls the smoothness of the probability distribution. When $T = 1$, the standard softmax is used. When $T > 1$, the probability distribution becomes softer, spreading the probability mass more evenly across classes. This helps the student capture more detailed information from the teacher model's output.
@@ -109,26 +110,22 @@ The temperature $T$ controls the smoothness of the probability distribution. Whe
 
 The training process in Knowledge Distillation relies on a combination of two loss functions: (1) the cross-entropy loss with respect to the true labels, and (2) the Kullback-Leibler (KL) divergence between the teacher’s soft labels and the student’s predictions. The overall loss function $L$ is formulated as:
 
-$$
-L = \alpha \cdot L_{\text{CE}}(y, p) + (1 - \alpha) \cdot T^2 \cdot L_{\text{KL}}(q, p)
-$$
+$$L = \alpha \cdot L_{\text{CE}}(y, p) + (1 - \alpha) \cdot T^2 \cdot L_{\text{KL}}(q, p)$$
 
 
 where:
 
 - $L_{\text{CE}}(y, p)$ is the cross-entropy loss between the true labels $y$ and the student model's predictions $p$:
+  
 
-  $$
-  L_{\text{CE}}(y, p) = -\sum_{i} y_i \log(p_i)
-  $$
+  $$L_{\text{CE}}(y, p) = -\sum_{i} y_i \log(p_i)$$
 
 - $L_{\text{KL}}(q, p)$ is the Kullback-Leibler divergence between the teacher’s soft predictions $q$ and the student’s soft predictions $p$:
 
-  $$
-  L_{\text{KL}}(q, p) = \sum_{i} q_i \log \left( \frac{q_i}{p_i} \right)
-  $$
+  $$L_{\text{KL}}(q, p) = \sum_{i} q_i \log \left( \frac{q_i}{p_i} \right)$$
 
 - $\alpha$ is a hyperparameter that controls the weight given to the cross-entropy loss and the distillation loss. Typically, $\alpha$ is chosen based on the relative importance of true labels and soft labels.
+
 - $T$ is the temperature parameter, which smooths the soft labels and helps the student learn the inter-class relationships better.
 
 ### 2.1 - Cross-Entropy Loss

@@ -1,0 +1,27 @@
+#define NUM_INPUTS 9216
+
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include "MobileNet.h"
+
+using namespace std;
+
+
+int main() {
+    MobileNet net;
+    unsigned char buffer[NUM_INPUTS];
+    float im[NUM_INPUTS];
+    FILE *file = fopen("X.bin", "rb");
+
+    while (fread(buffer, NUM_INPUTS, 1, file)) {
+        for (int i = 0; i < NUM_INPUTS; i++)
+            im[i] = buffer[i] / 255.0f;
+
+        cout << net.predict(im) << endl;
+    }
+
+    fclose(file);
+    return 0;
+}

@@ -1,0 +1,21 @@
+/**
+ * Depthwise 3x3 convolution without ReLU
+ *
+ * @param input
+ * @param output
+ * @param kernel
+ * @param width
+ * @param stride
+ */
+void conv2d_3x3x1(float *input, float *output, const float *kernel, const uint16_t width, uint8_t stride) {
+    uint16_t o = 0;
+
+    for (uint16_t y = 0; y <= width - 3; y += stride) {
+        const uint16_t offset = y * width;
+        float *i = input + offset;
+
+        for (uint16_t x = 0; x <= width - 3; x += stride) {
+            output[o++] = this->mult3x3(i + x, kernel, width);
+        }
+    }
+}

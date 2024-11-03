@@ -1,0 +1,22 @@
+/**
+ * Multiply 3x3 kernel on single 3x3 image patch
+ *
+ * @param inputs
+ * @param kernel
+ * @param width
+ */
+inline float mult3x3(float *inputs, const float kernel[9], const uint16_t width) {
+    const float *i1 = inputs;
+    const float *i2 = inputs + width;
+    const float *i3 = inputs + width + width;
+
+    return i1[0] * kernel[0] +
+           i1[1] * kernel[1] +
+           i1[2] * kernel[2] +
+           i2[0] * kernel[3] +
+           i2[1] * kernel[4] +
+           i2[2] * kernel[5] +
+           i3[0] * kernel[6] +
+           i3[1] * kernel[7] +
+           i3[2] * kernel[8];
+}

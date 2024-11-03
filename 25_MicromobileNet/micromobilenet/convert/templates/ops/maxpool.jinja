@@ -1,0 +1,23 @@
+/**
+ * (Global) MaxPooling
+ *
+ * @param inputs
+ * @param outputs
+ * @param width
+ * @param channels
+ */
+void maxpool(float *inputs, float *outputs, const uint16_t width, const uint16_t channels) {
+    const uint16_t size = width * width;
+
+    for (uint16_t c = 0; c < channels; c++) {
+        const uint16_t offset = size * c;
+        float *in = inputs + offset;
+        float greatest = in[0];
+
+        for (uint16_t j = 1; j < size; j++)
+            if (in[j] > greatest)
+                greatest = in[j];
+
+        outputs[c] = greatest;
+    }
+}

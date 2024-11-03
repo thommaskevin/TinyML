@@ -1,0 +1,29 @@
+/**
+ * Zero padding 2D
+ *
+ * @param inputs
+ * @param outputs
+ * @param width
+ */
+void pad(float *inputs, float *outputs, uint16_t width) {
+    const uint16_t paddedWidth = width + 2;
+    uint16_t i = 0;
+    uint16_t o = 0;
+
+    // first row of zeros
+    for (uint16_t x = 0; x < paddedWidth; x++)
+        outputs[o++] = 0;
+
+    for (uint16_t y = 0; y < width; y++) {
+        outputs[o++] = 0;
+
+        for (uint16_t x = 0; x < width; x++)
+            outputs[o++] = inputs[i++];
+
+        outputs[o++] = 0;
+    }
+
+    // last row of zeros
+    for (uint16_t x = 0; x < paddedWidth; x++)
+        outputs[o++] = 0;
+}

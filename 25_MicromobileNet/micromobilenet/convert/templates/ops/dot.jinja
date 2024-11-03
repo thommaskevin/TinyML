@@ -1,0 +1,17 @@
+/**
+ * Dot product with bias
+ *
+ * @param inputs
+ * @param outputs
+ * @param kernel
+ * @param bias
+ * @param length
+ */
+void dot(float *inputs, float *outputs, const float *weights, const float bias, const uint16_t length) {
+    float sum = 0;
+
+    for (uint16_t i = 0; i < length; i++)
+        sum += inputs[i] * weights[i];
+
+    outputs[0] = sum + bias;
+}

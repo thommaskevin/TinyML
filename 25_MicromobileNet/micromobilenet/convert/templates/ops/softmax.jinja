@@ -1,0 +1,19 @@
+/**
+ * Softmax activation
+ *
+ * @param inputs
+ * @param outputs
+ * @param numOutputs
+ */
+void softmax(float *inputs, float *outputs, uint16_t numOutputs) {
+    float sum = 0;
+
+    for (uint16_t i = 0; i < numOutputs; i++) {
+        const float e = exp(inputs[i]);
+        outputs[i] = e;
+        sum += e;
+    }
+
+    for (uint16_t i = 0; i < numOutputs; i++)
+        outputs[i] /= sum;
+}

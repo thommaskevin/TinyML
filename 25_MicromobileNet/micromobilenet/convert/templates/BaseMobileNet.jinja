@@ -1,0 +1,80 @@
+/**
+ * "Compiled" implementation of modified MobileNet
+ */
+class {{ classname }} {
+public:
+    const uint16_t numInputs = {{ num_inputs }};
+    const uint16_t numOutputs = {{ num_outputs }};
+    float outputs[{{ num_outputs }}];
+    float arena[{{ arena_size * 2 }}];
+    uint16_t output;
+    float proba;
+
+    /**
+     *
+     */
+    {{ classname }}() : output(0), proba(0) {
+        for (uint16_t i = 0; i < numOutputs; i++)
+            outputs[i] = 0;
+    }
+
+    /**
+     *
+     * @param input
+     */
+    uint16_t predict(float *input) {
+        float *ping = arena;
+        float *pong = arena + {{ arena_size }};
+
+        // conv2d (0)
+        for (int16_t d = 0; d < {{ conv_0.output_shape[2] }}; d++)
+            this->conv2d_3x3x1(input, ping + {{ conv_0.output_shape[0] }} * {{ conv_0.output_shape[1] }} * d, conv2d_0_weights[d], {{ conv_0.input_shape[0] }}, {{ conv_0.strides[0] }});
+
+        {% for i, hidden in enumerate(hidden_layers) %}
+            {% if 'padding' in hidden %}
+            // padding ({{ i + 1 }})
+            for (int16_t d = 0; d < {{ hidden['padding'].input_shape[2] }}; d++)
+                this->pad(ping + {{ hidden['padding'].input_shape[0] }} * {{ hidden['padding'].input_shape[1] }} * d, pong + {{ hidden['padding'].output_shape[0] }} * {{ hidden['padding'].output_shape[1] }} * d, {{ hidden['padding'].input_shape[0] }});
+
+            memcpy(ping, pong, sizeof(float) * {{ hidden['padding'].output_shape[0] }} * {{ hidden['padding'].output_shape[1] }} * {{ hidden['padding'].output_shape[2] }});
+            {% endif %}
+
+            // depthwise ({{ i + 1 }})
+            for (int16_t d = 0; d < {{ hidden['dw'].input_shape[2] }}; d++)
+                this->depthwise_conv(ping + {{ hidden['dw'].input_shape[0] }} * {{ hidden['dw'].input_shape[1] }} * d, pong + {{ hidden['pw'].input_shape[0] }} * {{ hidden['pw'].input_shape[1] }} * d, depthwise_{{ i + 1 }}_weights[d], {{ hidden['dw'].input_shape[0] }}, {{ hidden['dw'].strides[0] }});
+
+            // pointwise ({{ i + 1 }})
+            for (int16_t d = 0; d < {{ hidden['pw'].output_shape[2] }}; d++)
+                this->pointwise_conv(pong, ping + {{ hidden['pw'].input_shape[0] }} * {{ hidden['pw'].input_shape[1] }} * d, pointwise_{{ i + 1 }}_weights[d], {{ hidden['dw'].output_shape[0] }}, {{ hidden['dw'].output_shape[2] }});
+        {% endfor %}
+
+        this->maxpool(ping, pong, {{ maxpool.input_shape[0] }}, {{ maxpool.input_shape[-1] }});
+
+        for (uint16_t d = 0; d < numOutputs; d++)
+            this->dot(pong, ping + d, conv2d_last_weights[d], conv2d_last_bias[d], {{ conv_last.input_shape[-1] }});
+
+        this->softmax(ping, outputs, numOutputs);
+
+        return this->argmax();
+    }
+
+    {% include './ops/argmax' %}
+
+protected:
+    const float conv2d_0_weights{{ conv_0.weights | to_weights_shape }} = {{ conv_0.weights | to_weights_array }};
+    {% for i, hidden in enumerate(hidden_layers) %}
+    const float depthwise_{{ i + 1 }}_weights{{ hidden['dw'].weights | to_weights_shape }} = {{ hidden['dw'].weights | to_weights_array }};
+    const float pointwise_{{ i + 1 }}_weights{{ hidden['pw'].weights | to_weights_shape }} = {{ hidden['pw'].weights | to_weights_array }};
+    {% endfor %}
+    const float conv2d_last_weights{{ conv_last.weights | to_weights_shape }} = {{ conv_last.weights | to_weights_array }};
+    const float conv2d_last_bias[{{ conv_last.bias | length }}] = {{ conv_last.bias | to_array }};
+
+    {% include './ops/mult3x3' %}
+    {% include './ops/pad' %}
+    {% include './ops/conv3x3x1' %}
+    {% include './ops/depthwise_conv' %}
+    {% include './ops/pointwise_conv' %}
+    {% include './ops/maxpool' %}
+    {% include './ops/dot' %}
+    {% include './ops/softmax' %}
+};

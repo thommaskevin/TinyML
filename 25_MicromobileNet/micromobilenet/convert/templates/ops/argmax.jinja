@@ -1,0 +1,16 @@
+/**
+ * Get index of max output
+ */
+uint16_t argmax() {
+    this->output = 0;
+    this->proba = outputs[0];
+
+    for (uint16_t i = 1; i < numOutputs; i++) {
+        if (outputs[i] > this->proba) {
+            this->proba = outputs[i];
+            this->output = i;
+        }
+    }
+
+    return this->output;
+}

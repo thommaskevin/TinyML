@@ -1,0 +1,28 @@
+/**
+ * Pointwise 1x1 convolution with ReLU
+ *
+ * @param inputs
+ * @param outputs
+ * @param kernel
+ * @param width
+ * @param channels
+ */
+void pointwise_conv(float *inputs, float *outputs, const float *kernel, const uint16_t width, const uint16_t channels) {
+    const uint16_t size = width * width;
+    uint16_t o = 0;
+
+    for (uint16_t y = 0; y < width; y += 1) {
+        const uint16_t offset = y * width;
+        for (uint16_t x = 0; x < width; x += 1) {
+            float val = 0;
+
+            for (uint16_t c = 0; c < channels; c++)
+                val += inputs[(offset + x) + size * c] * kernel[c];
+
+            if (val < 0) val = 0;
+            else if (val > 6) val = 6;
+
+            outputs[o++] = val;
+        }
+    }
+}

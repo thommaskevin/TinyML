@@ -77,7 +77,9 @@ This block is used at the beginning of the model to process the input image and 
 
 For an input tensor $X$ of dimensions $(H, W, C_{\text{in}})$ and a filter tensor $W$ of dimensions $(k, k, C_{\text{in}}, C_{\text{out}})$, the output feature map $Y$ can be described by:
 
+
 $$Y(i, j, c) = \sum_{m=1}^{k} \sum_{n=1}^{k} \sum_{p=1}^{C_{\text{in}}} X(i + m, j + n, p) \cdot W(m, n, p, c)$$
+
 
 where:
 - $k$ is the kernel size,

@@ -104,7 +104,10 @@ $$Y_{\text{depthwise}}(i, j, c) = \sum_{m=1}^{k} \sum_{n=1}^{k} X(i + m, j + n, 
 This produces an intermediate tensor with the same depth as the input but reduced in spatial dimensions. The computational cost is:
 
 $$
+\begin(equation}{
 \text{Cost}_{\text{depthwise}} = H \cdot W \cdot C_{\text{in}} \cdot k^2
+}
+\end(equation)
 $$
 
 

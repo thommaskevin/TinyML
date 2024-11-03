@@ -103,7 +103,7 @@ $$Y_{\text{depthwise}}(i, j, c) = \sum_{m=1}^{k} \sum_{n=1}^{k} X(i + m, j + n, 
 
 This produces an intermediate tensor with the same depth as the input but reduced in spatial dimensions. The computational cost is:
 
-$$Cost_{\text{depthwise}} = H \cdot W \cdot C_{\text{in}} \cdot k^2$$
+$${Cost}_{\text{depthwise}} = H \cdot W \cdot C_{\text{in}} \cdot k^2$$
 
 
 #### 2.2.2 - Pointwise Convolution (1x1 Convolution)
@@ -115,7 +115,7 @@ $$Y_{\text{pointwise}}(i, j, c) = \sum_{p=1}^{C_{\text{in}}} Y_{\text{depthwise}
 This operation maintains spatial dimensions but changes the depth. The computational cost is:
 
 
-$$\text{Cost}_{\text{pointwise}} = H \cdot W \cdot C_{\text{in}} \cdot C_{\text{out}}$$
+$${Cost}_{\text{pointwise}} = H \cdot W \cdot C_{\text{in}} \cdot C_{\text{out}}$$
 
 
 Together, depthwise separable convolutions significantly reduce multiplications and additions, providing similar expressive power as standard convolutions but with fewer computations.

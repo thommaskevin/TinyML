@@ -48,6 +48,9 @@
 
 - 23 - [Post-Training Pruning](https://github.com/thommaskevin/TinyML/tree/main/23_PTP)
 
+- 24 - [Knowledge Distillation](https://github.com/thommaskevin/TinyML/tree/main/24_Knowledge_Distillation)
+
+- 25 - [MicroMobileNet](https://github.com/thommaskevin/TinyML/tree/main/25_MicromobileNet)
 
 ## Medium - TinyML's Weekly Open Paper
 

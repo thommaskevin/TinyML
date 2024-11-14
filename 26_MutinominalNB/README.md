@@ -18,21 +18,31 @@ _From mathematical foundations to edge implementation_
 
 ## SUMMARY
 
-1 - Introduction
+1 — Introduction
 
-2 - Detailed Look at Internal Blocks
+2 — Multinomial Naive Bayes
 
-2.1 - Standard Convolution Block
+2.1 —Bayes’ Theorem
 
-2.2 - Depthwise Separable Convolution Block
+2.2 — Multinomial Naive Bayes Formula
 
-2.3 - Bottleneck Block with Expansion
+2.3 — Estimating the Probabilities
 
-2.4 - Squeeze-and-Excitation Layer
+2.4 — Putting It All Together
 
-2.5 -Global Average Pooling and Fully Connected Layers
+2.5 — Example: Spam vs. Not Spam
 
-3 - TinyML Implementation
+3 — Bag-of-Words for Text Feature Extraction
+
+3.1 — Prepare the Text Corpus
+
+3.2 —Tokenization
+
+3.3 — Vocabulary Creation
+
+3.4 — Count Vectorization
+
+4— TinyML Implementation
 
 ---
 

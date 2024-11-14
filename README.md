@@ -52,6 +52,8 @@
 
 - 25 - [MicroMobileNet](https://github.com/thommaskevin/TinyML/tree/main/25_MicromobileNet)
 
+- 26 - [MultinominalNB (Text Classifier)](https://github.com/thommaskevin/TinyML/tree/main/26_MutinominalNB)
+
 ## Medium - TinyML's Weekly Open Paper
 
 - 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)

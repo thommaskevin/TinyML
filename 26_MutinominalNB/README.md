@@ -1,4 +1,4 @@
-# TinyML - Multinominal Naive Bayes Text Classifier with Bag-of-Words Feature Extraction
+# TinyML - Multinominal Naive Bayes (Text Classifier)
 
 _From mathematical foundations to edge implementation_
 

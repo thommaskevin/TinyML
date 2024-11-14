@@ -539,7 +539,7 @@ plt.show()
 
 
 
-#### 4.3.1 - Spam
+#### 4.3.2 - Not Spam
 
 ```python
 wc_spam = WordCloud(width = 500, height = 500, min_font_size = 10, background_color = 'white')

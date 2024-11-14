@@ -70,12 +70,12 @@ $$
 
 Where:
 
-- \(P(C \mid X)\): Posterior probability of class \(C\) given features \(X\)
-- \(P(X \mid C)\): Likelihood of features \(X\) given class \(C\)
-- \(P(C)\): Prior probability of class \(C\)
-- \(P(X)\): Probability of the feature set \(X\) (often ignored in Naive Bayes classification, as it is the same for all classes)
+- $P(C \mid X)$: Posterior probability of class $C$ given features $X$
+- $P(X \mid C)$: Likelihood of features $X$ given class $C$
+- $P(C)$: Prior probability of class $C$
+- $P(X)$: Probability of the feature set $X$ (often ignored in Naive Bayes classification, as it is the same for all classes)
 
-For classification, we want the class \(C\) that maximizes \(P(C \mid X)\). Since \(P(X)\) is constant across all classes, we can ignore it, leading to:
+For classification, we want the class $C$ that maximizes $P(C \mid X)$. Since $P(X)$ is constant across all classes, we can ignore it, leading to:
 
 $$
 P(C \mid X) \propto P(X \mid C) \cdot P(C)
@@ -85,11 +85,11 @@ $$
 
 In Multinomial Naive Bayes, we work with feature vectors representing word counts. Let:
 
-- \(X = (x_1, x_2, \dots, x_n)\): Feature vector where \(x_i\) is the count of word \(i\) in the document.
-- \(V\): Vocabulary of all possible words (features).
-- \(C\): A possible class label.
+- $X = (x_1, x_2, \dots, x_n)$: Feature vector where $x_i$ is the count of word $i$ in the document.
+- $V$: Vocabulary of all possible words (features).
+- $C$: A possible class label.
 
-Then, the probability of a class \(C\) given a document (feature vector) \(X\) is calculated as:
+Then, the probability of a class $C$ given a document (feature vector) $X$ is calculated as:
 
 $$
 P(C \mid X) \propto P(C) \prod_{i=1}^{|V|} P(x_i \mid C)^{x_i}
@@ -97,12 +97,12 @@ $$
 
 Where:
 
-- \(P(C)\): Prior probability of class \(C\), estimated as the proportion of documents in class \(C\).
-- \(P(x_i \mid C)\): Probability of word \(i\) occurring in a document from class \(C\).
+- $P(C)$: Prior probability of class $C$, estimated as the proportion of documents in class $C$.
+- $P(x_i \mid C)$: Probability of word $i$ occurring in a document from class $C$.
 
 ### 2.3 - Estimating the Probabilities
 
-The probabilities \(P(x_i \mid C)\) for each word \(i\) in the vocabulary are estimated as:
+The probabilities $P(x_i \mid C)$ for each word $i$ in the vocabulary are estimated as:
 
 $$
 P(x_i \mid C) = \frac{\text{count of word } i \text{ in documents of class } C + \alpha}{\text{total count of words in class } C + \alpha \cdot |V|}
@@ -110,19 +110,19 @@ $$
 
 Where:
 
-- \(\text{count of word } i \text{ in documents of class } C\): Total occurrences of word \(i\) across all documents in class \(C\).
-- \(\text{total count of words in class } C\): Total number of words across all documents in class \(C\).
-- \(\alpha\): Smoothing parameter (often set to 1 for Laplace smoothing) to avoid zero probabilities for words not present in the training set of class \(C\).
+- $\text{count of word } i \text{ in documents of class } C$: Total occurrences of word $i$ across all documents in class $C$.
+- $\text{total count of words in class } C$: Total number of words across all documents in class $C$.
+- $\alpha$: Smoothing parameter (often set to 1 for Laplace smoothing) to avoid zero probabilities for words not present in the training set of class $C$.
 
 ### 2.4 - Putting It All Together
 
-For a new document represented by the feature vector \(X = (x_1, x_2, \dots, x_n)\), we calculate the probability of each class \(C\) and predict the class that has the highest probability:
+For a new document represented by the feature vector $X = (x_1, x_2, \dots, x_n)$, we calculate the probability of each class $C$ and predict the class that has the highest probability:
 
 $$
 P(C \mid X) \propto P(C) \prod_{i=1}^{|V|} \left( \frac{\text{count of word } i \text{ in class } C + \alpha}{\text{total count of words in class } C + \alpha \cdot |V|} \right)^{x_i}
 $$
 
-The predicted class \(\hat{C}\) for the document is the one that maximizes this probability:
+The predicted class $\hat{C}$ for the document is the one that maximizes this probability:
 
 $$
 \hat{C} = \arg \max_C P(C \mid X)

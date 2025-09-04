@@ -58,7 +58,6 @@ By combining the rigor of mathematical representation with the flexibility of mo
 
 ## 2 - Historical Context
 
-
 The foundations of Kolmogorov–Arnold Networks (KANs) lie in a profound mathematical result from the mid-20th century that addressed one of the famous Hilbert problems. To understand why this theorem matters for modern neural architectures, it is essential to revisit the history and significance of the Kolmogorov–Arnold representation theorem.
 
 
@@ -342,8 +341,8 @@ With this example you can implement the machine learning algorithm in ESP32, Ard
 
 ### 4.1  -  Jupyter Notebooks
 
--  [![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/conect2ai/MLP-vs-KAN-TinyML/blob/main/src/codes/notebooks/train_KAN.ipynb) Training a Kolmogorov-Arnold Network (KAN)
+-  [![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML/blob/main/27_KAN/KAN.ipynb) Training a Kolmogorov-Arnold Network (KAN)
 
 ### 4.2  -  Arduino Code
 
--  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/conect2ai/TinyGPT-SLM/blob/main/codes/arduino/tinyGPT_SLM.ino) Arduino KAN code
+-  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/blob/main/27_KAN/ArduinoCode/KAN.ino) Arduino KAN code

@@ -346,3 +346,7 @@ With this example you can implement the machine learning algorithm in ESP32, Ard
 ### 4.2  -  Arduino Code
 
 -  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/blob/main/27_KAN/ArduinoCode/KAN.ino) Arduino KAN code
+
+### 4.3  -  Results
+
+![Figure 3](./figures/fig05.png)

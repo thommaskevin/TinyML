@@ -1,0 +1,11 @@
+scikit-learn==1.5.1
+matplotlib==3.7.1
+seaborn==0.13.2
+pykan==0.2.8
+torch==2.6.0
+carbontracker==2.1.2
+plotly==6.0.1
+nbformat==5.10.4
+tqdm==4.67.1
+pyyaml==6.0.2
+numpy==1.26.4 

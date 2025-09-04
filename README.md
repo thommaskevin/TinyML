@@ -54,6 +54,8 @@
 
 - 26 - [MultinominalNB (Text Classifier)](https://github.com/thommaskevin/TinyML/tree/main/26_MutinominalNB)
 
+- 27 - [Kolmogorov-Arnold Networks (KAN)](https://github.com/thommaskevin/TinyML/tree/main/27_KAN)
+
 ## Medium - TinyML's Weekly Open Paper
 
 - 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)

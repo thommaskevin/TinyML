@@ -140,13 +140,13 @@ With this example you can implement the machine learning algorithm in ESP32, Ard
 
 ### 4.1  -  Jupyter Notebooks
 
--  [![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML/blob/main/27_KAN/KAN.ipynb) Linear Discriminant Analysis (LDA)
+-  [![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML/blob/main/28_LAD/LAD.ipynb) Linear Discriminant Analysis (LDA)
 
 
 
 ### 4.2  -  Arduino Code
 
--  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/blob/main/27_KAN/ArduinoCode/KAN.ino) Arduino LDA code
+-  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/blob/main/28_LAD/ArduinoCode/LAD.ino) Arduino LDA code
 
 ### 4.3  -  Results
 

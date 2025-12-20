@@ -56,6 +56,8 @@
 
 - 27 - [Kolmogorov-Arnold Networks (KAN)](https://github.com/thommaskevin/TinyML/tree/main/27_KAN)
 
+- 28 - [Linear Discriminant Analysis (LDA)](https://github.com/thommaskevin/TinyML/tree/main/28_LDA)
+
 ## Medium - TinyML's Weekly Open Paper
 
 - 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)

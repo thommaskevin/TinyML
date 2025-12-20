@@ -9,10 +9,10 @@ void setup() {
   
   // Example: Simulating data for "Setosa" class
   // In a real project, replace these with analogRead() or sensor library calls
-  input_sensors[0] = 5.1;
-  input_sensors[1] = 3.5;
-  input_sensors[2] = 1.4;
-  input_sensors[3] = 0.2;
+  input_sensors[0] = 6.3;
+  input_sensors[1] = 3.3;
+  input_sensors[2] = 6.;
+  input_sensors[3] = 2.5;
   
   Serial.println("System Ready. Starting inference...");
 }

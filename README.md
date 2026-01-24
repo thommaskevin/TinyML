@@ -58,6 +58,8 @@
 
 - 28 - [Linear Discriminant Analysis (LDA)](https://github.com/thommaskevin/TinyML/tree/main/28_LDA)
 
+- 29 - [Radial Basis Function Networks (RBFN)](https://github.com/thommaskevin/TinyML/tree/main/29_RBFN)
+
 ## Medium - TinyML's Weekly Open Paper
 
 - 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)

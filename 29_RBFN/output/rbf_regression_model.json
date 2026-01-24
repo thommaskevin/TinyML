@@ -1,0 +1,252 @@
+{
+  "metadata": {
+    "creation_date": "2026-01-24T13:29:21.472191",
+    "framework_version": "3.0.0",
+    "description": "Advanced RBF Network Model",
+    "author": "RBF Framework Pro",
+    "tags": [
+      "rbf",
+      "neural_network",
+      "machine_learning",
+      "advanced"
+    ]
+  },
+  "architecture": {
+    "hidden_layers": [
+      {
+        "type": "rbf",
+        "units": 15
+      }
+    ],
+    "output_activation": "linear",
+    "use_bias": true,
+    "normalize_input": true,
+    "normalize_output": true
+  },
+  "parameters": {
+    "hidden_layer_sizes": [
+      15
+    ],
+    "hidden_layer_types": [
+      "rbf"
+    ],
+    "output_activation": "linear",
+    "use_bias": true,
+    "rbf_types": [
+      "gaussian"
+    ],
+    "distance_metric": "euclidean",
+    "center_init_types": [
+      "kmeans"
+    ],
+    "width_calc_types": [
+      "adaptive"
+    ],
+    "training_method": "direct",
+    "regularization": 0.001,
+    "learning_rate": 0.01,
+    "max_iter": 1000,
+    "tolerance": 0.0001,
+    "p_neighbors": 2,
+    "width_value": 1.0,
+    "sigma_values": [
+      1.0
+    ],
+    "c_values": [
+      1.0
+    ],
+    "optimizer": "adam",
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "epsilon": 1e-08
+  },
+  "learned_parameters": {
+    "layer_0_rbf": {
+      "centers": {
+        "data": [
+          [
+            -0.43800943310131923
+          ],
+          [
+            1.0092644940637985
+          ],
+          [
+            -1.3425988572448793
+          ],
+          [
+            0.26046225908169196
+          ],
+          [
+            1.4522979135525638
+          ],
+          [
+            -0.8676407145090865
+          ],
+          [
+            -0.12677515039897383
+          ],
+          [
+            0.49916649252847467
+          ],
+          [
+            -1.144709074961568
+          ],
+          [
+            1.6775632814905224
+          ],
+          [
+            -0.6154717078928891
+          ],
+          [
+            1.1583994745828508
+          ],
+          [
+            -1.5062073266496527
+          ],
+          [
+            0.8328442450268277
+          ],
+          [
+            0.13775793665770128
+          ]
+        ],
+        "shape": [
+          15,
+          1
+        ],
+        "dtype": "float64"
+      },
+      "widths": {
+        "data": [
+          0.17746227479156962,
+          0.14913498051905286,
+          0.16360846940477333,
+          0.12270432242399071,
+          0.2252653679379592,
+          0.2521690066161974,
+          0.2645330870566751,
+          0.23870423344678277,
+          0.197889782283311,
+          0.2252653679379592,
+          0.1774622747915697,
+          0.14913498051905286,
+          0.16360846940477333,
+          0.17642024903697112,
+          0.1227043224239907
+        ],
+        "shape": [
+          15
+        ],
+        "dtype": "float64"
+      }
+    },
+    "layer_1_dense": {
+      "weights": {
+        "data": [
+          [
+            1.4283203776518536
+          ],
+          [
+            0.6909913118841904
+          ],
+          [
+            0.8581428940432265
+          ],
+          [
+            0.32076411899901525
+          ],
+          [
+            1.1764681221749738
+          ],
+          [
+            2.5063287604566318
+          ],
+          [
+            3.048523526021759
+          ],
+          [
+            2.7543947288277577
+          ],
+          [
+            -0.03556839402124333
+          ],
+          [
+            2.8229566201819
+          ],
+          [
+            0.49986302637482394
+          ],
+          [
+            1.0813074989572322
+          ],
+          [
+            0.005268134489340992
+          ],
+          [
+            0.8034807432631706
+          ],
+          [
+            0.42425670909292407
+          ]
+        ],
+        "shape": [
+          15,
+          1
+        ],
+        "dtype": "float64"
+      },
+      "bias": {
+        "data": [
+          [
+            -2.7285888931919122
+          ]
+        ],
+        "shape": [
+          1,
+          1
+        ],
+        "dtype": "float64"
+      }
+    }
+  },
+  "components": {
+    "normalizers": {
+      "input_scaler": {
+        "data": [
+          2.354645351378279
+        ],
+        "shape": [
+          1
+        ],
+        "dtype": "float64"
+      },
+      "input_var": {
+        "data": [
+          2.1609833063447725
+        ],
+        "shape": [
+          1
+        ],
+        "dtype": "float64"
+      },
+      "output_scaler": {
+        "data": [
+          0.9663472108710569
+        ],
+        "shape": [
+          1
+        ],
+        "dtype": "float64"
+      },
+      "output_var": {
+        "data": [
+          0.14041844828132727
+        ],
+        "shape": [
+          1
+        ],
+        "dtype": "float64"
+      }
+    }
+  }
+}

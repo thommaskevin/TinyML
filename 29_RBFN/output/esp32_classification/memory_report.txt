@@ -1,0 +1,20 @@
+RESOURCE REPORT - RbfClassificationModelRBF
+=======================================
+Target Device: esp32
+Data Type: float (Precision: 6)
+
+MEMORY ESTIMATE (Minimum):
+-------------------------------
+FLASH (Constants): 0 bytes (0.00 KB)
+RAM (Buffers):      0 bytes
+*Note: Add overhead of Arduino libraries.
+
+ARCHITECTURE:
+-------------------------------
+Input: 0
+Hidden:  0 (Centers)
+Output:   0
+
+OPTIMIZATION CHECKLIST:
+[x] PROGMEM/const used for tables
+[ ] Fixed Point Arithmetic

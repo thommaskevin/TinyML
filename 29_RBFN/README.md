@@ -723,25 +723,19 @@ With this example you can implement the machine learning algorithm in ESP32, Ard
 
 ### 5.1  -  Python Codes
 
--  [![Jupyter](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://github.com/thommaskevin/TinyML/blob/main/28_LAD/LAD.ipynb) Microcontroller Code Generator
+-  [![Jupyter](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://github.com/thommaskevin/TinyML/blob/main/29_RBFN/model/rbfn.py) Radial Basis Function Networks (RBFN)
 
--  [![Jupyter](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://github.com/thommaskevin/TinyML/blob/main/28_LAD/LAD.ipynb) Radial Basis Function Networks (RBFN)
-
-
+-  [![Jupyter](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://github.com/thommaskevin/TinyML/blob/main/29_RBFN/model/rbfn_code_generator.py) Microcontroller Code Generator
 
 ### 5.2  -  Jupyter Notebooks
 
--  [![Python](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML/blob/main/28_LAD/LAD.ipynb) Radial Basis Function Networks Training
-
-
+-  [![Python](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML/blob/main/29_RBFN/rbfn.ipynb) Radial Basis Function Networks Training
 
 ### 5.3  -  Arduino Code
 
+-  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/29_RBFN/output/esp32_regression) Regression
 
--  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/blob/main/28_LAD/ArduinoCode/LAD.ino) Regression
-
-
--  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/blob/main/28_LAD/ArduinoCode/LAD.ino) Classification
+-  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/29_RBFN/output/esp32_classification) Classification
 
 
 ### 5.4  -  Result Regression

@@ -22,13 +22,17 @@ _From mathematical foundations to edge implementation_
 
 1 — Introduction
 
-2 — Learning Strategies
+2 — Mathematical Foundations
 
-3 — Application I: Nonparametric Regression
+ 2.1 — Data Flow in Graph Convolutional Networks
 
-4 — Application II: Pattern Classification
+ 2.2 — The Graph Convolutional Layer
 
-5 — TinyML Implementation
+ 2.3 — Normalizing the Adjacency Matrix
+
+ 2.4 — Comparing GCNs and CNNs
+ 
+3 — TinyML Implementation
 
 ---
 

@@ -59,40 +59,9 @@
 - 28 - [Linear Discriminant Analysis (LDA)](https://github.com/thommaskevin/TinyML/tree/main/28_LDA)
 
 - 29 - [Radial Basis Function Networks (RBFN)](https://github.com/thommaskevin/TinyML/tree/main/29_RBFN)
-
-## Medium - TinyML's Weekly Open Paper
-
-- 01 - [Decision Tree](https://medium.com/@thommaskevin/tinyml-%C3%A1rvore-de-decis%C3%A3o-aa1414562d97)
-
-- 02 - [Random Forest](https://medium.com/@thommaskevin/tinyml-random-forest-classifier-and-regressor-b351aa0980e8)
-
-- 03 - [XGBoost Classifier](https://medium.com/@thommaskevin/tinyml-xgboost-classifier-795202285779)
-
-- 04 - [GaussianNB](https://medium.com/@thommaskevin/tinyml-gaussian-naive-bayes-classifier-31f8d241c67c)
-
-- 05 - [Support Vector Machines](https://medium.com/@thommaskevin/tinyml-support-vector-machines-classifier-c391b54f3ab8)
-
-- 06 - [SEFR](https://medium.com/@thommaskevin/tinyml-similarity-ensemble-fusion-for-retrieval-sefr-379b647faba3)
-
-- 07 - [Principal Component Analysis](https://medium.com/@thommaskevin/tinyml-principal-component-analysis-pca-5379d0874592)
-
-- 08 - [Binomial Logistic Regression](https://medium.com/@thommaskevin/tinyml-binomial-logistic-regression-0fdbf00e6765)
-
-- 09 - [K-means](https://medium.com/@thommaskevin/tinyml-k-means-10e72828d492)
-
-- 10 - [Linear Regression](https://medium.com/@thommaskevin/tinyml-linear-regression-0b715844db01)
-
-- 11 - [Gaussian Mixture Model](https://medium.com/p/9730693fb8a4)
   
-- 12 - [Artificial Neural Networks (MLP)](https://medium.com/@thommaskevin/tinyml-neural-networks-mlp-62b2cfcc09c2)
+- 30 - [Graph Convolutional Networks (GCN)](https://github.com/thommaskevin/TinyML/tree/main/30_GCN) 
 
-- 13 - [Convolutional Neural Networks (CNN)](https://medium.com/@thommaskevin/tinyml-convolutional-neural-networks-cnn-3601b32c35f4)
 
-- 14 - [XGBoost Regression](https://medium.com/@thommaskevin/tinyml-xgboost-regression-d2b513a0d237)
 
-- 15 - [Poisson Regression](https://medium.com/@thommaskevin/tinyml-poisson-regression-5174d88479f5)
-  
-- 16 - [K-Nearest Neighbors (KNN-Classifier)](https://medium.com/@thommaskevin/tinyml-k-nearest-neighbors-knn-classifier-6008f8e51189)
-
-- 17 - [ElasticNet (ELNET)](https://medium.com/@thommaskevin/tinyml-elastic-net-elnet-e8eee849225a)
   

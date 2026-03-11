@@ -622,11 +622,11 @@ With this example you can implement the machine learning algorithm in ESP32, Ard
 
 ### 3.3  -  Arduino Code
 
--  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/31_NAM/arduino_code/regression/regression.ino) Exemplo 1: NAM Regression
+-  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/blob/main/31_NAM/arduino_code/regression/regression.ino) Exemplo 1: NAM Regression
 
--  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/31_NAM/arduino_code/classification_binary/classification_binary.ino) Exemplo 2: NAM Binary Classification  
+-  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/blob/main/31_NAM/arduino_code/classification_binary/classification_binary.ino) Exemplo 2: NAM Binary Classification  
 
--  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/31_NAM/arduino_code/classification_multiclass/classification_multiclass.ino) Exemplo 3: NAM Multiclass Classification
+-  [![Jupyter](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/blob/main/31_NAM/arduino_code/classification_multiclass/classification_multiclass.ino) Exemplo 3: NAM Multiclass Classification
 
 ### 3.4  -  Result 
 

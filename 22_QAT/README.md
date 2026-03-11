@@ -83,7 +83,7 @@ $q =  round(s \cdot x + z)$
 Among them, x and q are the numbers before and after quantization, s is called the scaling factor, and z is called the zero point. The zero point is the quantized value of "0" in the original value range. There will be a lot of 0 in the weight or activation (such as zero padding, or through the ReLU function), so we need to make "0" accurately represented after quantization when we quantize. In order to quantize in the range of n-bit integers, then:
 
 
-$s = \frac{2^n - 1}{{max}^x - {min}^x}$
+$s = \frac{2^n - 1}{\text{max}^x - \text{min}^x}$
 
 
 Among them, the denominators are the lower (min in above equation or −|max| in Figure 1) and upper bounds of the value range of the mapping value (such as weight or activation) respectively.

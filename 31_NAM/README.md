@@ -48,6 +48,11 @@ Networks
 
 3 — TinyML Implementation
 
+&nbsp;&nbsp;3.1 — Exemplo 1: NAM Regression
+
+&nbsp;&nbsp;3.2 — Exemplo 2: NAM Binary Classification
+
+&nbsp;&nbsp;3.3 — Exemplo 3: NAM Multiclass Classification
 
 
 

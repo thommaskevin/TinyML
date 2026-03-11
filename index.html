@@ -128,7 +128,8 @@
 
         .search-container {
             max-width: 600px;
-            margin: 0 auto 50px;
+            margin: 0 auto 40px;
+            width: 100%;
         }
 
         #searchBar {
@@ -148,9 +149,10 @@
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
             flex-grow: 1;
+            width: 100%;
         }
 
         .card {
@@ -179,6 +181,7 @@
             color: var(--accent-color);
             opacity: 0.8;
             margin-bottom: 5px;
+            text-transform: uppercase;
         }
 
         .card-title {
@@ -188,8 +191,8 @@
 
         /* --- Author Footer Section --- */
         footer {
-            margin-top: 80px;
-            padding: 40px 0;
+            margin-top: 60px;
+            padding: 40px 0 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
         }
@@ -200,6 +203,8 @@
             padding: 30px;
             border-radius: 20px;
             backdrop-filter: blur(5px);
+            width: 100%;
+            max-width: 500px;
         }
 
         .author-name {
@@ -223,6 +228,11 @@
             font-weight: 500;
         }
 
+        /* ==========================================
+           RESPONSIVE DESIGN (TABLETS & MOBILE)
+           ========================================== */
+        
+        /* Tablets e telas médias */
         @media (max-width: 900px) {
             .sidebar {
                 position: static;
@@ -230,10 +240,68 @@
                 justify-content: center;
                 transform: none;
                 margin: 0 auto 30px;
-                width: fit-content;
+                width: 100%;
+                max-width: 400px;
                 flex-wrap: wrap;
+                border-radius: 20px;
             }
-            header h1 { font-size: 2.5rem; }
+            header h1 { font-size: 2.8rem; }
+        }
+
+        /* Celulares */
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 15px; /* Reduz espaço inútil nas bordas */
+            }
+            
+            header h1 { 
+                font-size: 2.2rem; 
+                letter-spacing: -1px;
+            }
+            
+            header p {
+                font-size: 1rem;
+            }
+
+            .uni-tag {
+                font-size: 0.75rem;
+            }
+
+            .container {
+                /* Força 1 coluna no celular para não espremer os cards */
+                grid-template-columns: 1fr; 
+                gap: 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .search-container {
+                margin-bottom: 30px;
+            }
+
+            #searchBar {
+                padding: 14px 20px;
+            }
+
+            .sidebar a {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            .author-box {
+                padding: 20px 15px;
+            }
+
+            .author-name {
+                font-size: 1.2rem;
+            }
+            
+            .author-info {
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>

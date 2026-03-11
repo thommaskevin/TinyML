@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinyML | Embedded Machine Learning Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0b0f1a;
+            --card-bg: rgba(30, 41, 59, 0.5);
+            --accent-color: #38bdf8;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --sidebar-bg: rgba(15, 23, 42, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.08) 0%, transparent 50%);
+            color: var(--text-primary);
+            padding: 60px 20px;
+            min-height: 100vh;
+        }
+
+        /* --- Social Sidebar --- */
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: var(--sidebar-bg);
+            padding: 12px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .sidebar a {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            color: var(--accent-color);
+            background: rgba(56, 189, 248, 0.1);
+            transform: scale(1.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 650px;
+            margin: 0 auto 25px;
+            line-height: 1.6;
+        }
+
+        .btn-star {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #24292f;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn-star:hover {
+            background: #30363d;
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 50px;
+        }
+
+        #searchBar {
+            width: 100%;
+            padding: 16px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
+            color: white;
+            outline: none;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+            transition: 0.3s;
+        }
+
+        #searchBar:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-color);
+            background: rgba(30, 41, 59, 0.8);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-number {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .card-footer {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                position: static;
+                flex-direction: row;
+                justify-content: center;
+                transform: none;
+                margin: 0 auto 30px;
+                width: fit-content;
+                flex-wrap: wrap;
+            }
+            header h1 { font-size: 2.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <a href="https://github.com/thommaskevin/TinyML" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://www.linkedin.com/in/thommas-kevin-ab9810166/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+    <a href="https://medium.com/@thommaskevin" target="_blank" title="Medium"><i class="fab fa-medium-m"></i></a>
+    <a href="https://www.youtube.com/channel/UC7uazGXaMIE6MNkHg4ll9oA" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+    <a href="https://scholar.google.com/citations?user=MqWV8JIAAAAJ&hl=pt-PT&authuser=2" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+    <a href="http://lattes.cnpq.br/0630479458408181" target="_blank" title="Lattes CV"><i class="far fa-file-alt"></i></a>
+    <a href="https://conect2ai.dca.ufrn.br/" target="_blank" title="Conecta.ai"><i class="fas fa-network-wired"></i></a>
+</div>
+
+<header>
+    <h1>TinyML</h1>
+    <p>A high-performance repository of Machine Learning algorithms optimized for ultra-low power embedded systems and edge devices.</p>
+    <a href="https://github.com/thommaskevin/TinyML" target="_blank" class="btn-star">
+        <i class="fas fa-star" style="color: #fbbf24;"></i> Star this Repository
+    </a>
+</header>
+
+<div class="search-container">
+    <input type="text" id="searchBar" placeholder="Search algorithms (e.g., KAN, GCN, QAT)..." onkeyup="filterCards()">
+</div>
+
+<div class="container" id="cardContainer">
+    </div>
+
+<script>
+    const projects = [
+        { id: "01", name: "Decision Tree", url: "01_decision_tree" },
+        { id: "02", name: "Random Forest", url: "02_random_forest" },
+        { id: "03", name: "XGBoost Classifier", url: "03_XGBoost" },
+        { id: "04", name: "GaussianNB", url: "04_GaussianNB" },
+        { id: "05", name: "Support Vector Machines", url: "05_support_vector_machine" },
+        { id: "06", name: "SEFR", url: "06_SEFR" },
+        { id: "07", name: "Principal Component Analysis", url: "07_principal_components_analysis" },
+        { id: "08", name: "Binomial Logistic Regression", url: "08_Logistic_Regressor" },
+        { id: "09", name: "K-means", url: "09_K_Means" },
+        { id: "10", name: "Linear Regression", url: "10_Linear_Regressor" },
+        { id: "11", name: "Gaussian Mixture Model", url: "11_GMM" },
+        { id: "12", name: "Artificial Neural Networks (MLP)", url: "12_MLP" },
+        { id: "13", name: "Convolutional Neural Networks (CNN)", url: "13_CNN" },
+        { id: "14", name: "XGBoost Regression", url: "14_XGBRegression" },
+        { id: "15", name: "Poisson Regression", url: "15_Poisson_Regressor" },
+        { id: "16", name: "K-Nearest Neighbors (KNN)", url: "16_KNN" },
+        { id: "17", name: "ElasticNet (ELNET)", url: "17_ElasticNet" },
+        { id: "18", name: "Long Short-Term Memory (LSTM)", url: "18_LSTM" },
+        { id: "19", name: "AutoEncoder", url: "19_Autoencoder" },
+        { id: "20", name: "Q-Learning", url: "20_Q_Learning" },
+        { id: "21", name: "Huber Regression", url: "21_Huber_Regressor" },
+        { id: "22", name: "Quantization Aware Training", url: "22_QAT" },
+        { id: "23", name: "Post-Training Pruning", url: "23_PTP" },
+        { id: "24", name: "Knowledge Distillation", url: "24_Knowledge_Distillation" },
+        { id: "25", name: "MicroMobileNet", url: "25_MicromobileNet" },
+        { id: "26", name: "MultinominalNB (Text)", url: "26_MutinominalNB" },
+        { id: "27", name: "Kolmogorov-Arnold Networks (KAN)", url: "27_KAN" },
+        { id: "28", name: "Linear Discriminant Analysis (LDA)", url: "28_LDA" },
+        { id: "29", name: "Radial Basis Function (RBFN)", url: "29_RBFN" },
+        { id: "30", name: "Graph Convolutional (GCN)", url: "30_GCN" },
+        { id: "31", name: "Neural Additive Models (NAM)", url: "31_NAM" }
+    ];
+
+    const container = document.getElementById('cardContainer');
+    const baseUrl = "https://github.com/thommaskevin/TinyML/tree/main/";
+
+    function displayCards(data) {
+        container.innerHTML = "";
+        data.forEach(p => {
+            const card = document.createElement('a');
+            card.className = 'card';
+            card.href = baseUrl + p.url;
+            card.target = "_blank";
+            card.innerHTML = `
+                <div>
+                    <div class="card-number">Module ${p.id}</div>
+                    <div class="card-title">${p.name}</div>
+                </div>
+                <div class="card-footer">
+                    <span>Explore Code</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function filterCards() {
+        const query = document.getElementById('searchBar').value.toLowerCase();
+        const filtered = projects.filter(p => p.name.toLowerCase().includes(query));
+        displayCards(filtered);
+    }
+
+    displayCards(projects);
+</script>
+
+</body>
+</html>

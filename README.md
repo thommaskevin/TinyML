@@ -62,6 +62,7 @@
   
 - 30 - [Graph Convolutional Networks (GCN)](https://github.com/thommaskevin/TinyML/tree/main/30_GCN) 
 
+- 31 - [Neural Additive Models (NAM)](https://github.com/thommaskevin/TinyML/tree/main/31_NAM) 
 
 
   

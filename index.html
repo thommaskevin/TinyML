@@ -9,7 +9,7 @@
     <style>
         :root {
             --bg-color: #0b0f1a;
-            --card-bg: rgba(30, 41, 59, 0.5);
+            --card-bg: rgba(30, 41, 59, 0.4);
             --accent-color: #38bdf8;
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
@@ -29,8 +29,10 @@
                 radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 50%),
                 radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.08) 0%, transparent 50%);
             color: var(--text-primary);
-            padding: 60px 20px;
+            padding: 40px 20px;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* --- Social Sidebar --- */
@@ -72,7 +74,17 @@
 
         header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
+        }
+
+        .uni-tag {
+            font-size: 0.85rem;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            display: block;
+            font-weight: 600;
         }
 
         header h1 {
@@ -87,8 +99,8 @@
 
         header p {
             color: var(--text-secondary);
-            font-size: 1.2rem;
-            max-width: 650px;
+            font-size: 1.1rem;
+            max-width: 700px;
             margin: 0 auto 25px;
             line-height: 1.6;
         }
@@ -132,27 +144,23 @@
             transition: 0.3s;
         }
 
-        #searchBar:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
-        }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
+            gap: 20px;
+            flex-grow: 1;
         }
 
         .card {
             background: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: 16px;
+            padding: 25px;
             text-decoration: none;
             color: inherit;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             backdrop-filter: blur(12px);
             display: flex;
             flex-direction: column;
@@ -160,34 +168,59 @@
         }
 
         .card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
             border-color: var(--accent-color);
-            background: rgba(30, 41, 59, 0.8);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            background: rgba(30, 41, 59, 0.7);
         }
 
         .card-number {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
             color: var(--accent-color);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
+            opacity: 0.8;
+            margin-bottom: 5px;
         }
 
         .card-title {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            line-height: 1.3;
         }
 
-        .card-footer {
-            margin-top: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
+        /* --- Author Footer Section --- */
+        footer {
+            margin-top: 80px;
+            padding: 40px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .author-box {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .author-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .author-info {
+            font-size: 0.95rem;
             color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .author-email {
+            margin-top: 10px;
+            display: block;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
         }
 
         @media (max-width: 900px) {
@@ -200,7 +233,7 @@
                 width: fit-content;
                 flex-wrap: wrap;
             }
-            header h1 { font-size: 2.8rem; }
+            header h1 { font-size: 2.5rem; }
         }
     </style>
 </head>
@@ -217,19 +250,33 @@
 </div>
 
 <header>
+    <span class="uni-tag">UFRN | DCA | Conecta.ai</span>
     <h1>TinyML</h1>
-    <p>A high-performance repository of Machine Learning algorithms optimized for ultra-low power embedded systems and edge devices.</p>
+    <p>Algorithms optimized for resource-constrained systems, edge computing, and ultra-low power devices.</p>
     <a href="https://github.com/thommaskevin/TinyML" target="_blank" class="btn-star">
-        <i class="fas fa-star" style="color: #fbbf24;"></i> Star this Repository
+        <i class="fas fa-star" style="color: #fbbf24;"></i> Star this Project
     </a>
 </header>
 
 <div class="search-container">
-    <input type="text" id="searchBar" placeholder="Search algorithms (e.g., KAN, GCN, QAT)..." onkeyup="filterCards()">
+    <input type="text" id="searchBar" placeholder="Search algorithms..." onkeyup="filterCards()">
 </div>
 
 <div class="container" id="cardContainer">
     </div>
+
+<footer>
+    <div class="author-box">
+        <div class="author-name">Thommas K. S. Flores</div>
+        <div class="author-info">
+            Federal University of Rio Grande do Norte (UFRN)<br>
+            Department of Computation and Technology (DCA)
+        </div>
+        <a href="mailto:thommas.flores@ufrn.br" class="author-email">
+            <i class="far fa-envelope"></i> thommas.flores@ufrn.br
+        </a>
+    </div>
+</footer>
 
 <script>
     const projects = [
@@ -281,9 +328,9 @@
                     <div class="card-number">Module ${p.id}</div>
                     <div class="card-title">${p.name}</div>
                 </div>
-                <div class="card-footer">
-                    <span>Explore Code</span>
-                    <i class="fas fa-chevron-right"></i>
+                <div class="card-footer" style="margin-top:20px; display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; opacity:0.6;">
+                    <span>Source Code</span>
+                    <i class="fas fa-external-link-alt"></i>
                 </div>
             `;
             container.appendChild(card);

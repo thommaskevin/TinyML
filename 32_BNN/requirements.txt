@@ -1,0 +1,7 @@
+tensorflow==2.20.0
+numpy==2.0.2
+pandas==2.3.3
+scikit-learn==1.6.1
+matplotlib==3.9.4torch>=1.9.0
+numpy>=1.19.0
+torchvision>=0.10.0   # optional, required for MNIST example

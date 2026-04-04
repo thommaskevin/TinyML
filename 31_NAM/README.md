@@ -1,6 +1,6 @@
 # TinyML - Neural Additive Models
 
-_From interpretable machine learning to edge deployment_
+_From mathematical foundations to edge implementation_
 
 **Social media:**
 

@@ -64,5 +64,5 @@
 
 - 31 - [Neural Additive Models (NAM)](https://github.com/thommaskevin/TinyML/tree/main/31_NAM) 
 
-
+- 32 - [Neural Additive Models (NAM)](https://github.com/thommaskevin/TinyML/tree/main/32_BNN) 
   

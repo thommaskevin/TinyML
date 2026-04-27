@@ -94,8 +94,6 @@ The key limitation is that such a model has no mechanism for selective computati
 
 There is a fundamental distinction between rate-coded artificial neural networks and biologically plausible spiking models. A rate-coded model collapses the temporal dimension into a single scalar activation per neuron, discarding all timing information. A spiking model maintains the full temporal structure of neural activity, representing each neuron's output as a binary spike train indexed over discrete time steps.
 
-> **Figure 1 — Image prompt:**
-> "A side-by-side scientific diagram comparing three computational paradigms. On the left, a standard artificial neural network with continuous-valued activations shown as colored bars of varying height. In the center, a spiking neural network with the same architecture but outputs represented as binary spike rasters on a time axis. On the right, a raster plot showing the temporal spike pattern of the SNN. Background is white, style is clean technical illustration suitable for an academic paper, with a blue and orange color scheme."
 
 ![Figure 1](./figures/fig01.png)
 *Figure 1 — The transition from rate-coded to spiking neural networks. A standard network maps inputs to continuous activations (left). An SNN with the same topology maps inputs to spike trains over time (center), encoding information in temporal spike patterns (right). The sparsity of the spike raster is the primary source of energy efficiency.*
@@ -317,7 +315,17 @@ $$
 \frac{\partial \mathcal{L}}{\partial W} = \sum_{t=1}^T \frac{\partial \mathcal{L}}{\partial u[t]} \cdot \frac{\partial u[t]}{\partial W}
 $$
 
-The gradient $\partial u[t] / \partial W$ follows from the LIF recurrence: $u[t] = \beta\, u[t-1] + W\, S_{\mathrm{in}}[t] - S_{\mathrm{out}}[t-1]\,\vartheta$, so $\partial u[t]/\partial W = S_{\mathrm{in}}[t]$. The temporal credit assignment problem — attributing the loss at time $T$ to spikes emitted at earlier time steps — is solved by the chain of $\beta$ factors in the recurrence, which act analogously to the forget gate in a long short-term memory network.
+The gradient $\partial u[t] / \partial W$ follows from the LIF recurrence:
+
+$$
+u[t] = \beta\, u[t-1] + W\, S_{\mathrm{in}}[t] - S_{\mathrm{out}}[t-1]\,\vartheta
+$$
+
+$$
+\partial u[t]/\partial W = S_{\mathrm{in}}[t]
+$$
+ 
+ The temporal credit assignment problem — attributing the loss at time $T$ to spikes emitted at earlier time steps — is solved by the chain of $\beta$ factors in the recurrence, which act analogously to the forget gate in a long short-term memory network.
 
 
 

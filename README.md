@@ -65,4 +65,6 @@
 - 31 - [Neural Additive Models (NAM)](https://github.com/thommaskevin/TinyML/tree/main/31_NAM) 
 
 - 32 - [Bayesian Neural Networks (BNN)](https://github.com/thommaskevin/TinyML/tree/main/32_BNN) 
+
+- 33 - [Spiking Neural Networks (SNN)](https://github.com/thommaskevin/TinyML/tree/main/33_SNN) 
   

@@ -1,0 +1,46 @@
+# =============================================================================
+# TinyML – Spiking Neural Networks
+# requirements.txt
+#
+# Python version: 3.9.x  (see note below)
+#
+# WHY Python 3.9?
+#   • The source files use  X | None  and  tuple[X, Y]  union-type syntax
+#     that was introduced in Python 3.10.  The fixed versions of layers.py,
+#     model.py, vi.py and utils.py replace those hints with
+#     Optional[X] / Tuple[X, Y] from `typing`, making the code fully
+#     compatible with Python 3.9.
+#   • PyTorch 2.x officially supports Python 3.9 – 3.12.
+#   • Python 3.9 is the oldest version still receiving security patches
+#     from the PSF, making it a safe long-term choice for embedded/research
+#     workflows.
+#
+# Recommended setup (conda):
+#   conda create -n snn python=3.9
+#   conda activate snn
+#   pip install -r requirements.txt
+#
+# Recommended setup (venv):
+#   python3.9 -m venv .venv
+#   source .venv/bin/activate          # Windows: .venv\Scripts\activate
+#   pip install -r requirements.txt
+# =============================================================================
+
+# ── Deep learning framework ──────────────────────────────────────────────────
+# CPU-only build (smaller download, works everywhere).
+# For GPU support replace with the appropriate index URL from pytorch.org,
+# e.g.:  pip install torch --index-url https://download.pytorch.org/whl/cu121
+torch>=2.0.0
+
+# ── Numerical computing ───────────────────────────────────────────────────────
+numpy>=1.24.0
+
+# ── Visualisation ─────────────────────────────────────────────────────────────
+matplotlib>=3.7.0
+
+# ── Machine-learning utilities (datasets, metrics) ───────────────────────────
+scikit-learn>=1.3.0
+
+# ── Notebook environment (optional – only needed to run the .ipynb) ───────────
+jupyter>=1.0.0
+ipykernel>=6.0.0

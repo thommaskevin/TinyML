@@ -16,10 +16,7 @@ _From biological foundations to edge implementation_
 
 👨🏻‍🏫 Research group: [Conecta.ai](https://conect2ai.dca.ufrn.br/)
 
-> **Figure 0 — Image prompt:**
-> "A conceptual scientific illustration of a spiking neural network. Stylized neurons connected by axons emit discrete voltage spikes shown as sharp vertical pulses on a time axis. The color palette uses deep blue for neuron bodies and bright cyan for spike events, against a dark background. The overall aesthetic is clean, technical, and suitable for an academic publication cover."
-
-![Figure 0](./figures/fig00.png)
+![Figure 0](./figures/fig00.jpg)
 
 
 

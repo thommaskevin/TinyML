@@ -16,8 +16,7 @@ _From sequential foundations to edge implementation_
 
 👨🏻‍🏫 Research group: [Conecta.ai](https://conect2ai.dca.ufrn.br/)
 
-> **Figure 0 — Image prompt:**
-> "A conceptual scientific illustration of a recurrent neural network. Stylized neurons are arranged in a horizontal sequence connected by forward arrows representing time steps and by curved feedback arrows looping from each neuron back to itself representing recurrent connections. A timeline axis runs along the bottom. The color palette uses deep navy blue for neuron bodies, teal for recurrent connections, and white for feedforward connections, against a dark background. The overall aesthetic is clean, technical, and suitable for an academic publication cover."
+
 
 ![Figure 0](./figures/fig00.png)
 
@@ -99,8 +98,6 @@ Recurrent Neural Networks eliminate the need for both workarounds by parameteriz
 
 There is a fundamental distinction between stateless feedforward computation and stateful recurrent computation. A feedforward network processes each input independently, with no shared information across time steps. A recurrent network connects each time step to the next through a learned hidden state, creating a directed cycle in the computational graph that gives the architecture its name.
 
-> **Figure 1 — Image prompt:**
-> "A side-by-side scientific diagram comparing a feedforward neural network and a recurrent neural network. On the left, a standard three-layer feedforward network with input, hidden, and output layers connected by forward-only arrows, processing a single input vector x. On the right, a recurrent network with an input layer, a hidden state node with a curved self-loop arrow labeled h_t, and an output layer, shown unrolled over three time steps (t-1, t, t+1) with arrows connecting hidden states between consecutive steps. Labels show x_t, h_t, and y_hat_t at each position. Background white, style clean technical academic illustration, blue and teal color scheme."
 
 ![Figure 1](./figures/fig01.png)
 *Figure 1 — The transition from feedforward to recurrent computation. A feedforward network (left) processes each input independently with no temporal memory. An RNN (right), shown unrolled over three time steps, passes a hidden state $\mathbf{h}_t$ from each step to the next, enabling the output at time $t$ to depend on the full input history $\mathbf{x}_1, \ldots, \mathbf{x}_t$.*
@@ -165,8 +162,6 @@ $$
 
 which is independent of the sequence length $T$.
 
-> **Figure 2 — Image prompt:**
-> "A scientific diagram of a vanilla RNN unrolled over four time steps. Four identical blocks are arranged horizontally, labeled t=1, t=2, t=3, t=4. Each block receives an input arrow from below labeled x_t, has a hidden state circle labeled h_t in the center, and produces an output arrow upward labeled y_hat_t. Horizontal arrows connect consecutive hidden states, labeled W_hh. Vertical input arrows are labeled W_xh. Vertical output arrows are labeled W_hy. Weight labels appear in a distinct color to emphasize parameter sharing. Background white, style clean technical academic diagram, blue and teal color scheme."
 
 ![Figure 2](./figures/fig02.png)
 *Figure 2 — The vanilla RNN unrolled over four time steps. Input $\mathbf{x}_t$ is projected into the hidden state $\mathbf{h}_t$ via $W_{xh}$. The hidden state is carried forward via $W_{hh}$, and the output $\hat{y}_t$ is produced via $W_{hy}$. All three weight matrices are shared across all time steps, enabling the network to process sequences of any length.*
@@ -197,8 +192,6 @@ RNNs support several input-output configurations depending on the task:
 
 For TinyML applications, the many-to-one configuration is the most common, as it produces a single decision per inference window and minimizes output processing overhead.
 
-> **Figure 3 — Image prompt:**
-> "A scientific diagram showing three RNN input-output configurations arranged as three horizontal panels stacked vertically. Top panel labeled 'Many-to-one': an RNN unrolled over four steps with inputs x_1 to x_4, hidden states h_1 to h_4 connected left to right, and a single output arrow at h_4 labeled y_hat. Middle panel labeled 'Many-to-many synchronized': the same structure with an output arrow at every hidden state h_1 through h_4, labeled y_hat_1 to y_hat_4. Bottom panel labeled 'Encoder-Decoder': two RNN blocks of two steps each connected by a single context vector arrow, the left block labeled Encoder and the right block labeled Decoder with output y_hat. Background white, clean academic line illustration, blue and orange color scheme."
 
 ![Figure 3](./figures/fig03.png)
 *Figure 3 — The three principal RNN output configurations. Many-to-one (top) produces a single output from the final hidden state, used for sequence classification. Many-to-many synchronized (middle) produces one output per time step, used for sequence labeling. Encoder-decoder (bottom) uses a context vector to bridge two separate RNNs, used for sequence transduction.*
@@ -217,129 +210,6 @@ $$
 
 Stacking increases the depth of the representation at the cost of additional parameters and computation. For TinyML targets, a single-layer RNN with moderate $d_h$ is the standard configuration, and stacking is applied only when the task complexity and available compute budget justify it.
 
-
-
-### 2.3 — Long Short-Term Memory Networks
-
-The vanilla RNN suffers from the vanishing gradient problem: during backpropagation through time, gradients are multiplied by the recurrent weight matrix $W_{hh}$ at each time step. When the singular values of $W_{hh}$ are less than one, the gradient magnitude decays exponentially with the sequence length, making it effectively impossible to learn dependencies spanning more than approximately ten time steps. The Long Short-Term Memory (LSTM) network addresses this problem through a gating mechanism that provides a direct, unobstructed gradient pathway across time.
-
-#### 2.3.1 — The Cell State
-
-The LSTM introduces a second state variable, the **cell state** $\mathbf{c}_t \in \mathbb{R}^{d_h}$, in addition to the hidden state $\mathbf{h}_t$. The cell state is designed to carry information across long time spans with minimal transformation: it is updated by addition rather than by matrix multiplication, which allows gradients to flow backward through the cell state with magnitude close to one regardless of the sequence length. The cell state can be interpreted as the long-term memory of the LSTM, while the hidden state is the short-term, task-relevant summary passed to the output layer.
-
-#### 2.3.2 — The Gate Equations
-
-The LSTM controls the cell state through three learned gates. All three gates share the same functional form: a sigmoid function applied to a linear combination of the current input and the previous hidden state, producing a vector of values in $(0, 1)$ that is applied elementwise to scale another vector.
-
-**Forget gate** — determines what fraction of the previous cell state to retain:
-
-$$
-\mathbf{f}_t = \sigma\!\left(W_f\,[\mathbf{h}_{t-1};\, \mathbf{x}_t] + \mathbf{b}_f\right)
-$$
-
-**Input gate** — determines what new information to write to the cell state:
-
-$$
-\mathbf{i}_t = \sigma\!\left(W_i\,[\mathbf{h}_{t-1};\, \mathbf{x}_t] + \mathbf{b}_i\right)
-$$
-
-**Candidate cell state** — the proposed new content to be written:
-
-$$
-\tilde{\mathbf{c}}_t = \tanh\!\left(W_c\,[\mathbf{h}_{t-1};\, \mathbf{x}_t] + \mathbf{b}_c\right)
-$$
-
-**Output gate** — determines what portion of the cell state to expose as the hidden state:
-
-$$
-\mathbf{o}_t = \sigma\!\left(W_o\,[\mathbf{h}_{t-1};\, \mathbf{x}_t] + \mathbf{b}_o\right)
-$$
-
-where $[\mathbf{h}_{t-1};\, \mathbf{x}_t] \in \mathbb{R}^{d_h + d_x}$ denotes vector concatenation and $\sigma$ is the logistic sigmoid function.
-
-#### 2.3.3 — The Cell and Hidden State Updates
-
-The cell state is updated by erasing the previous content and writing new content:
-
-$$
-\mathbf{c}_t = \mathbf{f}_t \odot \mathbf{c}_{t-1} + \mathbf{i}_t \odot \tilde{\mathbf{c}}_t
-$$
-
-The hidden state is then read from the cell state through the output gate:
-
-$$
-\mathbf{h}_t = \mathbf{o}_t \odot \tanh(\mathbf{c}_t)
-$$
-
-where $\odot$ denotes the Hadamard (elementwise) product. The additive structure of the cell state update is the key property that prevents vanishing gradients: the gradient of the loss with respect to $\mathbf{c}_{t-1}$ is $\partial \mathcal{L} / \partial \mathbf{c}_t \cdot \mathbf{f}_t$, which is scaled by the forget gate values rather than by a matrix multiplication and can be kept close to one by learning forget gate values near one.
-
-> **Figure 4 — Image prompt:**
-> "A detailed scientific diagram of a single LSTM cell at one time step. The cell is drawn as a large rectangle. Inputs entering from the left are the previous hidden state h_{t-1} and the previous cell state c_{t-1}. The current input x_t enters from below. Inside the rectangle, four sub-units are shown as labeled circles: f (forget gate, sigmoid symbol), i (input gate, sigmoid symbol), c_tilde (candidate, tanh symbol), and o (output gate, sigmoid symbol). Arrows show the data flow: forget gate output multiplied elementwise with c_{t-1}; input gate multiplied elementwise with candidate and added to the forget product to form c_t; output gate multiplied elementwise with tanh(c_t) to form h_t. Outputs h_t and c_t exit to the right. All operations are labeled with symbols. Background white, clean academic diagram, blue teal and orange color scheme."
-
-![Figure 4](./figures/fig04.png)
-*Figure 4 — The LSTM cell at one time step. The forget gate $\mathbf{f}_t$ controls what is erased from the cell state $\mathbf{c}_{t-1}$. The input gate $\mathbf{i}_t$ and candidate $\tilde{\mathbf{c}}_t$ control what new information is written. The output gate $\mathbf{o}_t$ controls what portion of the updated cell state $\mathbf{c}_t$ is exposed as the hidden state $\mathbf{h}_t$. The additive update to $\mathbf{c}_t$ is the mechanism that mitigates vanishing gradients.*
-
-#### 2.3.4 — Parameter Count
-
-An LSTM with hidden dimension $d_h$ and input dimension $d_x$ has four gate weight matrices, each of size $d_h \times (d_h + d_x)$, and four bias vectors of size $d_h$:
-
-$$
-P_{\mathrm{LSTM}} = 4\, d_h\,(d_h + d_x) + 4\, d_h = 4\, d_h\,(d_h + d_x + 1)
-$$
-
-This is four times the parameter count of a vanilla RNN with the same dimensions, which is the primary memory cost of the gating mechanism. For TinyML deployment, quantizing the LSTM weights to 8-bit integers reduces this cost by a factor of four relative to 32-bit floating-point storage.
-
-
-
-### 2.4 — Gated Recurrent Units
-
-The Gated Recurrent Unit (GRU) is a simplified gating architecture that achieves performance comparable to the LSTM on most sequence modeling tasks while using fewer parameters and fewer gate operations per time step. The GRU merges the cell state and hidden state into a single state vector and replaces the three LSTM gates with two gates.
-
-#### 2.4.1 — The Gate Equations
-
-**Reset gate** — controls how much of the previous hidden state to use when computing the candidate update:
-
-$$
-\mathbf{r}_t = \sigma\!\left(W_r\,[\mathbf{h}_{t-1};\, \mathbf{x}_t] + \mathbf{b}_r\right)
-$$
-
-**Update gate** — controls the trade-off between retaining the previous hidden state and adopting the new candidate:
-
-$$
-\mathbf{z}_t = \sigma\!\left(W_z\,[\mathbf{h}_{t-1};\, \mathbf{x}_t] + \mathbf{b}_z\right)
-$$
-
-**Candidate hidden state** — the proposed new hidden state, computed with the reset gate applied to the previous state:
-
-$$
-\tilde{\mathbf{h}}_t = \tanh\!\left(W_h\,[\mathbf{r}_t \odot \mathbf{h}_{t-1};\, \mathbf{x}_t] + \mathbf{b}_h\right)
-$$
-
-#### 2.4.2 — The Hidden State Update
-
-The new hidden state is a convex combination of the previous state and the candidate, controlled by the update gate:
-
-$$
-\mathbf{h}_t = (1 - \mathbf{z}_t) \odot \mathbf{h}_{t-1} + \mathbf{z}_t \odot \tilde{\mathbf{h}}_t
-$$
-
-When $\mathbf{z}_t \approx \mathbf{0}$, the previous hidden state is carried forward unchanged, allowing the GRU to preserve information over long time spans. When $\mathbf{z}_t \approx \mathbf{1}$, the hidden state is replaced by the candidate, allowing the GRU to update its memory in response to a new input. This interpolation is functionally analogous to the combined effect of the LSTM forget and input gates, but requires only one gate matrix instead of two.
-
-#### 2.4.3 — Parameter Count and Comparison
-
-A GRU with hidden dimension $d_h$ and input dimension $d_x$ has three gate weight matrices of size $d_h \times (d_h + d_x)$ and three bias vectors of size $d_h$:
-
-$$
-P_{\mathrm{GRU}} = 3\, d_h\,(d_h + d_x + 1)
-$$
-
-Relative to the LSTM, the GRU uses 25 percent fewer parameters. This reduction translates directly to smaller flash memory usage, lower inference latency, and reduced energy consumption on a microcontroller, making the GRU a practical default for TinyML sequence modeling when the task does not require the full LSTM capacity.
-
-> **Figure 5 — Image prompt:**
-> "A two-panel scientific diagram comparing the LSTM cell and the GRU cell side by side, drawn at the same scale to make the structural simplification visually apparent. The left panel shows the LSTM cell with four internal gate units (f, i, c_tilde, o), two input state lines (h_{t-1} and c_{t-1}), and two output state lines (h_t and c_t). The right panel shows the GRU cell with three internal gate units (r, z, h_tilde), one input state line (h_{t-1}), and one output state line (h_t). All operations and state lines are labeled in standard notation. Background white, clean academic diagram, blue and orange color scheme."
-
-![Figure 5](./figures/fig05.png)
-*Figure 5 — Structural comparison of the LSTM cell (left) and the GRU cell (right). The LSTM maintains two state vectors ($\mathbf{h}_t$ and $\mathbf{c}_t$) and uses four gate computations. The GRU maintains a single state vector $\mathbf{h}_t$ and uses three gate computations, reducing the parameter count by 25 percent while retaining the ability to model long-range dependencies.*
 
 
 
@@ -389,11 +259,9 @@ $$
 
 where $c$ is the clipping threshold (typically $c \in [1, 5]$). The vanishing gradient problem is addressed structurally by the LSTM and GRU architectures, which provide additive gradient pathways that do not depend on the recurrent weight matrix.
 
-> **Figure 6 — Image prompt:**
-> "A scientific diagram illustrating backpropagation through time for a vanilla RNN unrolled over five steps. The top row shows the forward pass: five hidden state nodes h_1 through h_5 connected by right-pointing teal arrows labeled W_hh, with output nodes y_1 through y_5 above each hidden state connected by upward arrows. The bottom row shows the backward pass: red left-pointing arrows flowing from h_5 back to h_1, drawn with progressively decreasing thickness or opacity from right to left to visualize vanishing gradients. A horizontal dashed line separates the two rows. Labels indicate 'Forward pass' and 'Backward pass (BPTT)'. Background white, clean academic diagram."
 
-![Figure 6](./figures/fig06.png)
-*Figure 6 — Backpropagation through time for a five-step vanilla RNN. The forward pass (teal arrows) computes hidden states left to right. The backward pass (red arrows) propagates gradients right to left through repeated multiplication by $W_{hh}^\top$ and the $\tanh$ Jacobian. The progressive attenuation of backward arrows illustrates the vanishing gradient problem that motivates gated architectures.*
+![Figure 4](./figures/fig04.png)
+*Figure 4 — Backpropagation through time for a five-step vanilla RNN. The forward pass (teal arrows) computes hidden states left to right. The backward pass (red arrows) propagates gradients right to left through repeated multiplication by $W_{hh}^\top$ and the $\tanh$ Jacobian. The progressive attenuation of backward arrows illustrates the vanishing gradient problem that motivates gated architectures.*
 
 #### 2.5.4 — Truncated BPTT
 
@@ -427,11 +295,9 @@ $$
 
 Bidirectional processing allows the network to use both past and future context at each position. However, it requires the full input sequence to be available before any output is produced, which is incompatible with real-time streaming inference on embedded devices. For TinyML applications, unidirectional RNNs that process the sequence causally are the standard choice.
 
-> **Figure 7 — Image prompt:**
-> "A scientific diagram comparing a unidirectional RNN and a bidirectional RNN, each unrolled over four time steps, arranged as two vertical panels. The top panel shows a standard left-to-right unidirectional RNN with forward hidden state arrows h_1 to h_4 and a single output y_hat at h_4. A label on the right reads 'Causal: suitable for streaming'. The bottom panel shows a bidirectional RNN with two parallel rows of hidden state nodes: one forward row processing h_1 to h_4 left-to-right and one backward row processing left-to-right from t=4 to t=1. Both rows connect to a concatenation symbol at each time step producing a combined state. A label on the right reads 'Non-causal: full sequence required'. Background white, clean academic diagram, blue for forward and orange for backward."
 
-![Figure 7](./figures/fig07.png)
-*Figure 7 — Unidirectional versus bidirectional RNN. The unidirectional RNN (top) processes the sequence causally and can produce outputs in real time, making it suitable for embedded streaming inference. The bidirectional RNN (bottom) combines forward and backward hidden states, requiring the complete sequence before any output is produced, which is incompatible with real-time TinyML deployment.*
+![Figure 5](./figures/fig05.png)
+*Figure 5 — Unidirectional versus bidirectional RNN. The unidirectional RNN (top) processes the sequence causally and can produce outputs in real time, making it suitable for embedded streaming inference. The bidirectional RNN (bottom) combines forward and backward hidden states, requiring the complete sequence before any output is produced, which is incompatible with real-time TinyML deployment.*
 
 #### 2.6.4 — Out-of-Distribution Detection via Hidden State Statistics
 
@@ -443,11 +309,9 @@ $$
 
 where $h_{\mathrm{low}}$ and $h_{\mathrm{high}}$ are calibrated on a held-out validation set.
 
-> **Figure 8 — Image prompt:**
-> "A scientific scatter plot illustrating out-of-distribution detection using hidden state norms for an RNN. The horizontal axis is the hidden state norm ||h_T|| and the vertical axis is the maximum output logit magnitude. In-distribution validation samples form a compact elliptical cluster in the center, colored blue. Out-of-distribution samples scatter outside the cluster, colored orange. Two vertical dashed lines mark h_low and h_high on the horizontal axis. A legend distinguishes in-distribution and OOD samples. Background white, clean academic scatter plot style."
 
-![Figure 8](./figures/fig08.png)
-*Figure 8 — Out-of-distribution detection using hidden state norm statistics. In-distribution inputs (blue) produce hidden state norms within the calibrated band $[h_{\mathrm{low}}, h_{\mathrm{high}}]$ (dashed lines). Out-of-distribution inputs (orange) fall outside this band, enabling a parameter-free OOD flag directly from the final hidden state norm.*
+![Figure 6](./figures/fig06.png)
+*Figure 6 — Out-of-distribution detection using hidden state norm statistics. In-distribution inputs (blue) produce hidden state norms within the calibrated band $[h_{\mathrm{low}}, h_{\mathrm{high}}]$ (dashed lines). Out-of-distribution inputs (orange) fall outside this band, enabling a parameter-free OOD flag directly from the final hidden state norm.*
 
 
 
@@ -542,11 +406,9 @@ $$
 \mathcal{L}_{\mathrm{MSE}} = (0.430 - 0.720)^2 = (-0.290)^2 = \mathbf{0.0841}
 $$
 
-> **Figure 9 — Image prompt:**
-> "A scientific visualization of an RNN regression walkthrough with four time steps and two hidden units. Four panels arranged vertically. Panel 1 (top): a step plot of the input time series x_1=0.50, x_2=0.80, x_3=0.30, x_4=0.60 with time steps 1 to 4 on the horizontal axis and input value on the vertical axis. Panel 2: a 2-by-4 heatmap showing the hidden state h_t at each time step (2 rows for hidden unit 1 and hidden unit 2, 4 columns for time steps 1 to 4), color-coded from blue (negative) through white to orange (positive) with values annotated. Panel 3: a horizontal arrow diagram showing h_4 feeding into the output computation. Panel 4 (bottom): two horizontal bars labeled y_hat=0.430 (blue) and y=0.720 (orange) with a label showing MSE loss = 0.0841. Background white, clean academic diagram."
 
-![Figure 9](./figures/fig09.png)
-*Figure 9 — Complete forward pass for the regression walkthrough. The input time series (top) drives the hidden state dynamics across four steps (heatmap, two hidden units). The final hidden state $\mathbf{h}_4$ is projected to the prediction $\hat{y} = 0.430$. The true target $y = 0.720$ is shown for reference; the MSE loss is 0.0841.*
+![Figure 7](./figures/fig07.png)
+*Figure 7 — Complete forward pass for the regression walkthrough. The input time series (top) drives the hidden state dynamics across four steps (heatmap, two hidden units). The final hidden state $\mathbf{h}_4$ is projected to the prediction $\hat{y} = 0.430$. The true target $y = 0.720$ is shown for reference; the MSE loss is 0.0841.*
 
 #### 2.7.2 — Binary Classification Example
 
@@ -580,11 +442,9 @@ $$
 
 The moderately high loss reflects that the predicted probability $\hat{p} = 0.627$, while on the correct side of the decision boundary, is not highly concentrated. The hidden state norm $\|\mathbf{h}_3\| = \sqrt{0.412^2 + 0.287^2 + 0.153^2} \approx 0.519$ falls within a typical in-distribution range for a network trained on similar data.
 
-> **Figure 10 — Image prompt:**
-> "A scientific figure for an RNN binary classification walkthrough arranged as three horizontal panels. Left panel: the input sequence shown as a 2-by-3 grid of values (2 features on the vertical axis, 3 time steps on the horizontal axis), with each cell color-coded by magnitude from white (low) to blue (high), with the numerical values printed inside each cell. Center panel: three vertical bar charts side by side representing h_1, h_2, and h_3, each with 3 bars for the 3 hidden units, showing the evolution of the hidden state across the 3 time steps. Right panel: a sigmoid curve plotted from -3 to 3 on the horizontal axis, with a vertical dashed line at logit o=0.521 and a horizontal dashed line at the corresponding probability p_hat=0.627, and a horizontal reference line at p=0.5 labeled 'Decision boundary'. Background white, academic style, blue and orange color scheme."
 
-![Figure 10](./figures/fig10.png)
-*Figure 10 — Forward pass for the binary classification walkthrough. The input sequence (left) drives the hidden state evolution over three steps (center). The sigmoid function (right) maps the output logit $o = 0.521$ to $\hat{p} = 0.627$, placing the prediction on the correct class-1 side of the decision boundary. The binary cross-entropy loss is 0.467 nats.*
+![Figure 08](./figures/fig08.png)
+*Figure 08 — Forward pass for the binary classification walkthrough. The input sequence (left) drives the hidden state evolution over three steps (center). The sigmoid function (right) maps the output logit $o = 0.521$ to $\hat{p} = 0.627$, placing the prediction on the correct class-1 side of the decision boundary. The binary cross-entropy loss is 0.467 nats.*
 
 #### 2.7.3 — Multiclass Classification Example
 
@@ -624,11 +484,9 @@ $$
 
 The maximum entropy for three classes is $\log 3 \approx 1.099$ nats. An entropy of 0.774 nats indicates moderate concentration on class 2, with non-negligible probability on class 1, reflecting residual uncertainty consistent with a five-step observation window.
 
-> **Figure 11 — Image prompt:**
-> "A scientific figure for an RNN three-class classification walkthrough arranged as three horizontal panels. Left panel: a vertical bar chart showing the raw output logits [1.20, 2.45, 0.35] for Class 1, Class 2, and Class 3 on the horizontal axis and logit value on the vertical axis. Center panel: a vertical bar chart showing the softmax probabilities [0.203, 0.710, 0.087], with the bar for Class 2 colored orange to indicate the predicted class, the other bars colored blue, and a horizontal dashed line at uniform probability 0.333. Right panel: a vertical thermometer or gauge ranging from 0 to log(3)=1.099 nats, with the current entropy value 0.774 nats marked by a horizontal filled marker and labeled. Background white, clean academic illustration, blue and orange color scheme."
 
-![Figure 11](./figures/fig11.png)
-*Figure 11 — Output logits, softmax probabilities, and predictive entropy for the multiclass classification walkthrough. The logit for class 2 dominates after softmax, yielding $\hat{p}_2 = 0.710$ and a correct prediction. The entropy of 0.774 nats indicates moderate confidence, falling below the maximum of $\log 3 = 1.099$ nats.*
+![Figure 09](./figures/fig09.png)
+*Figure 09 — Output logits, softmax probabilities, and predictive entropy for the multiclass classification walkthrough. The logit for class 2 dominates after softmax, yielding $\hat{p}_2 = 0.710$ and a correct prediction. The entropy of 0.774 nats indicates moderate confidence, falling below the maximum of $\log 3 = 1.099$ nats.*
 
 
 
@@ -636,7 +494,6 @@ The maximum entropy for three classes is $\log 3 \approx 1.099$ nats. An entropy
 
 With this example you can implement the machine learning algorithm in ESP32, Arduino, Arduino Portenta H7 with Vision Shield, Raspberry Pi, and other microcontrollers or IoT devices.
 
-> **Implementation note on sequential inference at the edge:** In a TinyML deployment, the RNN processes one input vector $\mathbf{x}_t$ per time step, updating the hidden state $\mathbf{h}_t$ in place using the recurrence equation. Only the current hidden state vector needs to be stored in SRAM across time steps: $d_h$ floating-point values, or $d_h$ bytes when quantized to 8-bit integers. The weight matrices $W_{hh}$, $W_{xh}$, and $W_{hy}$ are stored in flash memory and read once per time step. For LSTM and GRU variants, the same approach applies with the appropriate number of gate weight matrices. The many-to-one configuration produces a single output after processing all $T$ time steps, minimizing output processing overhead on the microcontroller.
 
 ### 3.1 — Python Codes
 
@@ -658,24 +515,25 @@ With this example you can implement the machine learning algorithm in ESP32, Ard
 
 #### 3.4.1 — Example 1: RNN Regression
 
-> **Figure 12 — Image prompt:**
-> "A photograph of an Arduino or ESP32 microcontroller connected to a sensor module via breadboard, with a serial monitor window visible on a laptop screen showing a scrolling table of time series predictions produced by an embedded RNN regression model. The table has columns for time step, input value, and predicted output. The scene is a clean electronics workbench with a USB cable visible."
 
-![regression_arduino](./figures/fig12.png)
+![regression_arduino](./figures/regressor.png)
 
 #### 3.4.2 — Example 2: RNN Binary Classification
 
-> **Figure 13 — Image prompt:**
-> "A photograph of an Arduino or ESP32 microcontroller connected to a small OLED display showing binary classification output from an embedded RNN: the display reads 'Class: 1  Prob: 0.627  Loss: 0.467'. A status LED is visible on the breadboard. The setup is on a clean electronics workbench with breadboard wiring visible."
 
-![classification_binary_arduino](./figures/fig13.png)
+
+![classification_binary_arduino](./figures/binary.png)
 
 #### 3.4.3 — Example 3: RNN Multiclass Classification
 
-> **Figure 14 — Image prompt:**
-> "A photograph of an Arduino or ESP32 microcontroller running a three-class RNN classifier, with a serial monitor window on a laptop showing output formatted as: 'Logits: [1.20, 2.45, 0.35]  Probs: [0.203, 0.710, 0.087]  Predicted: Class 2'. The setup is on a clean electronics workbench with breadboard and sensor wiring visible."
 
-![classification_multiclass_arduino](./figures/fig14.png)
+![classification_multiclass_arduino](./figures/mult.png)
+
+#### 3.4.4 — Example 4: RNN Seq2Seq
+
+
+![classification_multiclass_arduino](./figures/seq2seq.png)
+
 
 
 

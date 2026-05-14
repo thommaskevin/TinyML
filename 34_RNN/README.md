@@ -110,7 +110,7 @@ The remainder of this document develops the mathematical framework that enables 
 
 ## 2 — Mathematical Foundations
 
-This section develops the mathematical foundations of Recurrent Neural Networks in full. We begin with the vanilla RNN state equations, which provide the theoretical basis for sequential computation. We then present the LSTM architecture that addresses the vanishing gradient problem, the GRU as a parameter-efficient alternative, the backpropagation through time training algorithm, and the principal sequence-to-output configurations. The section concludes with a step-by-step numerical walkthrough that makes each equation concrete.
+This section develops the mathematical foundations of Recurrent Neural Networks in full. We begin with the vanilla RNN state equations, which provide the theoretical basis for sequential computation. The section concludes with a step-by-step numerical walkthrough that makes each equation concrete.
 
 
 ### 2.1 — The Vanilla RNN: State Equations and Computational Graph
@@ -257,7 +257,7 @@ $$
 \mathbf{g} \leftarrow \mathbf{g} \cdot \min\!\left(1, \frac{c}{\|\mathbf{g}\|}\right)
 $$
 
-where $c$ is the clipping threshold (typically $c \in [1, 5]$). The vanishing gradient problem is addressed structurally by the LSTM and GRU architectures, which provide additive gradient pathways that do not depend on the recurrent weight matrix.
+where $c$ is the clipping threshold (typically $c \in [1, 5]$). 
 
 
 ![Figure 4](./figures/fig04.png)

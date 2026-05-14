@@ -68,3 +68,4 @@
 
 - 33 - [Spiking Neural Networks (SNN)](https://github.com/thommaskevin/TinyML/tree/main/33_SNN) 
   
+- 34 - [Recurrent Neural Networks (RNN)](https://github.com/thommaskevin/TinyML/tree/main/34_SNN) 

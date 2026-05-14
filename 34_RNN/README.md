@@ -495,21 +495,19 @@ The maximum entropy for three classes is $\log 3 \approx 1.099$ nats. An entropy
 With this example you can implement the machine learning algorithm in ESP32, Arduino, Arduino Portenta H7 with Vision Shield, Raspberry Pi, and other microcontrollers or IoT devices.
 
 
-### 3.1 — Python Codes
-
-- [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://github.com/thommaskevin/TinyML/blob/main/34_RNN/model/rnn.py) Recurrent Neural Network (RNN)
-
-### 3.2 — Jupyter Notebooks
+### 3.1 — Jupyter Notebooks
 
 - [![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML/blob/main/34_RNN/rnn.ipynb) Recurrent Neural Network Training
 
 ### 3.3 — Arduino Code
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/blob/main/34_RNN/arduino_code/regression/regression.ino) Example 1: RNN Regression
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/34_RNN/arduino_code/regression_ino) Example 1: RNN Regression
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/blob/main/34_RNN/arduino_code/classification_binary/classification_binary.ino) Example 2: RNN Binary Classification
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/34_RNN/arduino_code/binary_ino) Example 2: RNN Binary Classification
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/blob/main/34_RNN/arduino_code/classification_multiclass/classification_multiclass.ino) Example 3: RNN Multiclass Classification
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/34_RNN/arduino_code/multiclass_ino) Example 3: RNN Multiclass Classification
+
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/34_RNN/arduino_code/seq2seq_ino) Example 4: RNN Seq2Seq
 
 ### 3.4 — Results
 

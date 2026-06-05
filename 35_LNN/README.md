@@ -1,4 +1,4 @@
-# TinyML - Liquid Neural Networks (LNN / LTC)
+# TinyML - Liquid Neural Networks
 
 _From continuous-time dynamics to edge implementation_
 
@@ -18,11 +18,7 @@ _From continuous-time dynamics to edge implementation_
 
 
 
-> **📌 Figure generation prompts** — throughout this document, suggested figures are marked with a
-> `> 🖼️ Figure X` block. Each block contains a **prompt** you can paste directly into an
-> AI image-generation tool (e.g. DALL·E, Midjourney, Stable Diffusion) or a Python plotting
-> script to produce the illustration, followed by the intended **caption**.  The figures are
-> referenced inline in the text as *(Figure X)*.
+![Figure 0](./figures/fig00.png)
 
 
 
@@ -68,7 +64,7 @@ _From continuous-time dynamics to edge implementation_
 
 Liquid Neural Networks (LNNs), introduced under the name **Liquid Time-Constant (LTC) Networks** by Hasani et al. (2021), are a class of continuous-time recurrent neural networks whose hidden-state dynamics are governed by a system of ordinary differential equations (ODEs). Unlike discrete-time recurrent networks such as the Elman RNN, LSTM, or GRU, which update the hidden state by evaluating a fixed algebraic expression at each time step, an LNN defines a differential equation whose solution continuously evolves the hidden state over time. The key innovation is that the effective **time constant** of each neuron — governing how quickly it responds to new inputs and how long it retains past information — is not a fixed parameter but a **learned function of the current input and hidden state**. This property gives the architecture its name: the network is "liquid" because its temporal dynamics flow and adapt with the signal *(Figure 01)*.
 
-This document develops the mathematical foundations of Liquid Neural Networks in full, beginning with the limitations of discrete-time recurrent architectures and progressing to the LTC ODE, the input-dependent time-constant mechanism, fixed-step Euler integration, the training algorithm, and a step-by-step numerical walkthrough. The final section explains how LTC inference can be mapped to efficient embedded C implementations suitable for TinyML deployment on microcontrollers.
+This tutorial develops the mathematical foundations of Liquid Neural Networks in full, beginning with the limitations of discrete-time recurrent architectures and progressing to the LTC ODE, the input-dependent time-constant mechanism, fixed-step Euler integration, the training algorithm, and a step-by-step numerical walkthrough. The final section explains how LTC inference can be mapped to efficient embedded C implementations suitable for TinyML deployment on microcontrollers.
 
 
 ![Figure 1](./figures/fig01.png)
@@ -174,8 +170,7 @@ The term $-\mathbf{h}$ in the numerator acts as a **leak**: in the absence of in
 
 
 ![Figure 5](./figures/fig05.png)
-*Figure 05 — Anatomy of the LTC ODE. The hidden state derivative has three
-> functional components: (1) the leak term −h, which drives the state toward zero when no input is present, creating bounded stable dynamics; (2) the synaptic drive f(W_ih·x + W_hh·h + b), which pulls the state toward a target value determined by the current input; and (3) the adaptive time constant τ(x, h) in the denominator, which scales the overall integration speed. Large τ produces slow, smoothly varying trajectories (solid); small τ produces fast, reactive responses (dashed).*
+*Figure 05 — Anatomy of the LTC ODE. The hidden state derivative has three functional components: (1) the leak term −h, which drives the state toward zero when no input is present, creating bounded stable dynamics; (2) the synaptic drive f(W_ih·x + W_hh·h + b), which pulls the state toward a target value determined by the current input; and (3) the adaptive time constant τ(x, h) in the denominator, which scales the overall integration speed. Large τ produces slow, smoothly varying trajectories (solid); small τ produces fast, reactive responses (dashed).*
 
 
 ### 2.2 — Input-Dependent Time Constants
@@ -400,3 +395,31 @@ With this example you can implement the machine learning algorithm in ESP32, Ard
 - [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/35_LNN/arduino_code/multiclass_ino) Example 3: LNN Multiclass Classification
 
 - [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/35_LNN/arduino_code/seq2seq_ino) Example 4: LNN Seq2Seq
+
+## References
+
+[1] Hasani, R., Lechner, M., Amini, A., Rus, D., & Grosu, R. (2021). Liquid Time-constant Networks. *Proceedings of the 35th AAAI Conference on Artificial Intelligence*, 7657–7666.
+
+[2] Lechner, M., Hasani, R., Amini, A., Henzinger, T. A., Rus, D., & Grosu, R. (2020). Neural Circuit Policies Enabling Auditable Autonomy. *Nature Machine Intelligence*, 2(10), 642–652.
+
+[3] Hasani, R., Lechner, M., Amini, A., Liebenwein, L., Ray, A., Tschaikowski, M., Tanner, G., & Rus, D. (2022). Closed-form Continuous-time Neural Networks. *Nature Machine Intelligence*, 4, 992–1003.
+
+[4] Chen, R. T. Q., Rubanova, Y., Bettencourt, J., & Duvenaud, D. (2018). Neural Ordinary Differential Equations. *Advances in Neural Information Processing Systems (NeurIPS)*, 31.
+
+[5] Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986). Learning Representations by Back-Propagating Errors. *Nature*, 323(6088), 533–536.
+
+[6] Hochreiter, S., & Schmidhuber, J. (1997). Long Short-Term Memory. *Neural Computation*, 9(8), 1735–1780.
+
+[7] Cho, K., van Merrienboer, B., Gulcehre, C., Bahdanau, D., Bougares, F., Schwenk, H., & Bengio, Y. (2014). Learning Phrase Representations Using RNN Encoder-Decoder for Statistical Machine Translation. *EMNLP 2014*, 1724–1734.
+
+[8] Funahashi, K., & Nakamura, Y. (1993). Approximation of Dynamical Systems by Continuous Time Recurrent Neural Networks. *Neural Networks*, 6(6), 801–806.
+
+[9] Kidger, P., Morrill, J., Foster, J., & Lyons, T. (2020). Neural Controlled Differential Equations for Irregular Time Series. *NeurIPS*, 33, 6696–6707.
+
+[10] Goodfellow, I., Bengio, Y., & Courville, A. (2016). *Deep Learning*. MIT Press.
+
+[11] Lane, N. D., Bhattacharya, S., Georgiev, P., Forlivesi, C., & Kawsar, F. (2015). An Early Resource Characterization of Deep Learning on Wearables, Smartphones and Internet-of-Things Devices. *IoT-App 2015*, 7–12.
+
+[12] Werbos, P. J. (1990). Backpropagation Through Time: What It Does and How to Do It. *Proceedings of the IEEE*, 78(10), 1550–1560.
+
+[13] Dormand, J. R., & Prince, P. J. (1980). A Family of Embedded Runge-Kutta Formulae. *Journal of Computational and Applied Mathematics*, 6(1), 19–26.

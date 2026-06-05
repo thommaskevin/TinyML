@@ -70,21 +70,6 @@ Liquid Neural Networks (LNNs), introduced under the name **Liquid Time-Constant 
 
 This document develops the mathematical foundations of Liquid Neural Networks in full, beginning with the limitations of discrete-time recurrent architectures and progressing to the LTC ODE, the input-dependent time-constant mechanism, fixed-step Euler integration, the training algorithm, and a step-by-step numerical walkthrough. The final section explains how LTC inference can be mapped to efficient embedded C implementations suitable for TinyML deployment on microcontrollers.
 
----
-
-> 🖼️ **Figure 01 — The "liquid" metaphor**
->
-> **Prompt:** "A scientific illustration showing water flowing through a network of interconnected
-> neurons drawn as glowing nodes on a dark background. The flow speed between nodes varies — some
-> connections carry fast-moving bright streams, others carry slow viscous flows — representing
-> different time constants. Labels 'fast τ' and 'slow τ' point to the respective streams. Clean,
-> modern infographic style with a dark blue and violet palette. White labels in sans-serif font."
->
-> **Caption:** *Figure 01 — The liquid metaphor. A Liquid Neural Network adapts the speed at
-> which each neuron integrates information (represented by flow rate) based on the current input.
-> Fast-adapting neurons (bright, thin streams) respond to rapid transients; slow-adapting neurons
-> (thick, viscous streams) maintain long-range memory. The effective flow speed — the time constant
-> τ — is not fixed but varies dynamically with the signal, giving the architecture its name.*
 
 ![Figure 1](./figures/fig01.png)
 *Figure 01 — The liquid metaphor. A Liquid Neural Network adapts the speed at which each neuron integrates information (represented by flow rate) based on the current input. Fast-adapting neurons (bright, thin streams) respond to rapid transients; slow-adapting neurons (thick, viscous streams) maintain long-range memory. The effective flow speed — the time constant τ — is not fixed but varies dynamically with the signal, giving the architecture its name.*
@@ -105,26 +90,14 @@ In practice this limitation manifests in two ways. First, RNNs trained on sequen
 
 Gated architectures such as the LSTM and GRU partially address this by introducing learned gating coefficients that modulate how much of the previous state is retained. However, the gates are binary-like (bounded between 0 and 1 by a sigmoid), the effective time constant remains fixed per neuron per data point, and the relationship between gate values and continuous-time dynamics is indirect.
 
----
 
-> 🖼️ **Figure 02 — Discrete-time RNN vs reality: the fixed-step problem**
->
-> **Prompt:** "A two-panel scientific diagram. Left panel: a time-series signal showing a mix of
-> slow sinusoidal drift and rapid sharp spikes, labelled 'Real-world biosignal (multi-scale)'.
-> Below it, a sequence of uniformly spaced vertical arrows (all identical height) labelled
-> 'Discrete RNN updates — uniform Δt'. Right panel: the same signal, but the arrows now have
-> variable heights — tall arrows during fast spikes, short arrows during slow drift — labelled
-> 'Ideal: adaptive updates'. Clean academic diagram, white background, blue and orange palette,
-> serif math labels."
->
-> **Caption:** *Figure 02 — The fixed time-step limitation of discrete-time RNNs. A real-world
-> signal (top) contains events at multiple temporal scales: slow trends and rapid transients.
-> A vanilla RNN applies an identical update at every integer time step (left), allocating the
-> same representational effort to a slowly changing background and a sharp spike. An ideal model
-> (right) would adapt the update magnitude and memory depth to the local structure of the signal —
-> exactly what the Liquid Time-Constant Network achieves.*
 
----
+
+![Figure 2](./figures/fig02.png)
+*Figure 02 — The fixed time-step limitation of discrete-time RNNs. A real-world signal (top) contains events at multiple temporal scales: slow trends and rapid transients. A vanilla RNN applies an identical update at every integer time step (left), allocating the  same representational effort to a slowly changing background and a sharp spike. An ideal model (right) would adapt the update magnitude and memory depth to the local structure of the signal — exactly what the Liquid Time-Constant Network achieves.*
+
+
+
 
 ### 1.2 — The Continuous-Time Perspective
 
@@ -140,26 +113,13 @@ This perspective offers three immediate advantages over the discrete-time formul
 
 Liquid Time-Constant Networks instantiate this perspective with a specific choice of $F$ that leads to tractable, interpretable dynamics and efficient embedded implementations.
 
----
 
-> 🖼️ **Figure 03 — Continuous-time hidden state integration**
->
-> **Prompt:** "A scientific diagram showing ODE integration of a neural hidden state. On the
-> x-axis: continuous time t from 0 to T. On the y-axis: hidden state value h(t). A smooth
-> curved trajectory in violet represents the ODE solution h(t). Below the x-axis: an input
-> signal x(t) shown as a step function (zero-order hold between integer time steps). Vertical
-> dashed lines at integer times t=1,2,3,4 indicate where observations arrive. Small tangent
-> vectors along the curve show dh/dt direction. Initial condition h(0)=h0 is marked. Clean
-> academic plot, dark background with glowing violet curve."
->
-> **Caption:** *Figure 03 — Continuous-time hidden state dynamics. The hidden state h(t) evolves
-> as the solution to an ODE, driven by the input signal x(t). Between consecutive observations
-> (vertical dashed lines), the state follows the smooth trajectory defined by dh/dt = F(h, x, θ).
-> The tangent vectors show the instantaneous direction of change. This formulation naturally
-> handles irregular sampling: observations can arrive at arbitrary times without requiring any
-> resampling or padding.*
 
----
+
+![Figure 3](./figures/fig03.png)
+*Figure 03 — Continuous-time hidden state dynamics. The hidden state h(t) evolves as the solution to an ODE, driven by the input signal x(t). Between consecutive observations (vertical dashed lines), the state follows the smooth trajectory defined by dh/dt = F(h, x, θ). The tangent vectors show the instantaneous direction of change. This formulation naturally handles irregular sampling: observations can arrive at arbitrary times without requiring any resampling or padding.*
+
+
 
 ### 1.3 — From Elman RNNs to Liquid Neural Networks
 
@@ -177,26 +137,8 @@ $$
 
 The LTC network replaces the fixed scalar $\tau$ with an **input-dependent matrix-valued time constant** $\boldsymbol{\tau}(\mathbf{x}, \mathbf{h}) \in \mathbb{R}^{d_h}_{>0}$, allowing each neuron to have a different and signal-dependent temporal sensitivity. This is the central architectural innovation of the LTC cell *(Figure 04)*.
 
----
-
-> 🖼️ **Figure 04 — Evolutionary lineage: from Elman RNN to LTC**
->
-> **Prompt:** "A horizontal diagram showing the evolutionary lineage of recurrent architectures.
-> Three boxes connected by right-pointing arrows: (1) 'Elman RNN — h_t = tanh(W·x + U·h + b)',
-> with a small icon of a fixed clock representing constant τ; (2) 'Continuous-time RNN —
-> dh/dt = (-h + f(...))/τ, fixed τ', same fixed clock icon but with a continuous trajectory;
-> (3) 'LTC Network — dh/dt = (-h + f(...))/τ(x,h), adaptive τ', with a dynamic clock whose
-> hands move at different speeds. Annotations below each box highlight the key limitation removed
-> at each step. Clean infographic, white background, progressive color scheme from grey to violet."
->
-> **Caption:** *Figure 04 — Evolutionary lineage from the Elman RNN to the Liquid Time-Constant
-> Network. Step 1: the Elman RNN applies a discrete, fixed update at every integer time step.
-> Step 2: rewriting the update as a finite difference and taking the continuous-time limit yields
-> an ODE with a fixed time constant τ. Step 3: the LTC network replaces the fixed scalar τ with
-> an input-dependent vector τ(x, h), enabling each neuron to adapt its memory depth to the current
-> signal. Each arrow marks the removal of a structural limitation.*
-
----
+![Figure 4](./figures/fig04.png)
+*Figure 04 — Evolutionary lineage from the Elman RNN to the Liquid Time-Constant  Network. Step 1: the Elman RNN applies a discrete, fixed update at every integer time step. Step 2: rewriting the update as a finite difference and taking the continuous-time limit yields an ODE with a fixed time constant τ. Step 3: the LTC network replaces the fixed scalar τ with an input-dependent vector τ(x, h), enabling each neuron to adapt its memory depth to the current signal. Each arrow marks the removal of a structural limitation.*
 
 
 
@@ -229,27 +171,12 @@ where:
 
 The term $-\mathbf{h}$ in the numerator acts as a **leak**: in the absence of input, the hidden state decays exponentially toward zero at a rate controlled by $\boldsymbol{\tau}$. The backbone nonlinearity $f(\cdot)$ provides the saturating nonlinearity needed for stability and expressivity. The time constant $\boldsymbol{\tau}$ controls the rate at which the hidden state integrates new information *(Figure 05)*.
 
----
 
-> 🖼️ **Figure 05 — Anatomy of the LTC ODE**
->
-> **Prompt:** "A detailed annotated diagram of the LTC ODE equation dh/dt = (-h + f(W·x + U·h + b)) / τ(x,h).
-> The equation is shown large in the center. Colored arrows point to each term: a red arrow labelled
-> 'Leak term: exponential decay toward 0' points to '-h'; a blue arrow labelled
-> 'Synaptic drive: backbone nonlinearity f(·)' points to 'f(W·x + U·h + b)'; a violet arrow
-> labelled 'Adaptive time constant τ(x,h): controls integration speed' points to the denominator.
-> On the right: a small phase portrait showing h(t) converging to an attractor for two different
-> τ values (fast: dashed, slow: solid). White background, clean academic annotation style."
->
-> **Caption:** *Figure 05 — Anatomy of the LTC ODE. The hidden state derivative has three
-> functional components: (1) the leak term −h, which drives the state toward zero when no input
-> is present, creating bounded stable dynamics; (2) the synaptic drive f(W_ih·x + W_hh·h + b),
-> which pulls the state toward a target value determined by the current input; and (3) the
-> adaptive time constant τ(x, h) in the denominator, which scales the overall integration speed.
-> Large τ produces slow, smoothly varying trajectories (solid); small τ produces fast, reactive
-> responses (dashed).*
 
----
+![Figure 5](./figures/fig05.png)
+*Figure 05 — Anatomy of the LTC ODE. The hidden state derivative has three
+> functional components: (1) the leak term −h, which drives the state toward zero when no input is present, creating bounded stable dynamics; (2) the synaptic drive f(W_ih·x + W_hh·h + b), which pulls the state toward a target value determined by the current input; and (3) the adaptive time constant τ(x, h) in the denominator, which scales the overall integration speed. Large τ produces slow, smoothly varying trajectories (solid); small τ produces fast, reactive responses (dashed).*
+
 
 ### 2.2 — Input-Dependent Time Constants
 
@@ -289,46 +216,15 @@ $$
 
 **Interpretation.** When the gating signal $\mathbf{g}$ is close to 1 (i.e., the input strongly activates the gate), $\boldsymbol{\tau}$ is large — the neuron integrates information **slowly** and has **long memory**. When $\mathbf{g}$ is close to 0, $\boldsymbol{\tau}$ approaches $\tau_{\min}$ — the neuron responds **quickly** and has **short memory**. The network can thus simultaneously maintain slow-adapting neurons (tracking trends) and fast-adapting neurons (responding to transients), with the balance determined by the content of the current input sequence *(Figure 07)*.
 
----
 
-> 🖼️ **Figure 06 — The three-stage τ(x, h) computation pipeline**
->
-> **Prompt:** "A left-to-right flowchart diagram of the time-constant computation pipeline.
-> Input on the left: two boxes labelled 'x (input)' and 'h (hidden state)' with arrows feeding
-> into a summation node. Stage 1 box: 'Sigmoid σ(W_τ·x + W_τh·h + b_τ) → g ∈ (0,1)' in blue.
-> Arrow to Stage 2 box: 'Element-wise multiply: a = A ⊙ g, learnable amplitude A' in teal.
-> Arrow to Stage 3 box: 'τ = τ_min + softplus(a) — guaranteed τ > τ_min > 0' in violet.
-> Output on the right: 'τ(x,h) — adaptive time constant'. Each stage box includes a small
-> plot of the activation function used (sigmoid, identity, softplus). Clean flowchart style,
-> white background, colored boxes."
->
-> **Caption:** *Figure 06 — The three-stage pipeline for computing the input-dependent time
-> constant τ(x, h). Stage 1 computes a gating signal g ∈ (0,1) using a sigmoid applied to a
-> learned linear combination of x and h. Stage 2 scales the gate with a learnable per-neuron
-> amplitude A. Stage 3 passes the result through softplus and adds a fixed floor τ_min,
-> guaranteeing strict positivity. The final output τ(x, h) > τ_min for all inputs.*
+![Figure 6](./figures/fig06.png)
+*Figure 06 — The three-stage pipeline for computing the input-dependent time constant τ(x, h). Stage 1 computes a gating signal g ∈ (0,1) using a sigmoid applied to a learned linear combination of x and h. Stage 2 scales the gate with a learnable per-neuron amplitude A. Stage 3 passes the result through softplus and adds a fixed floor τ_min, guaranteeing strict positivity. The final output τ(x, h) > τ_min for all inputs.*
 
----
 
-> 🖼️ **Figure 07 — Long memory vs short memory neurons**
->
-> **Prompt:** "A two-panel time-series diagram. Both panels show the same input signal (a step
-> function turning on at t=5), plotted in grey. Left panel labelled 'Large τ — slow neuron
-> (long memory)': a smooth hidden state h(t) that gradually rises over many time steps toward
-> the input level, like exponential charging with a long time constant. Right panel labelled
-> 'Small τ — fast neuron (short memory)': h(t) rises steeply and reaches the input level
-> almost immediately. A horizontal dashed line marks the input amplitude. Annotation boxes
-> explain τ_large and τ_small. Both panels share the same axes. Clean scientific plot,
-> dark background, violet and orange curves."
->
-> **Caption:** *Figure 07 — Effect of the time constant τ on hidden-state dynamics in response
-> to a step input (grey). A neuron with large τ (left) responds slowly: the hidden state
-> h(t) rises smoothly over many time steps, effectively averaging the input over a long window
-> and providing long-term memory. A neuron with small τ (right) responds almost instantaneously,
-> tracking rapid changes in the input. In an LTC network, τ is not fixed but adapts dynamically
-> to the input signal, allowing the same neuron to alternate between these two regimes.*
+![Figure 7](./figures/fig07.png)
+*Figure 07 — Effect of the time constant τ on hidden-state dynamics in response to a step input (grey). A neuron with large τ (left) responds slowly: the hidden state h(t) rises smoothly over many time steps, effectively averaging the input over a long window and providing long-term memory. A neuron with small τ (right) responds almost instantaneously, tracking rapid changes in the input. In an LTC network, τ is not fixed but adapts dynamically to the input signal, allowing the same neuron to alternate between these two regimes.*
 
----
+
 
 ### 2.3 — Numerical Integration: Fixed-Step Euler Method
 
@@ -346,27 +242,12 @@ The input $\mathbf{x}$ is held constant over all $K$ micro-steps within a single
 
 **Trade-off.** Larger $K$ improves ODE accuracy but increases both training time and Arduino inference time proportionally. For TinyML deployment, $K = 4$ to $6$ is typically sufficient. If the input signal has very fine temporal structure, consider using a smaller $\Delta t$ rather than increasing $K$.
 
----
 
-> 🖼️ **Figure 08 — Fixed-step Euler integration inside one input time step**
->
-> **Prompt:** "A scientific diagram illustrating the Euler integration of the LTC ODE within
-> a single input time step. X-axis: time, showing one interval from t-1 to t divided into
-> K=6 equally-spaced micro-steps (δ = Δt/6). Y-axis: hidden state value h. A smooth violet
-> curve shows the true ODE solution. A sequence of K straight-line segments in orange (Euler
-> approximation) follows the same trajectory with small errors at each step. Vertical arrows
-> at each micro-step show the Euler update: h_(k) = h_(k-1) + δ·dh/dt. The input x is shown
-> as a constant horizontal bar below the x-axis (zero-order hold). Labels: h_(0)=h_{t-1},
-> h_(1), ..., h_(K)=h_t. Small error annotations between the true curve and the orange segments."
->
-> **Caption:** *Figure 08 — Fixed-step Euler integration of the LTC ODE within a single input
-> time step (from t−1 to t, divided into K=6 micro-steps). The violet curve is the true ODE
-> solution; the orange segments are the Euler approximation. At each micro-step, the hidden
-> state advances by δ·dh/dt, accumulating small local errors (shown by gaps between the curves).
-> The input x is held constant over all micro-steps (zero-order hold, grey bar). More micro-steps
-> reduce the accumulated integration error at the cost of proportionally more computation.*
 
----
+![Figure 8](./figures/fig08.png)
+*Figure 08 — Fixed-step Euler integration of the LTC ODE within a single input time step (from t−1 to t, divided into K=6 micro-steps). The violet curve is the true ODE solution; the orange segments are the Euler approximation. At each micro-step, the hidden state advances by δ·dh/dt, accumulating small local errors (shown by gaps between the curves). The input x is held constant over all micro-steps (zero-order hold, grey bar). More micro-steps reduce the accumulated integration error at the cost of proportionally more computation.*
+
+
 
 ### 2.4 — Stacked LTC Layers and Multi-Scale Dynamics
 
@@ -379,27 +260,11 @@ Each layer has its own independent set of parameters $(W_{ih}^{(\ell)}, W_{hh}^{
 
 This multi-scale property is structurally enforced and does not depend on gradient descent discovering the appropriate dynamics from scratch. It is a key advantage of LNNs over stacked Elman RNNs for time series with hierarchical temporal structure.
 
----
 
-> 🖼️ **Figure 09 — Stacked LTC layers operating at multiple temporal scales**
->
-> **Prompt:** "A vertical stack of three recurrent layers unrolled over time (left to right,
-> 5 time steps). Bottom row labelled 'LTC Layer 0 — fast, τ_min=0.05': small τ icons and
-> rapidly oscillating hidden state traces in light blue. Middle row labelled
-> 'LTC Layer 1 — medium, τ_min=0.1': moderately smooth traces in teal. Top row (optional third
-> layer) labelled 'LTC Layer 2 — slow, τ_min=0.3': very smooth slowly varying traces in violet.
-> Vertical arrows between rows show the hidden state of layer ℓ feeding as input to layer ℓ+1.
-> To the right: a dense head block mapping the top layer's output to ŷ. At the top, a raw input
-> signal (fast oscillations + slow trend). Clean technical diagram, dark background."
->
-> **Caption:** *Figure 09 — A two-layer stacked LTC network unrolled over five time steps.
-> Layer 0 (bottom) operates with a small τ_min and responds rapidly to changes in the raw input,
-> capturing fast transients. Layer 1 (top) receives the smoothed output of Layer 0 and operates
-> with a larger τ_min, integrating information over a longer context window. This architectural
-> hierarchy allows the network to simultaneously represent short-range and long-range temporal
-> patterns without relying exclusively on gradient descent to discover the multi-scale structure.*
 
----
+![Figure 9](./figures/fig09.png)
+*Figure 09 — A two-layer stacked LTC network unrolled over five time steps. Layer 0 (bottom) operates with a small τ_min and responds rapidly to changes in the raw input, capturing fast transients. Layer 1 (top) receives the smoothed output of Layer 0 and operates with a larger τ_min, integrating information over a longer context window. This architectural hierarchy allows the network to simultaneously represent short-range and long-range temporal patterns without relying exclusively on gradient descent to discover the multi-scale structure.*
+
 
 ### 2.5 — Many-to-One and Many-to-Many Computation Patterns
 
@@ -419,27 +284,11 @@ $$
 
 The dense head can contain multiple fully-connected layers with arbitrary activations, allowing arbitrary output shapes (scalar regression, binary logit, multiclass logits).
 
----
 
-> 🖼️ **Figure 10 — Many-to-one vs many-to-many computation patterns**
->
-> **Prompt:** "A side-by-side diagram of two recurrent computation patterns, each unrolled over
-> four time steps. Left diagram labelled 'Many-to-One (forward)': input boxes x_1..x_4 feed
-> into LTC cells h_1..h_4 connected left to right. Only h_4 has a downward arrow to a Dense
-> Head block and output ŷ. The other hidden states (h_1, h_2, h_3) have no output arrows —
-> they are greyed out. Right diagram labelled 'Many-to-Many (forward_sequence)': identical
-> unrolled cells, but every h_t has its own downward arrow to a separate Dense Head block and
-> output ŷ_t. Both diagrams use the same LTC cell icon (a rounded rectangle with τ(x,h) label
-> inside). Clean technical diagram, dark background, violet cells."
->
-> **Caption:** *Figure 10 — The two computation patterns supported by LNNModel. Left: many-to-one
-> (forward), in which the dense head is applied only to the final hidden state h_T, producing a
-> single output ŷ. This pattern is used for sequence classification and regression where a single
-> label per sequence is required. Right: many-to-many (forward_sequence), in which the dense head
-> is applied at every time step, producing a sequence of outputs ŷ_1, …, ŷ_T. This pattern is
-> used for sequence-to-sequence tasks such as next-step prediction and signal denoising.*
 
----
+![Figure 10](./figures/fig10.png)
+*Figure 10 — The two computation patterns supported by LNNModel. Left: many-to-one (forward), in which the dense head is applied only to the final hidden state h_T, producing a single output ŷ. This pattern is used for sequence classification and regression where a single label per sequence is required. Right: many-to-many (forward_sequence), in which the dense head is applied at every time step, producing a sequence of outputs ŷ_1, …, ŷ_T. This pattern is used for sequence-to-sequence tasks such as next-step prediction and signal denoising.*
+
 
 ### 2.6 — Training: Backpropagation Through Unrolled ODE Steps
 
@@ -453,27 +302,11 @@ $$
 
 **Gradient flow.** The Euler update $\mathbf{h}_{(k)} = \mathbf{h}_{(k-1)} + \delta \cdot \dot{\mathbf{h}}_{(k-1)}$ has a residual connection structure (similar to ResNet skip connections), which helps gradients flow backward through many micro-steps without vanishing. The time constant $\boldsymbol{\tau}$ in the denominator provides an additional gradient scaling: neurons with large $\tau$ receive smaller gradient signals from the ODE derivative, acting as a form of implicit regularisation on fast neurons.
 
----
 
-> 🖼️ **Figure 11 — Unrolled computational graph for LTC backpropagation**
->
-> **Prompt:** "A horizontal unrolled computational graph for backpropagation through an LTC
-> network. Top row: input nodes x_1, x_2, x_3 (grey circles). Middle row: hidden state nodes
-> h_(t,0), h_(t,1), ..., h_(t,K) for each time step t, arranged in a 2D grid (T columns × K
-> rows per column), connected by forward arrows (left to right for Euler micro-steps, and
-> between time steps). At the far right: loss node L (red circle). Backward pass: red dashed
-> arrows flowing right to left, with gradient labels ∂L/∂h_(t,k). A callout box highlights
-> the residual structure of the Euler step: h_(k) = h_(k-1) + δ·f(h_(k-1)), analogous to
-> a ResNet skip connection. Clean technical diagram, white background."
->
-> **Caption:** *Figure 11 — Unrolled computational graph for backpropagation through an LTC
-> network with T=3 input time steps and K=3 Euler micro-steps per step (total 9 nodes per
-> layer). Forward pass: orange arrows left to right. Backward pass: red dashed arrows right
-> to left, accumulating ∂L/∂θ contributions from every micro-step. The residual structure
-> of the Euler update (callout box) — identical to a ResNet skip connection — helps gradients
-> flow backward without vanishing across the T×K unrolled steps.*
+![Figure 11](./figures/fig11.png)
+*Figure 11 — Unrolled computational graph for backpropagation through an LTC network with T=3 input time steps and K=3 Euler micro-steps per step (total 9 nodes per layer). Forward pass: orange arrows left to right. Backward pass: red dashed arrows right to left, accumulating ∂L/∂θ contributions from every micro-step. The residual structure of the Euler update (callout box) — identical to a ResNet skip connection — helps gradients flow backward without vanishing across the T×K unrolled steps.*
 
----
+
 
 ### 2.7 — Numerical Walkthrough
 
@@ -542,59 +375,16 @@ $$
 
 The ODE integration ensures that the hidden state evolves smoothly from $\mathbf{h}_0$ toward the attractor defined by $f(W_{ih}\,\mathbf{x} + \ldots)$, at a speed controlled by $\boldsymbol{\tau}$. For the chosen input $\mathbf{x}$, the time constants are approximately 1.09, 1.07, and 1.11, meaning each neuron takes roughly one full time step to integrate the new input — moderate-memory behaviour. With a different input that strongly activates the gate, $\boldsymbol{\tau}$ would increase, slowing integration and producing longer-range memory *(Figure 12)*.
 
----
 
-> 🖼️ **Figure 12 — Step-by-step numerical walkthrough of one LTC forward pass**
->
-> **Prompt:** "A detailed vertical step-by-step diagram of one LTC cell forward pass, with
-> d_x=2, d_h=3, K=3 Euler micro-steps. Each step is a horizontal row with:
-> (A) Step label on the left, (B) the equation in the center, (C) the computed numerical
-> vector in a colored box on the right. Rows in order: 'Input x=[0.5, -0.3]' (grey box);
-> 'Pre-activation z=[0.25, -0.15, 0.40]' (blue box); 'Backbone f(z)=[0.245, -0.149, 0.380]'
-> (blue box); 'Gate g=[0.525, 0.480, 0.550]' (teal box); 'Amplitude a=A⊙g=[0.525,...]' (teal);
-> 'Time constant τ=[1.090, 1.074, 1.109]' (violet box with τ_min=0.1 annotation);
-> 'Euler step 1: h_(1)=[0.075, -0.046, 0.114]' (orange box);
-> 'Euler step 2: h_(2)=[...]' (orange box, slightly lighter);
-> 'Euler step 3: h_(3)=h_1 (final)' (orange box); 'Output ŷ = W_hy·h_1 + b' (red box).
-> Vertical arrows connect rows. White background, clean sans-serif font."
->
-> **Caption:** *Figure 12 — Complete numerical walkthrough of a single LTC cell forward pass
-> (d_x=2, d_h=3, K=3 micro-steps, δ=1/3). Each row shows one computational stage with its
-> result. The computation proceeds in two parallel tracks: the backbone track (blue/orange)
-> computes the synaptic drive f(W_ih·x + W_hh·h + b) and applies Euler updates; the time-
-> constant track (teal/violet) computes τ(x,h) at each micro-step to scale the update. After
-> K=3 micro-steps, the final hidden state h_1 is passed to the dense head.*
 
----
+![Figure 12](./figures/fig12.png)
+*Figure 12 — Complete numerical walkthrough of a single LTC cell forward pass(d_x=2, d_h=3, K=3 micro-steps, δ=1/3). Each row shows one computational stage with its result. The computation proceeds in two parallel tracks: the backbone track (blue/orange) computes the synaptic drive f(W_ih·x + W_hh·h + b) and applies Euler updates; the time-constant track (teal/violet) computes τ(x,h) at each micro-step to scale the update. After K=3 micro-steps, the final hidden state h_1 is passed to the dense head.*
 
 
 
 ## 3 — TinyML Implementation
 
 With this example you can implement the machine learning algorithm in ESP32, Arduino, Arduino Portenta H7 with Vision Shield, Raspberry Pi, and other microcontrollers or IoT devices *(Figure 13)*.
-
----
-
-> 🖼️ **Figure 13 — TinyML deployment pipeline: from Python training to Arduino inference**
->
-> **Prompt:** "A horizontal pipeline diagram showing five stages, each as a colored box with
-> an icon: (1) 'Data Collection' — sensor/waveform icon in grey; (2) 'LNNModel Training
-> in Python/PyTorch' — Python logo and loss curve icon in blue; (3) 'export_to_json()' —
-> JSON file icon in teal; (4) 'generate_ino() — C++ code generation' — Arduino logo and
-> code icon in green; (5) 'ESP32 / Arduino Inference' — microcontroller chip icon in orange.
-> Horizontal arrows between stages. Below each stage: a one-line description. Below stage 5:
-> a small Serial Monitor output showing 'Predicted value: 0.42378'. Clean infographic style,
-> white background."
->
-> **Caption:** *Figure 13 — The complete TinyML deployment pipeline for Liquid Neural Networks.
-> (1) Data is collected from sensors. (2) An LNNModel is defined and trained in Python using
-> PyTorch. (3) The trained model is serialised to JSON via export_to_json(), capturing all
-> weights, time-constant parameters, and architecture metadata. (4) The cpp_generator module
-> reads the JSON and emits a self-contained C++ header (LNNModel.h) implementing the full
-> Euler ODE inference loop. (5) The header is uploaded to the target microcontroller; inference
-> runs in a few hundred microseconds on an ESP32, with no external libraries required.*
-
----
 
 
 ### 3.1 — Jupyter Notebooks
@@ -610,33 +400,3 @@ With this example you can implement the machine learning algorithm in ESP32, Ard
 - [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/35_LNN/arduino_code/multiclass_ino) Example 3: LNN Multiclass Classification
 
 - [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/35_LNN/arduino_code/seq2seq_ino) Example 4: LNN Seq2Seq
-
-
-
-## References
-
-[1] Hasani, R., Lechner, M., Amini, A., Rus, D., & Grosu, R. (2021). Liquid Time-constant Networks. *Proceedings of the 35th AAAI Conference on Artificial Intelligence*, 7657–7666.
-
-[2] Lechner, M., Hasani, R., Amini, A., Henzinger, T. A., Rus, D., & Grosu, R. (2020). Neural Circuit Policies Enabling Auditable Autonomy. *Nature Machine Intelligence*, 2(10), 642–652.
-
-[3] Hasani, R., Lechner, M., Amini, A., Liebenwein, L., Ray, A., Tschaikowski, M., Tanner, G., & Rus, D. (2022). Closed-form Continuous-time Neural Networks. *Nature Machine Intelligence*, 4, 992–1003.
-
-[4] Chen, R. T. Q., Rubanova, Y., Bettencourt, J., & Duvenaud, D. (2018). Neural Ordinary Differential Equations. *Advances in Neural Information Processing Systems (NeurIPS)*, 31.
-
-[5] Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986). Learning Representations by Back-Propagating Errors. *Nature*, 323(6088), 533–536.
-
-[6] Hochreiter, S., & Schmidhuber, J. (1997). Long Short-Term Memory. *Neural Computation*, 9(8), 1735–1780.
-
-[7] Cho, K., van Merrienboer, B., Gulcehre, C., Bahdanau, D., Bougares, F., Schwenk, H., & Bengio, Y. (2014). Learning Phrase Representations Using RNN Encoder-Decoder for Statistical Machine Translation. *EMNLP 2014*, 1724–1734.
-
-[8] Funahashi, K., & Nakamura, Y. (1993). Approximation of Dynamical Systems by Continuous Time Recurrent Neural Networks. *Neural Networks*, 6(6), 801–806.
-
-[9] Kidger, P., Morrill, J., Foster, J., & Lyons, T. (2020). Neural Controlled Differential Equations for Irregular Time Series. *NeurIPS*, 33, 6696–6707.
-
-[10] Goodfellow, I., Bengio, Y., & Courville, A. (2016). *Deep Learning*. MIT Press.
-
-[11] Lane, N. D., Bhattacharya, S., Georgiev, P., Forlivesi, C., & Kawsar, F. (2015). An Early Resource Characterization of Deep Learning on Wearables, Smartphones and Internet-of-Things Devices. *IoT-App 2015*, 7–12.
-
-[12] Werbos, P. J. (1990). Backpropagation Through Time: What It Does and How to Do It. *Proceedings of the IEEE*, 78(10), 1550–1560.
-
-[13] Dormand, J. R., & Prince, P. J. (1980). A Family of Embedded Runge-Kutta Formulae. *Journal of Computational and Applied Mathematics*, 6(1), 19–26.

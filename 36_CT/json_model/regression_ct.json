@@ -1,0 +1,41 @@
+{
+  "model_type": "CausalTree",
+  "task": "regression",
+  "hyperparams": {
+    "max_depth": 4,
+    "min_samples_leaf": 15,
+    "min_samples_treat": 5,
+    "criterion": "variance",
+    "honest": true,
+    "n_features": "None",
+    "n_classes": null
+  },
+  "tree": {
+    "node_id": 2,
+    "depth": 0,
+    "is_leaf": false,
+    "impurity": 1.7968318441335767,
+    "n_treated": 0,
+    "n_control": 0,
+    "feature": 0,
+    "threshold": -0.13278285428142628,
+    "left": {
+      "node_id": 0,
+      "depth": 1,
+      "is_leaf": true,
+      "impurity": 0.0,
+      "n_treated": 55,
+      "n_control": 43,
+      "tau": 0.2674883275928837
+    },
+    "right": {
+      "node_id": 1,
+      "depth": 1,
+      "is_leaf": true,
+      "impurity": 0.0,
+      "n_treated": 80,
+      "n_control": 67,
+      "tau": 1.823891138218874
+    }
+  }
+}

@@ -1,0 +1,141 @@
+{
+  "model_type": "CausalTree",
+  "task": "multiclass",
+  "hyperparams": {
+    "max_depth": 4,
+    "min_samples_leaf": 20,
+    "min_samples_treat": 5,
+    "criterion": "variance",
+    "honest": true,
+    "n_features": "None",
+    "n_classes": 3
+  },
+  "tree": {
+    "node_id": 10,
+    "depth": 0,
+    "is_leaf": false,
+    "impurity": 0.19195203168717115,
+    "n_treated": 0,
+    "n_control": 0,
+    "feature": 3,
+    "threshold": -0.351079852164741,
+    "left": {
+      "node_id": 4,
+      "depth": 1,
+      "is_leaf": false,
+      "impurity": 0.23603002476075177,
+      "n_treated": 0,
+      "n_control": 0,
+      "feature": 4,
+      "threshold": 0.8776520821010756,
+      "left": {
+        "node_id": 2,
+        "depth": 2,
+        "is_leaf": false,
+        "impurity": 0.24462464508523013,
+        "n_treated": 0,
+        "n_control": 0,
+        "feature": 4,
+        "threshold": -0.7177249949442592,
+        "left": {
+          "node_id": 0,
+          "depth": 3,
+          "is_leaf": true,
+          "impurity": 0.0,
+          "n_treated": 10,
+          "n_control": 13,
+          "tau": [
+            -0.2076923076923077,
+            -0.31538461538461543,
+            0.523076923076923
+          ]
+        },
+        "right": {
+          "node_id": 1,
+          "depth": 3,
+          "is_leaf": true,
+          "impurity": 0.0,
+          "n_treated": 36,
+          "n_control": 35,
+          "tau": [
+            -0.1484126984126984,
+            -0.0087301587301587,
+            0.15714285714285714
+          ]
+        }
+      },
+      "right": {
+        "node_id": 3,
+        "depth": 2,
+        "is_leaf": true,
+        "impurity": 0.0,
+        "n_treated": 8,
+        "n_control": 12,
+        "tau": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "right": {
+      "node_id": 9,
+      "depth": 1,
+      "is_leaf": false,
+      "impurity": 0.4115834506833581,
+      "n_treated": 0,
+      "n_control": 0,
+      "feature": 0,
+      "threshold": 0.09385947934114416,
+      "left": {
+        "node_id": 5,
+        "depth": 2,
+        "is_leaf": true,
+        "impurity": 0.0,
+        "n_treated": 66,
+        "n_control": 47,
+        "tau": [
+          -0.12217923920051582,
+          -0.013539651837524203,
+          0.13571889103804
+        ]
+      },
+      "right": {
+        "node_id": 8,
+        "depth": 2,
+        "is_leaf": false,
+        "impurity": 0.9981249138643948,
+        "n_treated": 0,
+        "n_control": 0,
+        "feature": 1,
+        "threshold": -0.8829878080688491,
+        "left": {
+          "node_id": 6,
+          "depth": 3,
+          "is_leaf": true,
+          "impurity": 0.0,
+          "n_treated": 7,
+          "n_control": 7,
+          "tau": [
+            -0.2857142857142857,
+            0.0,
+            0.28571428571428575
+          ]
+        },
+        "right": {
+          "node_id": 7,
+          "depth": 3,
+          "is_leaf": true,
+          "impurity": 0.0,
+          "n_treated": 34,
+          "n_control": 40,
+          "tau": [
+            -0.17794117647058824,
+            -0.05588235294117644,
+            0.2338235294117647
+          ]
+        }
+      }
+    }
+  }
+}

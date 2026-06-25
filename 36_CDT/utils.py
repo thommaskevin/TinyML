@@ -278,7 +278,8 @@ def plot_tree(
             f'Task: {task}  |  Criterion: {tree_layer.criterion_name}')
     ax.text(0.5, -0.04, info, ha='center', fontsize=fontsize,
             color='gray', transform=ax.transAxes)
-    plt.tight_layout(); plt.show()
+    plt.tight_layout()
+    plt.show()
 
 
 # =============================================================================
@@ -341,7 +342,7 @@ def print_tree(
 
 
 # =============================================================================
-# 5. CATE Distribution (regression / binary)
+# 5. CATE Distribution
 # =============================================================================
 
 def plot_cate_distribution(
@@ -374,7 +375,8 @@ def plot_cate_distribution(
     ax.set_ylabel('Count', fontsize=12)
     ax.set_title(title, fontsize=13, fontweight='bold')
     ax.legend(); ax.grid(True, alpha=0.3)
-    plt.tight_layout(); plt.show()
+    plt.tight_layout()
+    plt.show()
 
 
 # =============================================================================
@@ -427,7 +429,9 @@ def plot_treatment_effect_by_feature(
     ax.axhline(0, color='gray', lw=1, ls='--')
     ax.set_xlabel(feature_name, fontsize=12); ax.set_ylabel(ylabel, fontsize=12)
     ax.set_title(title, fontsize=13, fontweight='bold')
-    ax.grid(True, alpha=0.3); plt.tight_layout(); plt.show()
+    ax.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.show()
 
 
 # =============================================================================
@@ -489,7 +493,12 @@ def plot_decision_boundary(
         ax.set_xlabel(names[feat_x]); ax.set_ylabel(names[feat_y])
 
     if task == 'multiclass':
-        preds = model.predict(X_grid).reshape(grid_n, grid_n)
+        tau_grid = model.predict(X_grid)          # pode ser (N, K) ou (N,)
+        # CORREÇÃO: verifica dimensionalidade
+        if tau_grid.ndim == 1:
+            preds = tau_grid.reshape(grid_n, grid_n)
+        else:
+            preds = np.argmax(tau_grid, axis=1).reshape(grid_n, grid_n)
         cmap_mc = plt.cm.get_cmap('tab10', K)
         axes[0].contourf(xx, yy, preds, levels=np.arange(-0.5, K+0.5, 1),
                          cmap=cmap_mc, alpha=0.7)
@@ -502,7 +511,7 @@ def plot_decision_boundary(
                          cmap=cmap_mc, alpha=0.4)
         for k in range(K):
             axes[1].contour(xx, yy, (preds == k).astype(float),
-                            levels=[0.5], colors='black', linewidths=1.0)
+                            levels=[0.5], colors='black', linewidths=1.0)  # corrigido
         axes[1].set_title('Policy Boundary (treat → predicted best class)')
         _scatter(axes[1])
     else:
@@ -516,7 +525,7 @@ def plot_decision_boundary(
 
         policy = (tau_grid > 0).astype(float)
         axes[1].contourf(xx, yy, policy, levels=1, cmap='RdYlGn', alpha=0.5)
-        axes[1].contour(xx, yy, policy, levels=[0.5], colors='black', lw=1.5)
+        axes[1].contour(xx, yy, policy, levels=[0.5], colors='black', linewidths=1.5)  # corrigido
         axes[1].set_title('Optimal Binary Policy  (τ̂ > 0 → treat)')
         _scatter(axes[1])
         p_g = mpatches.Patch(color='green', alpha=0.5, label='Treat (τ̂>0)')
@@ -525,7 +534,8 @@ def plot_decision_boundary(
 
     for ax in axes:
         ax.set_xlabel(names[feat_x]); ax.set_ylabel(names[feat_y])
-    plt.tight_layout(); plt.show()
+    plt.tight_layout()
+    plt.show()
 
 
 # =============================================================================
@@ -553,6 +563,9 @@ def plot_leaf_effects(
         alpha       : Significance level (default: 0.05).
         title       : Figure title.
     """
+    if model.task == 'multiclass':
+        raise ValueError("plot_leaf_effects is only for regression/binary tasks.")
+
     tree_layer = model._tree
     leaves     = tree_layer.get_leaf_nodes()
     if not leaves:
@@ -564,7 +577,8 @@ def plot_leaf_effects(
 
     for lf in leaves:
         lf_tau = float(lf.tau) if not isinstance(lf.tau, np.ndarray) else float(lf.tau[0])
-        mask   = tau_all == lf_tau
+        # Comparação com tolerância para evitar problemas de arredondamento
+        mask = np.isclose(tau_all, lf_tau, rtol=1e-8, atol=1e-8)
         y_lf, w_lf, n_lf = y[mask], w[mask], int(mask.sum())
 
         if n_lf < 2 or (w_lf==1).sum()==0 or (w_lf==0).sum()==0:
@@ -609,7 +623,8 @@ def plot_leaf_effects(
     ax.grid(True, axis='x', alpha=0.3)
     sm = ScalarMappable(cmap=cmap, norm=norm); sm.set_array([])
     fig.colorbar(sm, ax=ax, label='Leaf sample size', shrink=0.7)
-    plt.tight_layout(); plt.show()
+    plt.tight_layout()
+    plt.show()
 
 
 # =============================================================================
@@ -634,14 +649,14 @@ def plot_multiclass_effects(
     """
     if model.task != 'multiclass':
         raise ValueError("plot_multiclass_effects requires task='multiclass'.")
-    leaves  = model.get_leaf_nodes()
+
+    # CORREÇÃO: usar model._tree.get_leaf_nodes()
+    leaves  = model._tree.get_leaf_nodes()
     K       = model._tree.n_classes
     cnames  = class_names or [f'C{k}' for k in range(K)]
     n_l     = len(leaves)
 
-    # matrix (n_leaves, K)
     mat = np.array([lf.tau for lf in leaves])  # each row is the tau vector
-    # sort by argmax class
     order = np.argsort(np.argmax(mat, axis=1))
     mat   = mat[order]
 
@@ -659,7 +674,8 @@ def plot_multiclass_effects(
     ax.set_xlabel('Class k', fontsize=12)
     ax.set_ylabel('Leaf', fontsize=12)
     ax.set_title(title, fontsize=12, fontweight='bold')
-    plt.tight_layout(); plt.show()
+    plt.tight_layout()
+    plt.show()
 
 
 # =============================================================================
@@ -689,4 +705,5 @@ def plot_training_history(
     plt.xlabel(xlabel); plt.ylabel(metric_name.upper())
     plt.title('Hyperparameter Sweep', fontweight='bold')
     plt.legend(); plt.grid(True, alpha=0.3)
-    plt.tight_layout(); plt.show()
+    plt.tight_layout()
+    plt.show()

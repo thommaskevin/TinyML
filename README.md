@@ -71,3 +71,5 @@
 - 34 - [Recurrent Neural Networks (RNN)](https://github.com/thommaskevin/TinyML/tree/main/34_SNN) 
 
 - 35 - [Liquid Neural Networks (LNN)](https://github.com/thommaskevin/TinyML/tree/main/35_LNN)
+
+- 36 - [Causal Trees (CDT)](https://github.com/thommaskevin/TinyML/tree/main/36_CDT)

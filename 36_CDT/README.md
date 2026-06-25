@@ -351,7 +351,23 @@ $$
 \hat p_{C,k}(\ell) = \frac{\sum_{i \in S_\ell^{est,C}} \mathbf{1}[Y_i = k]}{n_\ell^{est,C}}
 $$
 
-**Properties.** By construction, $\sum_{k=0}^{K-1} \hat\tau_k(\ell) = 0$ in the limit: the treatment can shift probability mass between classes but cannot create or destroy it. The vector $\hat\boldsymbol\tau(\ell) \in \mathbb{R}^K$ therefore lies on the hyperplane $\{\mathbf{v} : \sum_k v_k = 0\}$.
+**Properties.** By construction, 
+
+$$
+\sum_{k=0}^{K-1} \hat\tau_k(\ell) = 0
+$$
+
+in the limit: the treatment can shift probability mass between classes but cannot create or destroy it. The vector 
+
+$$
+\hat{\boldsymbol{\tau}}(\ell) \in \mathbb{R}^{K \times 1}
+$$ 
+
+therefore lies on the hyperplane 
+
+$$
+\mathbf{v} : \sum_k v_k = 0
+$$
 
 **Prediction.** The treatment-induced class — the class whose probability the treatment increases the most — is:
 
@@ -364,7 +380,11 @@ Negative $\hat\tau_k(\ell)$ means treatment *decreases* the probability of class
 **Split criterion for multiclass.** The Variance criterion is extended to multiclass by summing the squared mean-difference vector:
 
 $$
-\hat\tau_L^2 \;\to\; \|\hat\boldsymbol\tau_L\|^2 = \sum_{k=0}^{K-1} \hat\tau_{L,k}^2
+\hat{\tau}_L^2
+\;\longrightarrow\;
+\|\hat{\boldsymbol{\tau}}_L\|_2^2
+=
+\sum_{k=0}^{K-1}\hat{\tau}_{L,k}^{\,2}.
 $$
 
 This encourages splits that create children with large shifts in class probabilities, in any direction across the $K$ classes.

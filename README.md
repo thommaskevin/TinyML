@@ -72,4 +72,4 @@
 
 - 35 - [Liquid Neural Networks (LNN)](https://github.com/thommaskevin/TinyML/tree/main/35_LNN)
 
-- 36 - [Causal Trees (CDT)](https://github.com/thommaskevin/TinyML/tree/main/36_CDT)
+- 36 - [Causal Decision Trees (CDT)](https://github.com/thommaskevin/TinyML/tree/main/36_CDT)

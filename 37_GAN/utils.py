@@ -79,10 +79,12 @@ def export_to_json(generator: nn.Module, filepath: str) -> None:
 
         if block.norm is not None:
             if block.conditional:
+                # ConditionalBatchNorm
                 params[f'gen_{i}_bn_gamma_w'] = _t(block.norm.gamma_fc.weight)
                 params[f'gen_{i}_bn_gamma_b'] = _t(block.norm.gamma_fc.bias)
                 params[f'gen_{i}_bn_beta_w']  = _t(block.norm.beta_fc.weight)
                 params[f'gen_{i}_bn_beta_b']  = _t(block.norm.beta_fc.bias)
+                # running_mean/var serão adicionados depois via add_bn_stats_to_json
             else:
                 params[f'gen_{i}_bn_weight'] = _t(block.norm.weight)
                 params[f'gen_{i}_bn_bias']   = _t(block.norm.bias)
@@ -598,3 +600,45 @@ def evaluate_fid_proxy(
 
     fid = mean_sq + np.trace(sig_r + sig_f - 2.0 * sqrt_prod)
     return float(fid)
+
+
+# =============================================================================
+# CORREÇÃO: add_bn_stats_to_json agora suporta ConditionalBatchNorm
+# =============================================================================
+
+def add_bn_stats_to_json(generator, json_path: str) -> None:
+    """
+    Append BatchNorm running statistics (running_mean, running_var) to an
+    existing Generator JSON export.
+
+    Must be called **after** ``model.eval()`` to ensure the running statistics
+    are populated from training.
+
+    Esta função agora suporta tanto BatchNorm padrão quanto ConditionalBatchNorm.
+
+    Args:
+        generator : The trained ``Generator`` instance (in eval mode).
+        json_path : Path to the JSON file produced by ``export_to_json``.
+                    The file is updated in place.
+    """
+    import torch
+    with open(json_path, 'r') as f:
+        data = json.load(f)
+
+    p = data['parameters']
+
+    for i, block in enumerate(generator.blocks):
+        if block.norm is not None:
+            bn = block.norm
+            # ConditionalBatchNorm encapsula um BatchNorm1d interno em .bn
+            if hasattr(bn, 'bn'):
+                bn_inner = bn.bn
+            else:
+                bn_inner = bn
+            p[f'gen_{i}_bn_running_mean'] = bn_inner.running_mean.cpu().tolist()
+            p[f'gen_{i}_bn_running_var']  = bn_inner.running_var.cpu().tolist()
+
+    with open(json_path, 'w') as f:
+        json.dump(data, f, indent=2)
+
+    print(f"BN running stats appended → {json_path}")

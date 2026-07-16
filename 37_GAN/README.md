@@ -1,6 +1,6 @@
-# TinyML — Generative Adversarial Networks (GAN)
+# TinyML — Generative Adversarial Networks
 
-_From adversarial dynamics to edge data synthesis_
+_Comprehensive guide to deploying on edge devices_
 
 **Social media:**
 
@@ -18,13 +18,7 @@ _From adversarial dynamics to edge data synthesis_
 
 
 
-> **📌 Figure generation prompts** — throughout this document, suggested figures are marked with a
-> `> 🖼️ Figure X` block. Each block contains a **prompt** you can paste directly into an
-> AI image-generation tool (e.g. DALL·E, Midjourney, Stable Diffusion) or a Python plotting
-> script to produce the illustration, followed by the intended **caption**. The figures are
-> referenced inline in the text as *(Figure X)*.
-
-
+![Figure 0](./figures/fig00.png)
 
 ## SUMMARY
 
@@ -465,15 +459,17 @@ The **trained Generator** (not the Discriminator) is deployed to the embedded de
 
 ### 3.1 — Jupyter Notebooks
 
-- [![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML/blob/main/36_GAN/gan.ipynb) Generative Adversarial Network Training
+- [![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML/blob/main/37_GAN/gan.ipynb) Generative Adversarial Network Training
 
 ### 3.2 — Arduino Code
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/36_GAN/arduino_code/vanilla_moons_ino) Example 1: Vanilla GAN — Two Moons
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/37_GAN/arduino_code/vanilla_moons_ino) Example 1: Vanilla GAN — Two Moons
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/36_GAN/arduino_code/wgan_gp_gmm_ino) Example 2: WGAN-GP — Gaussian Mixture
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/37_GAN/arduino_code/wgan_gp_gmm_ino) Example 2: WGAN-GP — Gaussian Mixture
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/36_GAN/arduino_code/hinge_sensor_ino) Example 4: Hinge GAN — Sensor Data
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/37_GAN/arduino_code/cgan_blobs_ino) Example 3: Conditional GAN — Three Blobs
+
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/37_GAN/arduino_code/hinge_sensor_ino) Example 4: Hinge GAN — Sensor Data
 
 
 

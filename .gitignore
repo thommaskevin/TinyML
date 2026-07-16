@@ -1,4 +1,5 @@
 .venv
+.venv_new_python
 .vscode
 .pytest_cache
 __pycache__

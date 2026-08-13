@@ -76,4 +76,8 @@
 
 - 37 - [Generative Adversarial Networks (GAN)](https://github.com/thommaskevin/TinyML/tree/main/37_GAN)
 
+- 38 - [Adaptive Neuro-Fuzzy Inference System (ANFIS)](https://github.com/thommaskevin/TinyML/tree/main/38_ANFIS)
+
+
+
 

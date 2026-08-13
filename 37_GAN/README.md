@@ -14,9 +14,6 @@ _Comprehensive guide to deploying on edge devices_
 
 :pencil2: CV Lattes CNPq: [Thommas Kevin Sales Flores](http://lattes.cnpq.br/0630479458408181)
 
-👨🏻‍🏫 Research group: [Conecta.ai](https://conect2ai.dca.ufrn.br/)
-
-
 
 ![Figure 0](./figures/fig00.png)
 

@@ -1,4 +1,4 @@
-# TinyML - Adaptive Neuro-Fuzzy Inference System
+ # TinyML - Adaptive Neuro-Fuzzy Inference System
 
 _From fuzzy logic to edge implementation_
 
@@ -322,16 +322,16 @@ With this example you can implement the machine learning algorithm on the ESP32,
 
 ### 3.1 — Jupyter Notebooks
 
-- [![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML) ANFIS Training
+- [![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML/blob/main/38_ANFIS/nf_examples.ipynb) ANFIS Training
 
 
 ### 3.2 — Arduino Code
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML) Example 1: ANFIS Regression
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/38_ANFIS/arduino_code/regression_ino) Example 1: ANFIS Regression
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML) Example 2: ANFIS Binary Classification
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/38_ANFIS/arduino_code/binary_ino) Example 2: ANFIS Binary Classification
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML) Example 3: ANFIS Multiclass Classification
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/38_ANFIS/arduino_code/multiclass_ino) Example 3: ANFIS Multiclass Classification
 
 
 ## References

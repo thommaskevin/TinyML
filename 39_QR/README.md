@@ -61,31 +61,14 @@ _From distributional forecasting to edge implementation_
 
 ## 1 — Introduction
 
-Quantile Regression Neural Networks (QRNNs), building on the theoretical
-foundations of Koenker & Bassett (1978) and the neural-network extension of
-Taylor (2000), are feed-forward networks trained to estimate the **conditional
-quantile function** Q_τ(Y | X) of a response variable Y given covariates X,
-for one or more quantile levels τ ∈ (0, 1). Unlike conventional regression
-networks that minimise the mean squared error (MSE) and converge to the
-conditional mean E[Y | X], a QRNN minimises the asymmetric **pinball loss**
-and converges to the conditional τ-quantile of the response distribution. When
-trained simultaneously across K quantile levels, a QRNN provides a full
-distributional forecast — median, prediction intervals, and tail quantiles —
-in a single forward pass, making it a powerful tool for uncertainty
-quantification in TinyML systems where multiple inference calls would be
-prohibitively expensive *(Figure 01)*.
+Quantile Regression Neural Networks (QRNNs) extend the theoretical framework of Koenker and Bassett (1978), together with the neural-network formulation introduced by Taylor (2000). These feed-forward networks estimate the \textbf{conditional quantile function} $Q_{\tau}(Y \mid X)$ of a response variable $Y$ given covariates $X$, for one or more quantile levels $\tau \in (0,1)$. Conventional regression networks typically minimise the mean squared error (MSE) and therefore estimate the conditional mean $\mathbb{E}[Y \mid X]$. By contrast, a QRNN minimises the asymmetric \textbf{pinball loss} to estimate the conditional $\tau$-quantile of the response distribution. When trained jointly for $K$ quantile levels, the network produces a distributional forecast that includes the median, prediction intervals, and tail quantiles in a single forward pass. This property is particularly valuable for uncertainty quantification in TinyML systems, where repeated inference calls may be prohibitively expensive (Figure 01).
 
-This tutorial develops the mathematical foundations of Quantile Regression
-Neural Networks in full, beginning with the limitations of mean regression,
-progressing through the pinball loss, multi-quantile training, quantile
-crossing prevention, interval scoring, and calibration diagnostics. The final
-section explains how QRNN inference can be mapped to efficient embedded C
-implementations suitable for deployment on microcontrollers.
+This tutorial presents the mathematical foundations of Quantile Regression Neural Networks, starting with the limitations of mean regression and then introducing the pinball loss, multi-quantile training, methods for preventing quantile crossing, interval scoring, and calibration diagnostics. The final section describes how QRNN inference can be translated into efficient embedded C implementations for deployment on microcontrollers.
 
 
 
 ![Figure 1](./figures/fig01.png)
-*Figure 01 — The distributional forecasting paradigm. A standard regression network predicts only the conditional mean Ê[Y|X] (center line). A Quantile Regression Neural Network simultaneously estimates multiple conditional quantiles Q_τ(Y|X), producing a fan-shaped prediction band that captures the full shape of the response distribution. The band widens in regions of high aleatoric uncertainty and narrows where the response is more predictable, providing actionable uncertainty estimates at the cost of a single forward pass.*
+*Figure 01 — The distributional forecasting paradigm. A standard regression network predicts only the conditional mean Ê[Y|X] (center line). A Quantile Regression Neural Network simultaneously estimates multiple conditional quantiles $Q_τ(Y|X)$, producing a fan-shaped prediction band that captures the full shape of the response distribution. The band widens in regions of high aleatoric uncertainty and narrows where the response is more predictable, providing actionable uncertainty estimates at the cost of a single forward pass.*
 
 
 
@@ -97,28 +80,15 @@ $$
 \hat{y}(x) \;\to\; \mathbb{E}[Y \mid X = x]
 $$
 
-This estimator is optimal under squared loss, but it discards all information
-about the *shape* of the conditional distribution of Y | X. In practice,
-three situations make the conditional mean an inadequate summary:
+This estimator is optimal under squared loss, but it discards all information about the *shape* of the conditional distribution of Y | X. In practice, three situations make the conditional mean an inadequate summary:
 
-**Heteroskedasticity.** When the variance of Y | X depends on x, a single
-mean prediction gives no indication of how confident the model is at different
-operating points. A temperature sensor that is reliable at 25°C and noisy at
-−40°C requires a model that expresses this difference quantitatively.
+- **Heteroskedasticity:** When the variance of Y | X depends on x, a single mean prediction gives no indication of how confident the model is at different operating points. A temperature sensor that is reliable at 25°C and noisy at −40°C requires a model that expresses this difference quantitatively.
 
-**Asymmetric cost functions.** In inventory management, underestimating demand
-carries a different cost than overestimating it. Predicting only the mean
-ignores the asymmetry in the loss surface; the decision-theoretically optimal
-action depends on the full conditional distribution.
+- **Asymmetric cost functions:** In inventory management, underestimating demand carries a different cost than overestimating it. Predicting only the mean ignores the asymmetry in the loss surface; the decision-theoretically optimal action depends on the full conditional distribution.
 
-**Heavy-tailed noise.** MSE regression is known to be highly sensitive to
-outliers because the squared penalty grows quadratically with the error. In
-environments where extreme events are common — power grids, financial returns,
-physiological signals — mean predictions are systematically distorted by tail
-observations.
+- **Heavy-tailed noise:** MSE is highly sensitive to outliers because its penalty increases quadratically with the magnitude of the error. In settings characterized by frequent extreme events, such as power grids, financial markets, and physiological monitoring, observations in the tails of the distribution can therefore substantially distort estimates of the conditional mean.
 
-Quantile regression addresses all three limitations by targeting specific
-percentiles of the conditional distribution rather than its mean *(Figure 02)*.
+Quantile regression addresses all three limitations by targeting specific percentiles of the conditional distribution rather than its mean *(Figure 02)*.
 
 
 
@@ -129,32 +99,25 @@ percentiles of the conditional distribution rather than its mean *(Figure 02)*.
 
 ### 1.2 — The Distributional Forecasting Perspective
 
-Let (X, Y) be a random pair with X ∈ ℝ^p and Y ∈ ℝ. The conditional
-quantile function at level τ is defined as:
+Let (X, Y) be a random pair with X ∈ ℝ^p and Y ∈ ℝ. The conditional quantile function at level τ is defined as:
 
 $$
 Q_\tau(Y \mid X = x) \;=\; \inf\!\left\{ q \in \mathbb{R} : \Pr(Y \leq q \mid X = x) \geq \tau \right\}
 $$
 
-Estimating Q_τ for a grid of values τ_1 < τ_2 < … < τ_K effectively
-*reconstructs* the conditional cumulative distribution function F(y | x)
-at K points. The resulting quantile fan *(Figure 01)* encodes:
+Estimating $Q_τ$ for a grid of values $τ_1$ < $τ_2$ < … < $τ_K$ effectively *reconstructs* the conditional cumulative distribution function $F(y | x)$
+at $K$ points. The resulting quantile fan (Figure 01) encodes:
 
-- The **conditional median** Q_{0.5}(Y|X) — robust location estimate.
-- The **prediction interval** [Q_{α/2}(Y|X), Q_{1−α/2}(Y|X)] — a (1−α) × 100%
-  probability region for future observations.
-- **Tail quantiles** Q_{0.05}(Y|X) and Q_{0.95}(Y|X) — risk-relevant extremes
-  for safety-critical applications.
+- The **conditional median** $Q_{0.5}(Y|X)$ — robust location estimate.
+- The **prediction interval** $[Q_{α/2}(Y|X), Q_{1−α/2}(Y|X)] — a (1−α) × 100%$  probability region for future observations.
+- **Tail quantiles** $Q_{0.05}(Y|X) and Q_{0.95}(Y|X)$ — risk-relevant extremes for safety-critical applications.
 
-The quantile function is directly actionable for decision making: the optimal
-action under an asymmetric cost function c(y, a) is obtained by minimising
-the expected cost using the estimated conditional distribution, without any
-further modelling assumption.
+The quantile function is directly actionable for decision making: the optimal action under an asymmetric cost function c(y, a) is obtained by minimising the expected cost using the estimated conditional distribution, without any further modelling assumption.
 
 
 
 ![Figure 3](./figures/fig03.png)
-*Figure 03 — The conditional quantile function as a distributional summary. Left: conditional density f(y|x) for three fixed values of x. The distributional shape changes with x: symmetric and narrow at x₁, asymmetric at x₂, heavy-tailed at x₃. Right: the conditional quantile fan Q_τ(y|x) for the same three points. Each vertical cross-section of the fan corresponds to the inverse CDF of the conditional density on the left. The QRNN estimates this fan directly without modelling the density.*
+*Figure 03 — The conditional quantile function as a distributional summary. Left: conditional density $f(y|x)$ for three fixed values of $x$. The distributional shape changes with $x$: symmetric and narrow at $x_1$, asymmetric at $x_2, heavy-tailed at $x_3$. Right: the conditional quantile fan $Q_τ(y|x)$ for the same three points. Each vertical cross-section of the fan corresponds to the inverse CDF of the conditional density on the left. The QRNN estimates this fan directly without modelling the density.*
 
 
 
@@ -172,23 +135,15 @@ $$
 \hat{\boldsymbol{\beta}}_\tau \;=\; \arg\min_{\boldsymbol{\beta}} \sum_{i=1}^n \rho_\tau(y_i - x_i^\top \boldsymbol{\beta})
 $$
 
-where $\rho_\tau(\cdot)$ is the pinball loss function defined in Section 2.1.
-The linear model is computationally efficient and yields exact confidence
-intervals via asymptotic theory, but it cannot capture nonlinear
-covariate-quantile relationships that arise in complex physical systems.
+where $\rho_\tau(\cdot)$ is the pinball loss function defined in Section 2.1. The linear model is computationally efficient and yields exact confidence intervals via asymptotic theory, but it cannot capture nonlinear covariate-quantile relationships that arise in complex physical systems.
 
-Quantile Regression Neural Networks replace the linear predictor with a
-feed-forward network f(x; θ), yielding:
+Quantile Regression Neural Networks replace the linear predictor with a feed-forward network f(x; θ), yielding:
 
 $$
 \hat{Q}_\tau(Y \mid X = x) \;=\; f(x;\, \boldsymbol{\theta}_\tau)
 $$
 
-The network is trained by minimising the expected pinball loss over the
-training data using gradient-based optimisation (backpropagation). Unlike the
-linear case, the neural network version requires no prior knowledge of the
-functional form of the quantile-covariate relationship and can model
-interactions, thresholds, and saturation effects automatically *(Figure 04)*.
+The network is trained by minimising the expected pinball loss over the training data using gradient-based optimisation (backpropagation). Unlike the linear case, the neural network version requires no prior knowledge of the functional form of the quantile-covariate relationship and can model interactions, thresholds, and saturation effects automatically *(Figure 04)*.
 
 
 
@@ -196,10 +151,7 @@ interactions, thresholds, and saturation effects automatically *(Figure 04)*.
 
 ### 2.1 — The Pinball (Check) Loss Function
 
-The pinball loss (also called the *check function* or *tick function*) is the
-fundamental training objective for quantile regression. For a scalar
-prediction $\hat{q}$ and ground-truth outcome $y$, the pinball loss at
-quantile level τ is:
+The pinball loss (also called the *check function* or *tick function*) is the fundamental training objective for quantile regression. For a scalar prediction $\hat{q}$ and ground-truth outcome $y$, the pinball loss at quantile level τ is:
 
 $$
 \rho_\tau(y,\, \hat{q}) \;=\;
@@ -218,24 +170,16 @@ $$
 
 where $r = y - \hat{q}$ is the residual *(Figure 05)*.
 
-**Interpretation.** The loss penalises positive residuals (true value above
-the prediction) at rate τ and negative residuals (true value below) at rate
-1 − τ. For τ = 0.5, both penalties are equal and the loss reduces to
-(1/2) × MAE, so the median is the solution that minimises the expected MAE.
-For τ = 0.9, under-prediction (positive residuals) is penalised nine times
-more heavily than over-prediction, driving the estimate toward the 90th
-percentile of the conditional distribution.
+**Interpretation.** The loss penalises positive residuals (true value above the prediction) at rate τ and negative residuals (true value below) at rate 1 − τ. For τ = 0.5, both penalties are equal and the loss reduces to (1/2) × MAE, so the median is the solution that minimises the expected MAE. For τ = 0.9, under-prediction (positive residuals) is penalised nine times more heavily than over-prediction, driving the estimate toward the 90th percentile of the conditional distribution.
 
-**Statistical property.** The minimiser of the expected pinball loss over a
-dataset is exactly the conditional τ-quantile:
+**Statistical property.** The minimiser of the expected pinball loss over a dataset is exactly the conditional τ-quantile:
 
 $$
 \hat{q}^* \;=\; \arg\min_{\hat{q}} \; \mathbb{E}[\rho_\tau(Y - \hat{q}) \mid X = x]
 \;=\; Q_\tau(Y \mid X = x)
 $$
 
-This result, analogous to the well-known fact that the conditional mean
-minimises the MSE, provides the theoretical justification for using the
+This result, analogous to the well-known fact that the conditional mean minimises the MSE, provides the theoretical justification for using the
 pinball loss as a training objective.
 
 
@@ -247,8 +191,7 @@ pinball loss as a training objective.
 
 ### 2.2 — Simultaneous Multi-Quantile Estimation
 
-Instead of training a separate model for each quantile level, a QRNN can
-estimate K quantiles simultaneously by extending the output layer to K
+Instead of training a separate model for each quantile level, a QRNN can estimate K quantiles simultaneously by extending the output layer to K
 neurons — one per quantile — and summing their individual pinball losses:
 
 $$
@@ -257,18 +200,14 @@ $$
 \rho_{\tau_k}\!\left(y_i - \hat{q}_{\tau_k}(x_i;\boldsymbol{\theta})\right)
 $$
 
-The K quantile estimates share all hidden layers and only diverge at the
-output head. This parameter sharing provides two advantages:
+The K quantile estimates share all hidden layers and only diverge at the output head. This parameter sharing provides two advantages:
 
 1. **Efficiency** — a single forward pass produces the full quantile fan.
-2. **Regularisation** — information from the data distribution propagates
-   through the shared backbone, improving estimates at under-represented
+2. **Regularisation** — information from the data distribution propagates through the shared backbone, improving estimates at under-represented
    quantile levels.
 
-A critical constraint is that the estimates must satisfy the monotonicity
-property $\hat{q}_{\tau_1} \leq \hat{q}_{\tau_2} \leq \cdots \leq
-\hat{q}_{\tau_K}$ for all $\tau_1 < \tau_2 < \cdots < \tau_K$,
-which is enforced by the ``QuantileHead`` layer described in Section 2.3.
+A critical constraint is that the estimates must satisfy the monotonicity property $\hat{q}_{\tau_1} \leq \hat{q}_{\tau_2} \leq \cdots \leq
+\hat{q}_{\tau_K}$ for all $\tau_1 < \tau_2 < \cdots < \tau_K$, which is enforced by the ``QuantileHead`` layer described in Section 2.3.
 
 
 
@@ -279,14 +218,10 @@ which is enforced by the ``QuantileHead`` layer described in Section 2.3.
 
 ### 2.3 — Quantile Crossing and Monotonicity Enforcement
 
-When K quantile levels are estimated by a single network, the raw outputs
-may violate the ordering constraint — that is, $\hat{q}_{\tau_k} >
-\hat{q}_{\tau_{k+1}}$ may occur for some inputs. This phenomenon is called
-**quantile crossing** and produces logically inconsistent predictions: a 90th
-percentile estimate lower than the 50th percentile.
+When K quantile levels are estimated by a single network, the raw outputs may violate the ordering constraint — that is, $\hat{q}_{\tau_k} >
+\hat{q}_{\tau_{k+1}}$ may occur for some inputs. This phenomenon is called **quantile crossing** and produces logically inconsistent predictions: a 90th percentile estimate lower than the 50th percentile.
 
-The ``QuantileHead`` layer prevents crossing by parameterising the output as
-a base level plus a set of non-negative increments:
+The ``QuantileHead`` layer prevents crossing by parameterising the output as a base level plus a set of non-negative increments:
 
 $$
 \hat{q}_{\tau_1} = \mathbf{w}_1^\top h + b_1 \qquad \text{(base — unconstrained)}
@@ -297,17 +232,13 @@ $$
 \qquad k = 2, \ldots, K
 $$
 
-where $\mathrm{softplus}(z) = \log(1 + e^z) > 0$ ensures that each increment
-is strictly positive. Equivalently, the K outputs are:
+where $\mathrm{softplus}(z) = \log(1 + e^z) > 0$ ensures that each increment is strictly positive. Equivalently, the K outputs are:
 
 $$
 \hat{\mathbf{q}} = \mathrm{cumsum}\bigl([\hat{q}_{\tau_1},\; \mathrm{softplus}(\delta_2),\; \ldots,\; \mathrm{softplus}(\delta_K)]\bigr)
 $$
 
-where $\delta_k = \mathbf{w}_k^\top h + b_k$ are the raw linear outputs for
-$k \geq 2$. This reparameterisation guarantees strict ordering for any
-network weights and input, without requiring any post-hoc sorting, projection,
-or constraint on the optimiser *(Figure 06)*.
+where $\delta_k = \mathbf{w}_k^\top h + b_k$ are the raw linear outputs for $k \geq 2$. This reparameterisation guarantees strict ordering for any network weights and input, without requiring any post-hoc sorting, projection, or constraint on the optimiser *(Figure 06)*.
 
 
 
@@ -318,10 +249,7 @@ or constraint on the optimiser *(Figure 06)*.
 
 ### 2.4 — The Huber-Smoothed Pinball Loss
 
-The standard pinball loss has a non-differentiable kink at $r = 0$, which
-can cause gradient noise in mini-batch training when many residuals are
-near zero. The Huber-smoothed pinball loss replaces the kink with a smooth
-quadratic region of half-width $\delta > 0$:
+The standard pinball loss has a non-differentiable kink at $r = 0$, which nmcan cause gradient noise in mini-batch training when many residuals are near zero. The Huber-smoothed pinball loss replaces the kink with a smooth quadratic region of half-width $\delta > 0$:
 
 $$
 H_\delta(r) \;=\;
@@ -331,8 +259,7 @@ H_\delta(r) \;=\;
 \end{cases}
 $$
 
-The Huber-pinball loss then applies this smoothed absolute value with
-asymmetric weights:
+The Huber-pinball loss then applies this smoothed absolute value with asymmetric weights:
 
 $$
 L_\tau^\delta(y,\,\hat{q}) \;=\;
@@ -342,11 +269,7 @@ L_\tau^\delta(y,\,\hat{q}) \;=\;
 \end{cases}
 $$
 
-As $\delta \to 0$, the Huber-pinball recovers the standard pinball loss;
-as $\delta \to \infty$, it approaches a weighted MSE. For moderate values
-of $\delta$ (e.g. $\delta = 0.5$), it retains the quantile-consistency
-property while producing smoother gradient signals, particularly beneficial
-for estimating extreme quantiles ($\tau$ near 0 or 1) from noisy data.
+As $\delta \to 0$, the Huber-pinball recovers the standard pinball loss; as $\delta \to \infty$, it approaches a weighted MSE. For moderate values of $\delta$ (e.g. $\delta = 0.5$), it retains the quantile-consistency property while producing smoother gradient signals, particularly beneficial for estimating extreme quantiles ($\tau$ near 0 or 1) from noisy data.
 
 
 
@@ -357,10 +280,8 @@ for estimating extreme quantiles ($\tau$ near 0 or 1) from noisy data.
 
 ### 2.5 — Prediction Interval Scoring: The Winkler Score
 
-A K-quantile QRNN trained with τ_1 = α/2 and τ_K = 1 − α/2 produces a
-nominal (1 − α) × 100% prediction interval $[\hat{l}, \hat{u}] =
-[\hat{q}_{\alpha/2}, \hat{q}_{1-\alpha/2}]$. The **Winkler interval score**
-(Winkler, 1972) evaluates the quality of this interval:
+A K-quantile QRNN trained with τ_1 = α/2 and τ_K = 1 − α/2 produces a nominal (1 − α) × 100% prediction interval $[\hat{l}, \hat{u}] =
+[\hat{q}_{\alpha/2}, \hat{q}_{1-\alpha/2}]$. The **Winkler interval score** (Winkler, 1972) evaluates the quality of this interval:
 
 $$
 \mathrm{IS}_\alpha(\hat{l}, \hat{u}, y) \;=\;
@@ -369,16 +290,9 @@ $$
       \underbrace{(y - \hat{u})_+}_{\text{miss above}}\bigr]
 $$
 
-where $(z)_+ = \max(z, 0)$. The score rewards **narrower intervals**
-(smaller $\hat{u} - \hat{l}$) while penalising **coverage failures** at rate
-$2/\alpha$. For a 90% interval ($\alpha = 0.1$), a missed observation carries
-a penalty 20 times the unit interval width.
+where $(z)_+ = \max(z, 0)$. The score rewards **narrower intervals** (smaller $\hat{u} - \hat{l}$) while penalising **coverage failures** at rate $2/\alpha$. For a 90% interval ($\alpha = 0.1$), a missed observation carries a penalty 20 times the unit interval width.
 
-The Winkler score is a **proper scoring rule**: it is minimised in expectation
-by the true predictive interval, and no interval that misrepresents the
-underlying distribution can score better in expectation. This makes it the
-canonical metric for evaluating probabilistic forecasts on microcontroller
-systems where the full predictive distribution cannot be stored.
+The Winkler score is a **proper scoring rule**: it is minimised in expectation by the true predictive interval, and no interval that misrepresents the underlying distribution can score better in expectation. This makes it the canonical metric for evaluating probabilistic forecasts on microcontroller systems where the full predictive distribution cannot be stored.
 
 
 
@@ -390,18 +304,12 @@ $$
 \Pr(Y \leq \hat{q}_\tau(X)) \;=\; \tau
 $$
 
-for all τ ∈ (0, 1). Empirically, this means that a fraction τ of the test
-observations should lie below the predicted τ-quantile. The **reliability
-diagram** (Figure 08) plots the empirical coverage against the nominal
-quantile level τ; perfect calibration corresponds to points lying on the
-45-degree diagonal.
+for all τ ∈ (0, 1). Empirically, this means that a fraction τ of the test observations should lie below the predicted τ-quantile. The **reliability diagram** (Figure 08) plots the empirical coverage against the nominal quantile level τ; perfect calibration corresponds to points lying on the 45-degree diagonal.
 
 Deviations from the diagonal indicate systematic miscalibration:
 
-- **Points above the diagonal** (empirical > nominal): the model is
-  over-conservative — intervals are wider than necessary.
-- **Points below the diagonal** (empirical < nominal): the model
-  under-covers — intervals are too narrow and miss more observations than
+- **Points above the diagonal** (empirical > nominal): the model is over-conservative — intervals are wider than necessary.
+- **Points below the diagonal** (empirical < nominal): the model under-covers — intervals are too narrow and miss more observations than
   the nominal level implies.
 
 The calibration error (CE) summarises the diagram as a scalar:
@@ -410,8 +318,7 @@ $$
 \mathrm{CE} \;=\; \frac{1}{K} \sum_{k=1}^K \left|\hat{F}(\hat{q}_{\tau_k}) - \tau_k\right|
 $$
 
-where $\hat{F}(\hat{q}_{\tau_k})$ is the empirical fraction of test
-observations below $\hat{q}_{\tau_k}$. A well-calibrated QRNN achieves
+where $\hat{F}(\hat{q}_{\tau_k})$ is the empirical fraction of test observations below $\hat{q}_{\tau_k}$. A well-calibrated QRNN achieves
 $\mathrm{CE} \approx 0$.
 
 
@@ -425,32 +332,26 @@ $\mathrm{CE} \approx 0$.
 
 The QRNN implemented in this framework consists of:
 
-**Backbone.** L fully-connected ``DenseLayer`` blocks with nonlinear activations
-(ReLU, GELU, Swish, or tanh), optional dropout, and Kaiming / Xavier weight
-initialisation:
+**Backbone.** L fully-connected ``DenseLayer`` blocks with nonlinear activations (ReLU, GELU, Swish, or tanh), optional dropout, and Kaiming / Xavier weight initialisation:
 
 $$
 h^{(\ell)} = \sigma\!\left(W^{(\ell)} h^{(\ell-1)} + b^{(\ell)}\right), \qquad \ell = 1, \ldots, L
 $$
 
-**Quantile head.** A ``QuantileHead`` layer maps the penultimate
-representation to K ordered quantile estimates via the cumulative-sum
+**Quantile head.** A ``QuantileHead`` layer maps the penultimate representation to K ordered quantile estimates via the cumulative-sum
 reparameterisation (Section 2.3):
 
 $$
 \hat{\mathbf{q}} = \mathrm{QHead}(h^{(L)}) \;\in\; \mathbb{R}^K
 $$
 
-**Training.** The model is trained end-to-end using the multi-pinball loss
-(or one of its variants) with the Adam optimiser:
+**Training.** The model is trained end-to-end using the multi-pinball loss (or one of its variants) with the Adam optimiser:
 
 $$
 \boldsymbol{\theta}^* = \arg\min_{\boldsymbol{\theta}} \;\mathcal{L}_\text{multi}(\boldsymbol{\theta})
 $$
 
-Backpropagation through the cumulative-sum operation is exact: the gradient
-of the cumulative sum with respect to each raw output $\delta_k$ is an
-upper-triangular all-ones matrix, which PyTorch computes automatically.
+Backpropagation through the cumulative-sum operation is exact: the gradient of the cumulative sum with respect to each raw output $\delta_k$ is an upper-triangular all-ones matrix, which PyTorch computes automatically.
 
 
 
@@ -461,8 +362,7 @@ upper-triangular all-ones matrix, which PyTorch computes automatically.
 
 ### 2.8 — Numerical Walkthrough
 
-We perform a complete forward pass for a QRNN with $d_x = 2$, two hidden
-layers of width 4, K = 3 quantile levels (τ = 0.1, 0.5, 0.9), and ReLU
+We perform a complete forward pass for a QRNN with $d_x = 2$, two hidden layers of width 4, K = 3 quantile levels (τ = 0.1, 0.5, 0.9), and ReLU
 activations. All values are chosen to make the computation explicit.
 
 **Input:** $\mathbf{x} = [1.0,\; -0.5]^\top$.
@@ -526,9 +426,7 @@ $$
 \mathcal{L}_\text{multi} = \frac{1}{3}(0.150 + 0.204 + 0.107) = 0.154
 $$
 
-The gradient of each pinball loss with respect to the head raw output flows
-back through the cumulative-sum (an upper-triangular Jacobian of ones) into
-the backbone parameters, updating all layers simultaneously *(Figure 10)*.
+The gradient of each pinball loss with respect to the head raw output flows back through the cumulative-sum (an upper-triangular Jacobian of ones) into the backbone parameters, updating all layers simultaneously *(Figure 10)*.
 
 
 
@@ -539,9 +437,7 @@ the backbone parameters, updating all layers simultaneously *(Figure 10)*.
 
 ## 3 — TinyML Implementation
 
-With this example you can implement the quantile regression model on ESP32,
-Arduino, Arduino Portenta H7 with Vision Shield, Raspberry Pi, and other
-microcontrollers or IoT devices *(Figure 11)*.
+With this example you can implement the quantile regression model on ESP32, Arduino, Arduino Portenta H7 with Vision Shield, Raspberry Pi, and other microcontrollers or IoT devices *(Figure 11)*.
 
 
 ### 3.1 — Jupyter Notebooks

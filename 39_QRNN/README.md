@@ -170,9 +170,9 @@ $$
 
 where $r = y - \hat{q}$ is the residual *(Figure 05)*.
 
-**Interpretation.** The loss penalises positive residuals (true value above the prediction) at rate τ and negative residuals (true value below) at rate 1 − τ. For τ = 0.5, both penalties are equal and the loss reduces to (1/2) × MAE, so the median is the solution that minimises the expected MAE. For τ = 0.9, under-prediction (positive residuals) is penalised nine times more heavily than over-prediction, driving the estimate toward the 90th percentile of the conditional distribution.
+- **Interpretation:** the loss penalises positive residuals (true value above the prediction) at rate τ and negative residuals (true value below) at rate 1 − τ. For τ = 0.5, both penalties are equal and the loss reduces to (1/2) × MAE, so the median is the solution that minimises the expected MAE. For τ = 0.9, under-prediction (positive residuals) is penalised nine times more heavily than over-prediction, driving the estimate toward the 90th percentile of the conditional distribution.
 
-**Statistical property.** The minimiser of the expected pinball loss over a dataset is exactly the conditional τ-quantile:
+- **Statistical property:** the minimiser of the expected pinball loss over a dataset is exactly the conditional τ-quantile:
 
 $$
 \hat{q}^* \;=\; \arg\min_{\hat{q}} \; \mathbb{E}[\rho_\tau(Y - \hat{q}) \mid X = x]
@@ -191,8 +191,9 @@ pinball loss as a training objective.
 
 ### 2.2 — Simultaneous Multi-Quantile Estimation
 
-Instead of training a separate model for each quantile level, a QRNN can estimate K quantiles simultaneously by extending the output layer to K
-neurons — one per quantile — and summing their individual pinball losses:
+Rather than training a separate model for each quantile level, a QRNN can
+estimate $K$ quantiles simultaneously by using an output layer with $K$
+neurons, one for each quantile, and summing the corresponding pinball losses:
 
 $$
 \mathcal{L}_{\text{multi}}(\boldsymbol{\theta}) \;=\;
@@ -218,8 +219,13 @@ A critical constraint is that the estimates must satisfy the monotonicity proper
 
 ### 2.3 — Quantile Crossing and Monotonicity Enforcement
 
-When K quantile levels are estimated by a single network, the raw outputs may violate the ordering constraint — that is, $\hat{q}_{\tau_k} >
-\hat{q}_{\tau_{k+1}}$ may occur for some inputs. This phenomenon is called **quantile crossing** and produces logically inconsistent predictions: a 90th percentile estimate lower than the 50th percentile.
+When a single network estimates $K$ quantile levels, its raw outputs may
+violate the required ordering constraint. Specifically, for
+$\tau_k < \tau_{k+1}$, the inequality
+$\hat{q}_{\tau_k} > \hat{q}_{\tau_{k+1}}$ may hold for some inputs. This
+phenomenon, known as \textbf{quantile crossing}, produces internally
+inconsistent predictions, such as a 90th-percentile estimate that is lower
+than the corresponding 50th-percentile estimate.
 
 The ``QuantileHead`` layer prevents crossing by parameterising the output as a base level plus a set of non-negative increments:
 
@@ -308,9 +314,8 @@ for all τ ∈ (0, 1). Empirically, this means that a fraction τ of the test ob
 
 Deviations from the diagonal indicate systematic miscalibration:
 
-- **Points above the diagonal** (empirical > nominal): the model is over-conservative — intervals are wider than necessary.
-- **Points below the diagonal** (empirical < nominal): the model under-covers — intervals are too narrow and miss more observations than
-  the nominal level implies.
+- **Points above the diagonal**, where empirical coverage exceeds nominal coverage, indicate that the model is overly conservative and produces intervals that are wider than necessary.
+- **Points below the diagonal**, where empirical coverage is lower than nominal coverage, indicate that the model undercovers. Its intervals are too narrow and therefore exclude more observations than the nominal coverage level implies.
 
 The calibration error (CE) summarises the diagram as a scalar:
 

@@ -447,17 +447,17 @@ With this example you can implement the quantile regression model on ESP32, Ardu
 
 ### 3.1 — Jupyter Notebooks
 
-- [![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML/blob/main/36_QR/qr.ipynb) Quantile Regression Neural Network Training
+- [![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML/blob/main/39_QRNN/qrnn.ipynb) Quantile Regression Neural Network Training
 
 ### 3.2 — Arduino Code
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/36_QR/arduino_code/median_ino) Example 1: Single-Quantile Median Regression
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/39_QRNN/arduino_code/median_ino) Example 1: Single-Quantile Median Regression
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/36_QR/arduino_code/multi_ino) Example 2: Multi-Quantile with Prediction Intervals
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/39_QRNN/arduino_code/multi_ino) Example 2: Multi-Quantile with Prediction Intervals
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/36_QR/arduino_code/combined_ino) Example 3: Combined Loss on Multivariate Data
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/39_QRNN/arduino_code/combined_ino) Example 3: Combined Loss on Multivariate Data
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/36_QR/arduino_code/huber_ino) Example 4: Huber-Pinball for Robust Tail Estimation
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/39_QRNN/arduino_code/huber_ino) Example 4: Huber-Pinball for Robust Tail Estimation
 
 ## References
 

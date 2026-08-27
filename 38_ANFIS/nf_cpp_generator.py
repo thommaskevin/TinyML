@@ -197,9 +197,6 @@ class ArduinoANFISGenerator:
             "",
         ]
 
-        if self.use_flash:
-            lines += ["#include <avr/pgmspace.h>", ""]
-
         lines.append("// ANFIS config: n_inputs={}, n_terms={}, n_rules={}, mf={}".format(
             n_in, n_te, n_r, mf))
         lines.append("")

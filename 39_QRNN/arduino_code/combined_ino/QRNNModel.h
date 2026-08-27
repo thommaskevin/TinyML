@@ -11,7 +11,6 @@
  */
 
 #include <math.h>
-#include <avr/pgmspace.h>
 
 const float PROGMEM h0_w[128][5] = {
   {0.01286284f, 0.79331928f, -0.64093089f, -0.86363685f, -0.26060778f},

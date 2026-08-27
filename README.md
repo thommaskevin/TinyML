@@ -78,6 +78,7 @@
 
 - 38 - [Adaptive Neuro-Fuzzy Inference System (ANFIS)](https://github.com/thommaskevin/TinyML/tree/main/38_ANFIS)
 
+- 39 - [Quantile Regression Neural Networks (QRNN)](https://github.com/thommaskevin/TinyML/tree/main/39_QRNN)
 
 
 

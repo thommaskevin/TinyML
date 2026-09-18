@@ -80,5 +80,4 @@
 
 - 39 - [Quantile Regression Neural Networks (QRNN)](https://github.com/thommaskevin/TinyML/tree/main/39_QRNN)
 
-
-
+- 40 - [Self-Organizing Maps (SOM)](https://github.com/thommaskevin/TinyML/tree/main/40_SOM)

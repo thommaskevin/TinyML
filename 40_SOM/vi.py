@@ -51,6 +51,15 @@ import numpy as np
 
 
 # ---------------------------------------------------------------------------
+# Internal helpers
+# ---------------------------------------------------------------------------
+
+def _is_finite(a: np.ndarray) -> bool:
+    """Return True if every element of ``a`` is finite (no inf/nan)."""
+    return bool(np.isfinite(a).all())
+
+
+# ---------------------------------------------------------------------------
 # Weight smoothness regulariser
 # ---------------------------------------------------------------------------
 
@@ -75,19 +84,26 @@ def weight_smoothness_loss(w: np.ndarray) -> float:
 
     Returns:
         Scalar smoothness loss (lower = smoother map, better topology).
+        Returns ``nan`` if ``w`` contains non-finite values (i.e. the
+        upstream SOM training has already diverged).
     """
+    # Guard: if weights already contain inf/nan, upstream training diverged.
+    if not _is_finite(w):
+        return float("nan")
+
     total = 0.0
     count = 0
     n_rows, n_cols, _ = w.shape
 
-    for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-        r_src = slice(max(0, -dr), n_rows + min(0, -dr))
-        c_src = slice(max(0, -dc), n_cols + min(0, -dc))
-        r_dst = slice(max(0,  dr), n_rows + min(0,  dr))
-        c_dst = slice(max(0,  dc), n_cols + min(0,  dc))
-        diff   = w[r_src, c_src] - w[r_dst, c_dst]
-        total += float((diff ** 2).sum())
-        count += diff.shape[0] * diff.shape[1]
+    with np.errstate(over="ignore", invalid="ignore"):
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            r_src = slice(max(0, -dr), n_rows + min(0, -dr))
+            c_src = slice(max(0, -dc), n_cols + min(0, -dc))
+            r_dst = slice(max(0,  dr), n_rows + min(0,  dr))
+            c_dst = slice(max(0,  dc), n_cols + min(0,  dc))
+            diff   = w[r_src, c_src] - w[r_dst, c_dst]
+            total += float((diff ** 2).sum())
+            count += diff.shape[0] * diff.shape[1]
 
     return total / max(count * w.shape[-1], 1)
 
@@ -206,21 +222,30 @@ def probabilistic_bmu(
 
     Returns:
         Soft assignment matrix of shape ``(N, n_rows * n_cols)``,
-        each row sums to 1.
+        each row sums to 1.  Returns a matrix of ``nan`` if ``X`` or ``w``
+        contains non-finite values.
     """
-    N, d    = X.shape
-    K       = w.shape[0] * w.shape[1]
-    w_flat  = w.reshape(K, d)                      # (K, d)
-    X_sq    = (X ** 2).sum(axis=1, keepdims=True)  # (N, 1)
-    W_sq    = (w_flat ** 2).sum(axis=1)             # (K,)
-    XW      = X @ w_flat.T                          # (N, K)
-    dist_sq = X_sq - 2 * XW + W_sq                 # (N, K)
+    N, d = X.shape
+    K    = w.shape[0] * w.shape[1]
 
-    log_q   = -beta * dist_sq
-    log_q  -= log_q.max(axis=1, keepdims=True)      # numerical stability
-    q       = np.exp(log_q)
-    q      /= q.sum(axis=1, keepdims=True)
-    return q                                        # (N, K)
+    # Guard: refuse to compute on divergent inputs.
+    if not (_is_finite(X) and _is_finite(w)):
+        return np.full((N, K), np.nan, dtype=float)
+
+    w_flat = w.reshape(K, d)                       # (K, d)
+
+    with np.errstate(over="ignore", invalid="ignore"):
+        X_sq    = (X ** 2).sum(axis=1, keepdims=True)  # (N, 1)
+        W_sq    = (w_flat ** 2).sum(axis=1)            # (K,)
+        XW      = X @ w_flat.T                         # (N, K)
+        dist_sq = X_sq - 2 * XW + W_sq                 # (N, K)
+
+        log_q   = -beta * dist_sq
+        log_q  -= log_q.max(axis=1, keepdims=True)     # numerical stability
+        q       = np.exp(log_q)
+        q      /= q.sum(axis=1, keepdims=True)
+
+    return q                                           # (N, K)
 
 
 # ---------------------------------------------------------------------------
@@ -260,11 +285,18 @@ def som_kl_loss(
 
     Returns:
         Scalar KL divergence loss (lower = more confident clustering).
+        Returns ``nan`` if the soft assignments could not be computed.
     """
-    q  = probabilistic_bmu(X, w, beta=beta)        # (N, K)
-    f  = q.sum(axis=0, keepdims=True)              # (1, K) — soft frequency
-    p  = (q ** 2) / (f + 1e-12)
-    p /= p.sum(axis=1, keepdims=True)              # normalise rows
+    q = probabilistic_bmu(X, w, beta=beta)         # (N, K)
 
-    kl = (p * np.log((p + 1e-12) / (q + 1e-12))).sum(axis=1)
+    if not np.isfinite(q).all():
+        return float("nan")
+
+    with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
+        f = q.sum(axis=0, keepdims=True)           # (1, K) — soft frequency
+        p = (q ** 2) / (f + 1e-12)
+        p /= p.sum(axis=1, keepdims=True)          # normalise rows
+
+        kl = (p * np.log((p + 1e-12) / (q + 1e-12))).sum(axis=1)
+
     return float(kl.mean())

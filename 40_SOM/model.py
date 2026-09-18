@@ -48,6 +48,7 @@ Inference API
 """
 
 import math
+import warnings
 from typing import Optional, Tuple
 
 import numpy as np
@@ -61,6 +62,10 @@ from layers import (
     KERNEL_NAMES,
     SCHEDULE_NAMES,
 )
+
+
+# Safety cap on individual weight magnitudes (well within float32 range).
+_WEIGHT_CLIP = 1e30
 
 
 class SOMModel:
@@ -84,10 +89,16 @@ class SOMModel:
     lr_min       : Minimum learning rate (default: ``0.01``).
     sigma_0      : Initial neighborhood radius (default: ``max(n_rows, n_cols) / 2``).
     sigma_min    : Minimum neighborhood radius (default: ``1.0``).
-    init         : Weight initialisation: ``'random'`` (uniform [0, 1]),
+    init         : Weight initialisation: ``'random'`` (uniform over data range),
                    ``'pca'`` (first two principal components), or
                    ``'data'`` (random sample from training data).
     random_state : Random seed for reproducibility.
+    clip_weights : If True (default), clip weights after each update to
+                   ``[-_WEIGHT_CLIP, _WEIGHT_CLIP]`` to prevent runaway values.
+    max_step     : Upper bound on the per-update effective gain ``|alpha * h|``
+                   (default: ``0.99``).  The online update
+                   ``w <- w + alpha*h*(x - w)`` is only stable when
+                   ``|alpha*h| < 1`` for every neuron.
 
     Example
     -------
@@ -115,6 +126,8 @@ class SOMModel:
         sigma_min:      float = 1.0,
         init:           str   = 'random',
         random_state:   Optional[int] = None,
+        clip_weights:   bool  = True,
+        max_step:       float = 0.99,
     ) -> None:
         self.n_rows       = n_rows
         self.n_cols       = n_cols
@@ -130,6 +143,8 @@ class SOMModel:
         self.sigma_min    = sigma_min
         self.init         = init
         self.random_state = random_state
+        self.clip_weights = clip_weights
+        self.max_step     = max_step
 
         self._rng = np.random.RandomState(random_state)
 
@@ -145,6 +160,49 @@ class SOMModel:
         self.quantization_errors_: list = []
         self.topographic_errors_:  list = []
         self.n_epochs_:            int  = 0
+        self.diverged_:            bool = False
+
+    # ------------------------------------------------------------------
+    # Internal helpers
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _check_finite(name: str, arr: np.ndarray) -> None:
+        """Raise a clear error if ``arr`` contains non-finite entries."""
+        if not np.isfinite(arr).all():
+            n_bad = int((~np.isfinite(arr)).sum())
+            raise ValueError(
+                f"{name} contains {n_bad} non-finite value(s) "
+                f"(inf/nan). Clean the input before training."
+            )
+
+    def _safe_h(self, h: np.ndarray) -> np.ndarray:
+        """
+        Sanitise a neighborhood kernel response.
+
+        - Replaces non-finite entries with 0.
+        - Clips to [-1, 1] (no valid SOM kernel exceeds this range).
+        - Applies the stability bound |alpha * h| <= max_step.
+        """
+        h = np.where(np.isfinite(h), h, 0.0)
+        h = np.clip(h, -1.0, 1.0)
+        return h
+
+    def _clip_weights_inplace(self) -> None:
+        """Clamp weights to a safe magnitude and replace non-finite entries."""
+        if not np.isfinite(self.weights).all():
+            # Extremely aggressive: replace non-finite entries with column means.
+            bad = ~np.isfinite(self.weights)
+            if bad.any():
+                col_means = np.nanmean(
+                    np.where(np.isfinite(self.weights), self.weights, np.nan),
+                    axis=(0, 1),
+                )
+                col_means = np.where(np.isfinite(col_means), col_means, 0.0)
+                self.weights[bad] = np.broadcast_to(
+                    col_means, self.weights.shape
+                )[bad]
+        if self.clip_weights:
+            np.clip(self.weights, -_WEIGHT_CLIP, _WEIGHT_CLIP, out=self.weights)
 
     # ------------------------------------------------------------------
     def _init_weights(self, X: np.ndarray) -> None:
@@ -152,9 +210,8 @@ class SOMModel:
         d = self.input_dim
 
         if self.init == 'pca':
-            # Project the first two principal components onto the grid
             X_centered = X - X.mean(axis=0)
-            cov  = np.cov(X_centered.T)
+            cov        = np.cov(X_centered.T)
             vals, vecs = np.linalg.eigh(cov)
             order = np.argsort(vals)[::-1]
             pc1 = vecs[:, order[0]]
@@ -168,8 +225,11 @@ class SOMModel:
                     self.weights[r, c] = X.mean(axis=0) + t1 * pc1 + t2 * pc2
 
         elif self.init == 'data':
-            idx = self._rng.choice(len(X), size=self.n_rows * self.n_cols,
-                                   replace=len(X) < self.n_rows * self.n_cols)
+            idx = self._rng.choice(
+                len(X),
+                size=self.n_rows * self.n_cols,
+                replace=len(X) < self.n_rows * self.n_cols,
+            )
             self.weights = X[idx].reshape(self.n_rows, self.n_cols, d).astype(np.float32)
 
         else:  # 'random'
@@ -178,7 +238,9 @@ class SOMModel:
             self.weights = (
                 self._rng.rand(self.n_rows, self.n_cols, d).astype(np.float32)
                 * (hi - lo) + lo
-            )
+            ).astype(np.float32)
+
+        self._clip_weights_inplace()
 
     # ------------------------------------------------------------------
     def _find_bmu(self, x: np.ndarray) -> Tuple[int, int]:
@@ -192,7 +254,7 @@ class SOMModel:
             Tuple ``(bmu_row, bmu_col)``.
         """
         x_t = torch.from_numpy(x.astype(np.float32))
-        w_t = torch.from_numpy(self.weights)
+        w_t = torch.from_numpy(self.weights.astype(np.float32))
         dist = self._dist_fn(x_t, w_t)            # (n_rows, n_cols)
         idx  = int(dist.argmin())
         return divmod(idx, self.n_cols)
@@ -202,6 +264,10 @@ class SOMModel:
         """
         Find the BMU for every sample in ``X`` in a vectorised pass.
 
+        Uses a numerically stable computation of squared Euclidean distance:
+        we centre both ``X`` and ``w`` by their mean before squaring, which
+        keeps the intermediate values well below the float32 overflow range.
+
         Args:
             X : Data matrix of shape ``(N, d)``.
 
@@ -210,11 +276,25 @@ class SOMModel:
         """
         N, d    = X.shape
         w_flat  = self.weights.reshape(-1, d)        # (K, d)
-        # Squared Euclidean: ||x - w||^2 = ||x||^2 - 2 x·w + ||w||^2
-        X_sq    = (X ** 2).sum(axis=1, keepdims=True)   # (N, 1)
-        W_sq    = (w_flat ** 2).sum(axis=1, keepdims=True).T  # (1, K)
-        XW      = X @ w_flat.T                       # (N, K)
-        dists   = X_sq - 2 * XW + W_sq              # (N, K)
+
+        # Centre both matrices to keep intermediate squares small.
+        mu      = X.mean(axis=0, keepdims=True)
+        X_c     = X - mu
+        W_c     = w_flat - mu
+
+        # Use float64 for the squared-distance computation regardless of
+        # the input dtype, then cast back for argmin.
+        X_c64   = X_c.astype(np.float64, copy=False)
+        W_c64   = W_c.astype(np.float64, copy=False)
+
+        X_sq    = (X_c64 ** 2).sum(axis=1, keepdims=True)       # (N, 1)
+        W_sq    = (W_c64 ** 2).sum(axis=1, keepdims=True).T     # (1, K)
+        XW      = X_c64 @ W_c64.T                               # (N, K)
+        dists   = X_sq - 2.0 * XW + W_sq                        # (N, K)
+
+        # Guard: squared distances must be non-negative.
+        np.maximum(dists, 0.0, out=dists)
+
         bmu_idx = dists.argmin(axis=1)               # (N,)
         rows, cols = np.divmod(bmu_idx, self.n_cols)
         return np.stack([rows, cols], axis=1)        # (N, 2)
@@ -243,8 +323,17 @@ class SOMModel:
 
         Returns:
             ``self`` (for method chaining).
+
+        Raises:
+            ValueError : If ``X`` contains inf/nan, or if training diverges
+                         (weights become non-finite despite the guards).
         """
         X = np.asarray(X, dtype=np.float32)
+        if X.ndim != 2 or X.shape[1] != self.input_dim:
+            raise ValueError(
+                f"X must have shape (N, {self.input_dim}); got {X.shape}."
+            )
+        self._check_finite("X", X)
 
         if self.weights is None:
             self._init_weights(X)
@@ -254,16 +343,37 @@ class SOMModel:
         sigma_sched = LearningRateSchedule(
             self.sigma_schedule_name, self.sigma_0, self.sigma_min, n_epochs)
 
+        self.diverged_ = False
+
         for epoch in range(n_epochs):
             alpha = lr_sched(epoch)
-            sigma = sigma_sched(epoch)
+            sigma = max(float(sigma_sched(epoch)), 1e-6)
 
             if mode == 'batch':
                 self._batch_step(X, alpha, sigma)
             else:
-                indices = self._rng.permutation(len(X)) if shuffle else np.arange(len(X))
+                indices = (
+                    self._rng.permutation(len(X)) if shuffle else np.arange(len(X))
+                )
                 for idx in indices:
                     self._online_step(X[idx], alpha, sigma)
+                    if self.diverged_:
+                        break
+
+            # Post-epoch safety net.
+            if not np.isfinite(self.weights).all():
+                self.diverged_ = True
+
+            if self.diverged_:
+                warnings.warn(
+                    f"SOM training diverged at epoch {epoch + 1} "
+                    f"(alpha={alpha:.5f}, sigma={sigma:.4f}). "
+                    f"Consider: (a) standardising X, (b) lowering lr_0, "
+                    f"(c) using init='pca', or (d) increasing sigma_min.",
+                    RuntimeWarning,
+                    stacklevel=2,
+                )
+                break
 
             self.n_epochs_ += 1
 
@@ -288,13 +398,55 @@ class SOMModel:
     def _online_step(
         self, x: np.ndarray, alpha: float, sigma: float
     ) -> None:
-        """Update weights for a single training sample (online mode)."""
+        """
+        Update weights for a single training sample (online mode).
+
+        The update rule
+            w <- w + alpha * h * (x - w)
+        is stable only when ``|alpha * h| < 1``.  We enforce that here and
+        guard against non-finite kernels, weights, or deltas.
+        """
+        if not np.isfinite(x).all() or not np.isfinite(self.weights).all():
+            self.diverged_ = True
+            return
+
         bmu_r, bmu_c = self._find_bmu(x)
-        dist_sq = self._grid.grid_distance_sq(bmu_r, bmu_c)   # (n_rows, n_cols)
-        h = self._kernel(dist_sq, sigma)                       # (n_rows, n_cols)
-        # Broadcast: (n_rows, n_cols, 1) * (1, 1, d)
-        delta = x - self.weights                               # (n_rows, n_cols, d)
-        self.weights += alpha * h[:, :, np.newaxis] * delta
+        dist_sq      = self._grid.grid_distance_sq(bmu_r, bmu_c)
+
+        # Guard: squared grid distances must be non-negative.
+        dist_sq = np.maximum(dist_sq, 0.0)
+        if not np.isfinite(dist_sq).all():
+            return
+
+        h = self._kernel(dist_sq, sigma)
+
+        # Sanitise kernel response.
+        h = self._safe_h(h)
+
+        # Enforce stability: |alpha * h| <= max_step.
+        if abs(alpha) > 0.0:
+            h_max = float(np.abs(h).max())
+            gain  = abs(alpha) * h_max
+            if gain > self.max_step:
+                h = h * (self.max_step / gain)
+
+        delta = x.astype(np.float64) - self.weights.astype(np.float64)
+        if not np.isfinite(delta).all():
+            self.diverged_ = True
+            return
+
+        update = alpha * h[:, :, np.newaxis] * delta
+
+        # Accumulate in float64, then cast back.
+        new_w = self.weights.astype(np.float64) + update
+        if not np.isfinite(new_w).all():
+            self.diverged_ = True
+            return
+
+        if self.clip_weights:
+            np.clip(new_w, -_WEIGHT_CLIP, _WEIGHT_CLIP, out=new_w)
+
+        self.weights = new_w.astype(np.float32)
 
     # ------------------------------------------------------------------
     def _batch_step(
@@ -308,20 +460,33 @@ class SOMModel:
 
             w_{ij} = sum_n h(d(bmu_n, ij)) * x_n  /  sum_n h(d(bmu_n, ij))
         """
-        numerator   = np.zeros_like(self.weights)              # (n_rows, n_cols, d)
-        denominator = np.zeros((self.n_rows, self.n_cols))     # (n_rows, n_cols)
+        numerator   = np.zeros_like(self.weights, dtype=np.float64)
+        denominator = np.zeros((self.n_rows, self.n_cols), dtype=np.float64)
 
         for x in X:
+            if not np.isfinite(x).all():
+                continue
             bmu_r, bmu_c = self._find_bmu(x)
-            dist_sq      = self._grid.grid_distance_sq(bmu_r, bmu_c)
-            h            = self._kernel(dist_sq, sigma)
-            numerator   += h[:, :, np.newaxis] * x
+            dist_sq      = np.maximum(
+                self._grid.grid_distance_sq(bmu_r, bmu_c), 0.0
+            )
+            h            = self._safe_h(self._kernel(dist_sq, sigma))
+            h            = np.abs(h)              # batch rule requires non-negative weights
+            numerator   += h[:, :, np.newaxis] * x.astype(np.float64)
             denominator += h
 
         mask = denominator > 1e-12
-        self.weights[mask] = (
-            numerator[mask] / denominator[mask, np.newaxis]
-        )
+        new_w = self.weights.astype(np.float64)
+        new_w[mask] = numerator[mask] / denominator[mask, np.newaxis]
+
+        if not np.isfinite(new_w).all():
+            self.diverged_ = True
+            return
+
+        if self.clip_weights:
+            np.clip(new_w, -_WEIGHT_CLIP, _WEIGHT_CLIP, out=new_w)
+
+        self.weights = new_w.astype(np.float32)
 
     # ------------------------------------------------------------------
     def predict(self, X: np.ndarray) -> np.ndarray:
@@ -336,7 +501,9 @@ class SOMModel:
         """
         if self.weights is None:
             raise RuntimeError("Call fit() before predict().")
-        return self._find_bmu_batch(np.asarray(X, dtype=np.float32))
+        X = np.asarray(X, dtype=np.float32)
+        self._check_finite("X", X)
+        return self._find_bmu_batch(X)
 
     # ------------------------------------------------------------------
     def transform(self, X: np.ndarray) -> np.ndarray:

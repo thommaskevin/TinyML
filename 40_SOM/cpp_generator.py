@@ -197,7 +197,7 @@ class ArduinoSOMGenerator:
             '#include <math.h>',
         ]
         if self.use_flash:
-            lines += ['#include <avr/pgmspace.h>', '']
+            pass
         else:
             lines.append('')
 

@@ -8,7 +8,7 @@
  * Map size       : 12 x 12
  * Input values   : [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000]
  *
- * Expected BMU   : flat=0  row=0  col=0
+ * Expected BMU   : flat=53  row=4  col=5
  *
  * Upload this sketch, open Serial Monitor at 115200 baud,
  * and confirm the printed BMU matches the expected values above.
@@ -29,7 +29,7 @@ void setup() {
 
   int bmu = model.predict(x);
 
-  // Expected: flat=0  row=0  col=0
+  // Expected: flat=53  row=4  col=5
   Serial.print("BMU flat index : "); Serial.println(bmu);
   Serial.print("BMU row        : "); Serial.println(model.bmu_row(bmu));
   Serial.print("BMU col        : "); Serial.println(model.bmu_col(bmu));

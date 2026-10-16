@@ -65,14 +65,7 @@ _From extreme randomisation to edge deployment_
 
 ## 1 — Introduction
 
-Extra Trees (Extremely Randomized Trees), introduced by Geurts, Ernst, and
-Wehenkel (2006), are one of the most computationally efficient and competitively
-accurate ensemble learning algorithms available for structured tabular data.
-An Extra Trees model is a collection of $B$ decision trees, each trained on
-the **full** training set (no bootstrap resampling), each using a **single
-randomly drawn threshold** per candidate feature rather than the optimal
-threshold found by an exhaustive search.  These two departures from the
-Random Forest recipe — full-data training and random thresholds — simplify
+Extra Trees (Extremely Randomized Trees), introduced by Geurts, Ernst, and Wehenkel (2006), are one of the most computationally efficient and competitively accurate ensemble learning algorithms available for structured tabular data. An Extra Trees model is a collection of $B$ decision trees, each trained on the **full** training set (no bootstrap resampling), each using a **single randomly drawn threshold** per candidate feature rather than the optimal threshold found by an exhaustive search.  These two departures from the Random Forest recipe — full-data training and random thresholds — simplify
 the learning algorithm, reduce training time from $O(B \cdot n \cdot p \cdot
 \log n)$ to $O(B \cdot n \cdot p)$, and often improve generalisation by
 providing a stronger regularisation effect through increased stochasticity.

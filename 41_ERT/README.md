@@ -599,17 +599,17 @@ microcontrollers or IoT devices *(Figure 13)*.
 
 ### 3.1 — Jupyter Notebooks
 
-- [![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML/blob/main/38_ET/et.ipynb) Extra Trees Training and Evaluation
+- [![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/thommaskevin/TinyML/blob/main/41_ERT/ert.ipynb) Extra Trees Training and Evaluation
 
 ### 3.2 — Arduino Code
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/38_ET/arduino_code/iris_ino) Example 1: Iris -- Multi-Class Classification
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/41_ERT/arduino_code/iris_ino) Example 1: Iris -- Multi-Class Classification
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/38_ET/arduino_code/bc_ino) Example 2: Breast Cancer -- Binary Classification with Pruning
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/41_ERT/arduino_code/bc_ino) Example 2: Breast Cancer -- Binary Classification with Pruning
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/38_ET/arduino_code/reg_ino) Example 3: Regression with Uncertainty and Partial Dependence
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/41_ERT/arduino_code/reg_ino) Example 3: Regression with Uncertainty and Partial Dependence
 
-- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/38_ET/arduino_code/wine_ino) Example 4: Wine -- Criterion and max_features Comparison
+- [![Arduino](https://img.shields.io/badge/Arduino-00878F?logo=arduino&logoColor=fff&style=plastic)](https://github.com/thommaskevin/TinyML/tree/main/41_ERT/arduino_code/wine_ino) Example 4: Wine -- Criterion and max_features Comparison
 
 ## References
 

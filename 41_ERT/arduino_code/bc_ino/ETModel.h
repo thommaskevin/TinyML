@@ -12,8 +12,6 @@
 
 #include <math.h>
 #include <stdint.h>
-#include <avr/pgmspace.h>
-
 const PROGMEM int16_t et0_int[1][4] = {
   {6, -1, -2, 0},  /* threshold stored separately */
 };
